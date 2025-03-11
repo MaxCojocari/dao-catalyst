@@ -5,7 +5,7 @@ interface IDaoCatalystErrors {
     error UnknownProposal(uint256 proposalId);
 }
 
-interface IDaoCatalyst is IDaoCatalystErrors{
+interface IDaoCatalyst is IDaoCatalystErrors {
     enum ProposalState {
         Pending,
         Active,
@@ -18,17 +18,17 @@ interface IDaoCatalyst is IDaoCatalystErrors{
     }
 
     struct Proposal {
+        address proposer;
         uint64 voteStart;
         uint64 voteEnd;
         bool executed;
         bool canceled;
-        address proposer;
     }
 
     struct ProposalAction {
-        address targets,
-        uint256 values,
-        bytes calldatas, 
+        address targets;
+        uint256 values;
+        bytes calldatas;
     }
 
     event ProposalCreated(
@@ -49,18 +49,15 @@ interface IDaoCatalyst is IDaoCatalystErrors{
 
     event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight);
 
-    function propose(
-        ProposalAction[] calldata actions
-        string memory description
-    ) external;
+    function propose(ProposalAction[] calldata actions, string calldata description) external;
 
     function execute(uint256 proposalId) external payable;
 
+    function cancel(uint256 proposalId) external;
+
     function state(uint256 proposalId) external view returns (ProposalState);
 
-    function cancel(uint256 proposalId) public virtual returns (uint256 proposalId);
-
-    function castVote(uint256 proposalId, uint8 support) public virtual returns (uint256 balance);
+    function castVote(uint256 proposalId, uint8 support) external;
 
     function proposalProposer(uint256 proposalId) external view returns (address);
 
