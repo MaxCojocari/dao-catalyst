@@ -3,6 +3,10 @@ pragma solidity 0.8.28;
 
 interface IDaoCatalystErrors {
     error UnknownProposal(uint256 proposalId);
+    error InvalidProposalLength(uint256 length);
+    error InvalidProposer(address proposer);
+    error ProposalAlreadyExists(uint256 proposalId);
+    error InvalidProposalVotingTimestamps(uint256 currentTime, uint256 voteStart, uint256 voteEnd);
 }
 
 interface IDaoCatalyst is IDaoCatalystErrors {
@@ -34,10 +38,7 @@ interface IDaoCatalyst is IDaoCatalystErrors {
     event ProposalCreated(
         uint256 proposalId,
         address proposer,
-        address[] targets,
-        uint256[] values,
-        string[] signatures,
-        bytes[] calldatas,
+        ProposalAction[] actions,
         uint256 voteStart,
         uint256 voteEnd,
         string description
