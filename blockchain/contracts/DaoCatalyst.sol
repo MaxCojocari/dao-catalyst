@@ -5,7 +5,6 @@ import {IDaoCatalyst} from "./interfaces/IDaoCatalyst.sol";
 
 abstract contract DaoCatalyst is IDaoCatalyst {
     uint256 public proposalCounter;
-    uint256 public proposalThreshold;
     string public metadataURI;
     mapping(uint256 => Proposal) public proposals;
 
@@ -19,13 +18,13 @@ abstract contract DaoCatalyst is IDaoCatalyst {
         uint64 voteStart,
         uint64 voteEnd
     ) external {
+        address proposer = msg.sender;
+        if (!_isValidProposer(proposer)) revert InvalidProposer(proposer);
+
         if (bytes(descriptionURI).length == 0) revert InvalidProposalLength(0);
 
         bool validVotingStartAndEnd = block.timestamp <= voteStart && voteStart < voteEnd;
         if (!validVotingStartAndEnd) revert InvalidProposalVotingTimestamps(block.timestamp, voteStart, voteEnd);
-
-        address proposer = msg.sender;
-        if (!_isValidProposer(proposer)) revert InvalidProposer(proposer);
 
         proposals[proposalCounter] = Proposal({
             proposer: proposer,
@@ -40,11 +39,46 @@ abstract contract DaoCatalyst is IDaoCatalyst {
         }
     }
 
-    function getVotes(address account, uint256 timepoint) public view virtual override returns (uint256) {
-        return _getVotes(account, timepoint);
+    function castVote(uint256 proposalId) external {
+        _castVote(proposalId, msg.sender, "");
+    }
+
+    function castVoteWithParams(uint256 proposalId, bytes memory params) external {
+        _castVote(proposalId, msg.sender, params);
+    }
+
+    function _castVote(uint256 proposalId, address voter, bytes memory params) internal virtual {
+        if (_state(proposalId) != ProposalState.Active) revert VotingNotActive(proposalId);
+
+        uint256 weight = _getVotes(voter, proposals[proposalId].voteStart, params);
+        _countVote(proposalId, voter, weight, params);
+
+        if (params.length == 0) {
+            emit VoteCast(voter, proposalId, weight);
+        } else {
+            emit VoteCastWithParams(voter, proposalId, weight, params);
+        }
     }
 
     function state(uint256 proposalId) external view returns (ProposalState) {
+        return _state(proposalId);
+    }
+
+    function _isValidProposer(address proposer) internal view virtual returns (bool);
+
+    function _countVote(
+        uint256 proposalId,
+        address account,
+        uint8 support,
+        uint256 weight,
+        bytes memory params
+    ) internal virtual;
+
+    function _getVotes(address account, uint256 timepoint, bytes memory params) internal view virtual returns (uint256);
+
+    function _countVote(uint256 proposalId, address account, uint256 weight, bytes memory params) internal virtual;
+
+    function _state(uint256 proposalId) internal view returns (ProposalState) {
         Proposal storage proposal = proposals[proposalId];
 
         if (proposal.executed) {
@@ -75,10 +109,6 @@ abstract contract DaoCatalyst is IDaoCatalyst {
             return ProposalState.Defeated;
         }
     }
-
-    function _isValidProposer(address proposer) internal view virtual returns (bool);
-
-    function _getVotes(address account, uint256 timepoint) internal view virtual returns (uint256);
 
     function _quorumReached(uint256 proposalId) internal view virtual returns (bool);
 

@@ -7,6 +7,7 @@ interface IDaoCatalystErrors {
     error InvalidProposer(address proposer);
     error ProposalAlreadyExists(uint256 proposalId);
     error InvalidProposalVotingTimestamps(uint256 currentTime, uint256 voteStart, uint256 voteEnd);
+    error VotingNotActive(uint256 proposalId);
 }
 
 interface IDaoCatalyst is IDaoCatalystErrors {
@@ -36,8 +37,8 @@ interface IDaoCatalyst is IDaoCatalystErrors {
     }
 
     event ProposalCreated(
-        uint256 proposalId,
-        address proposer,
+        uint256 indexed proposalId,
+        address indexed proposer,
         ProposalAction[] actions,
         uint256 voteStart,
         uint256 voteEnd,
@@ -48,7 +49,9 @@ interface IDaoCatalyst is IDaoCatalystErrors {
 
     event ProposalExecuted(uint256 proposalId);
 
-    event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight);
+    event VoteCast(address indexed voter, uint256 indexed proposalId, uint256 weight);
+
+    event VoteCastWithParams(address indexed voter, uint256 indexed proposalId, uint256 weight, bytes params);
 
     function propose(ProposalAction[] calldata actions, string calldata description) external;
 
@@ -60,11 +63,7 @@ interface IDaoCatalyst is IDaoCatalystErrors {
 
     function castVote(uint256 proposalId, uint8 support) external;
 
-    function proposalProposer(uint256 proposalId) external view returns (address);
-
-    function votingDelay() external view returns (uint256);
-
-    function votingPeriod() external view returns (uint256);
+    function proposal(uint256 proposalId) external view returns (Proposal calldata);
 
     function quorum(uint256 timepoint) external view returns (uint256);
 
