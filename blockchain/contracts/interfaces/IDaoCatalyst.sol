@@ -3,11 +3,15 @@ pragma solidity 0.8.28;
 
 interface IDaoCatalystErrors {
     error UnknownProposal(uint256 proposalId);
+    error InvalidProposalId();
     error InvalidProposalLength(uint256 length);
     error InvalidProposer(address proposer);
-    error ProposalAlreadyExists(uint256 proposalId);
     error InvalidProposalVotingTimestamps(uint256 currentTime, uint256 voteStart, uint256 voteEnd);
     error VotingNotActive(uint256 proposalId);
+    error ProposalNotSuccessful(uint256 proposalId);
+    error TooLateToCancel(uint256 proposalId);
+    error OnlyProposerCanCancel();
+    error ProposalNotActive(uint256 proposalId);
 }
 
 interface IDaoCatalyst is IDaoCatalystErrors {
@@ -22,18 +26,19 @@ interface IDaoCatalyst is IDaoCatalystErrors {
         Executed
     }
 
+    struct ProposalAction {
+        address target;
+        uint256 value;
+        bytes calldatas;
+    }
+
     struct Proposal {
         address proposer;
+        ProposalAction[] actions;
         uint64 voteStart;
         uint64 voteEnd;
         bool executed;
         bool canceled;
-    }
-
-    struct ProposalAction {
-        address targets;
-        uint256 values;
-        bytes calldatas;
     }
 
     event ProposalCreated(
@@ -45,9 +50,9 @@ interface IDaoCatalyst is IDaoCatalystErrors {
         string description
     );
 
-    event ProposalCanceled(uint256 proposalId);
-
     event ProposalExecuted(uint256 proposalId);
+
+    event ProposalCanceled(uint256 proposalId);
 
     event VoteCast(address indexed voter, uint256 indexed proposalId, uint256 weight);
 

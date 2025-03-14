@@ -2,11 +2,18 @@
 pragma solidity 0.8.28;
 
 import {IDaoCatalyst} from "./interfaces/IDaoCatalyst.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 
-abstract contract DaoCatalyst is IDaoCatalyst {
+abstract contract DaoCatalyst is IDaoCatalyst, Context {
     uint256 public proposalCounter;
     string public metadataURI;
     mapping(uint256 => Proposal) public proposals;
+
+    modifier validProposalId(uint256 proposalId) {
+        if (proposalId >= proposalCounter) revert InvalidProposalId();
+        _;
+    }
 
     constructor(string memory metadataURI_) {
         metadataURI = metadataURI_;
@@ -18,7 +25,7 @@ abstract contract DaoCatalyst is IDaoCatalyst {
         uint64 voteStart,
         uint64 voteEnd
     ) external {
-        address proposer = msg.sender;
+        address proposer = _msgSender();
         if (!_isValidProposer(proposer)) revert InvalidProposer(proposer);
 
         if (bytes(descriptionURI).length == 0) revert InvalidProposalLength(0);
@@ -28,6 +35,7 @@ abstract contract DaoCatalyst is IDaoCatalyst {
 
         proposals[proposalCounter] = Proposal({
             proposer: proposer,
+            actions: actions,
             voteStart: voteStart,
             voteEnd: voteEnd,
             executed: false,
@@ -39,12 +47,57 @@ abstract contract DaoCatalyst is IDaoCatalyst {
         }
     }
 
-    function castVote(uint256 proposalId) external {
-        _castVote(proposalId, msg.sender, "");
+    function castVote(uint256 proposalId) external validProposalId(proposalId) {
+        _castVote(proposalId, _msgSender(), "");
     }
 
-    function castVoteWithParams(uint256 proposalId, bytes memory params) external {
-        _castVote(proposalId, msg.sender, params);
+    function castVoteWithParams(uint256 proposalId, bytes memory params) external validProposalId(proposalId) {
+        _castVote(proposalId, _msgSender(), params);
+    }
+
+    function execute(uint256 proposalId) external payable validProposalId(proposalId) {
+        ProposalState currentState = _state(proposalId);
+
+        if (currentState != ProposalState.Succeeded && currentState != ProposalState.Queued)
+            revert ProposalNotSuccessful(proposalId);
+
+        proposals[proposalId].executed = true;
+
+        ProposalAction[] storage actions = proposals[proposalId].actions;
+
+        uint256 length = actions.length;
+        for (uint256 i = 0; i < length; ++i) {
+            (bool success, bytes memory returndata) = actions[i].target.call{value: actions[i].value}(
+                actions[i].calldatas
+            );
+            Address.verifyCallResult(success, returndata);
+        }
+
+        emit ProposalExecuted(proposalId);
+    }
+
+    function cancel(uint256 proposalId) external validProposalId(proposalId) {
+        ProposalState currentState = _state(proposalId);
+
+        if (currentState != ProposalState.Pending) revert TooLateToCancel(proposalId);
+        if (_msgSender() != proposals[proposalId].proposer) revert OnlyProposerCanCancel();
+        if (
+            currentState == ProposalState.Canceled ||
+            currentState == ProposalState.Expired ||
+            currentState == ProposalState.Executed
+        ) revert ProposalNotActive(proposalId);
+
+        proposals[proposalId].canceled = true;
+
+        emit ProposalCanceled(proposalId);
+    }
+
+    function getVotes(address account, uint256 timepoint) external view returns (uint256) {
+        return _getVotes(account, timepoint, "");
+    }
+
+    function state(uint256 proposalId) external view returns (ProposalState) {
+        return _state(proposalId);
     }
 
     function _castVote(uint256 proposalId, address voter, bytes memory params) internal virtual {
@@ -60,19 +113,9 @@ abstract contract DaoCatalyst is IDaoCatalyst {
         }
     }
 
-    function state(uint256 proposalId) external view returns (ProposalState) {
-        return _state(proposalId);
-    }
-
     function _isValidProposer(address proposer) internal view virtual returns (bool);
 
-    function _countVote(
-        uint256 proposalId,
-        address account,
-        uint8 support,
-        uint256 weight,
-        bytes memory params
-    ) internal virtual;
+    function _countVote(uint256 proposalId, address account, bytes memory params) internal virtual;
 
     function _getVotes(address account, uint256 timepoint, bytes memory params) internal view virtual returns (uint256);
 
