@@ -85,9 +85,10 @@ interface IDao is IDaoErrors {
     /// before the vote starts.
     function cancel(uint256 proposalId) external;
 
-    /// @dev Casts a vote
+    /// @dev Casts a vote.
     function castVote(uint256 proposalId, uint8 support) external;
 
+    /// @dev Returns the current proposal state.
     function state(uint256 proposalId) external view returns (ProposalState);
 
     /// @dev Returns the proposal details.

@@ -94,12 +94,16 @@ abstract contract Dao is IDao, AccessControl {
         }
     }
 
-    function castVote(uint256 proposalId) external validProposalId(proposalId) {
-        _castVote(proposalId, _msgSender(), "");
+    function castVote(uint256 proposalId, uint8 support) external validProposalId(proposalId) {
+        _castVote(proposalId, _msgSender(), support, "");
     }
 
-    function castVoteWithParams(uint256 proposalId, bytes memory params) external validProposalId(proposalId) {
-        _castVote(proposalId, _msgSender(), params);
+    function castVoteWithParams(
+        uint256 proposalId,
+        uint8 support,
+        bytes memory params
+    ) external validProposalId(proposalId) {
+        _castVote(proposalId, _msgSender(), support, params);
     }
 
     function execute(uint256 proposalId) external payable validProposalId(proposalId) {
@@ -159,11 +163,19 @@ abstract contract Dao is IDao, AccessControl {
         return _state(proposalId);
     }
 
-    function _castVote(uint256 proposalId, address voter, bytes memory params) internal virtual {
+    function proposalSnapshot(uint256 proposalId) external view returns (uint256) {
+        return _proposalSnapshot(proposalId);
+    }
+
+    function quorum(uint256 timepoint) external view returns (uint256) {
+        return _quorum(timepoint);
+    }
+
+    function _castVote(uint256 proposalId, address voter, uint8 support, bytes memory params) internal {
         if (_state(proposalId) != ProposalState.Active) revert VotingNotActive(proposalId);
 
         uint256 weight = _getVotes(voter, proposals[proposalId].voteStart, params);
-        _countVote(proposalId, voter, weight, params);
+        _countVote(proposalId, voter, support, weight, params);
 
         if (params.length == 0) {
             emit VoteCast(voter, proposalId, weight);
@@ -204,13 +216,25 @@ abstract contract Dao is IDao, AccessControl {
         }
     }
 
+    function _proposalSnapshot(uint256 proposalId) internal view returns (uint256) {
+        return proposals[proposalId].voteStart;
+    }
+
+    function _quorum(uint256 timepoint) internal view virtual returns (uint256);
+
     function _isValidProposer(address proposer) internal view virtual returns (bool);
 
     function _quorumReached(uint256 proposalId) internal view virtual returns (bool);
 
     function _voteSucceeded(uint256 proposalId) internal view virtual returns (bool);
 
-    function _countVote(uint256 proposalId, address account, uint256 weight, bytes memory params) internal virtual;
+    function _countVote(
+        uint256 proposalId,
+        address account,
+        uint8 support,
+        uint256 totalWeight,
+        bytes memory params
+    ) internal virtual returns (uint256);
 
     function _getVotes(address account, uint256 timepoint, bytes memory params) internal view virtual returns (uint256);
 }
