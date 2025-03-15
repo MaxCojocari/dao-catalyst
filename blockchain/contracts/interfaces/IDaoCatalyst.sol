@@ -61,21 +61,36 @@ interface IDaoCatalyst is IDaoCatalystErrors {
 
     event SetMetadataURI(string oldURI, string newURI);
 
-    function propose(ProposalAction[] calldata actions, string calldata description) external;
+    /// @dev Create a new proposal.
+    function propose(
+        ProposalAction[] calldata actions,
+        string memory descriptionURI,
+        uint64 voteStart,
+        uint64 voteEnd
+    ) external;
 
+    /// @dev Execute a successful proposal. This requires the quorum to be reached,
+    /// the vote to be successful, and the deadline to be reached.
     function execute(uint256 proposalId) external payable;
 
+    /// @dev Cancel a proposal. A proposal is cancellable by the proposer, but only while it is Pending state, i.e.
+    /// before the vote starts.
     function cancel(uint256 proposalId) external;
 
+    /// @dev Casts a vote
     function castVote(uint256 proposalId, uint8 support) external;
 
     function state(uint256 proposalId) external view returns (ProposalState);
 
+    /// @dev Returns the proposal details.
     function proposal(uint256 proposalId) external view returns (Proposal calldata);
 
+    /// @dev Minimum number of cast voted required for a proposal to be successful.
     function quorum(uint256 timepoint) external view returns (uint256);
 
+    /// @dev Voting power of an `account` at a specific `timepoint`.
     function getVotes(address account, uint256 timepoint) external view returns (uint256);
 
+    /// @dev Returns whether `account` has cast a vote on `proposalId`.
     function hasVoted(uint256 proposalId, address account) external view returns (bool);
 }

@@ -132,14 +132,6 @@ abstract contract DaoCatalyst is IDaoCatalyst, Context, AccessControl {
         }
     }
 
-    function _isValidProposer(address proposer) internal view virtual returns (bool);
-
-    function _countVote(uint256 proposalId, address account, bytes memory params) internal virtual;
-
-    function _getVotes(address account, uint256 timepoint, bytes memory params) internal view virtual returns (uint256);
-
-    function _countVote(uint256 proposalId, address account, uint256 weight, bytes memory params) internal virtual;
-
     function _state(uint256 proposalId) internal view returns (ProposalState) {
         Proposal storage proposal = proposals[proposalId];
 
@@ -172,7 +164,13 @@ abstract contract DaoCatalyst is IDaoCatalyst, Context, AccessControl {
         }
     }
 
+    function _isValidProposer(address proposer) internal view virtual returns (bool);
+
     function _quorumReached(uint256 proposalId) internal view virtual returns (bool);
 
     function _voteSucceeded(uint256 proposalId) internal view virtual returns (bool);
+
+    function _countVote(uint256 proposalId, address account, uint256 weight, bytes memory params) internal virtual;
+
+    function _getVotes(address account, uint256 timepoint, bytes memory params) internal view virtual returns (uint256);
 }
