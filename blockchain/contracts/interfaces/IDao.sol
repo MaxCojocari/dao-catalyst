@@ -4,6 +4,7 @@ pragma solidity 0.8.28;
 interface IDaoErrors {
     error InvalidAddress(address addr);
     error InvalidUint256(uint256 value);
+    error InvalidFraction();
     error UnknownProposal(uint256 proposalId);
     error InvalidProposalId();
     error InvalidString(string str);
@@ -99,7 +100,10 @@ interface IDao is IDaoErrors {
     function proposal(uint256 proposalId) external view returns (Proposal calldata);
 
     /// @dev Minimum number of cast voted required for a proposal to be successful.
-    function quorum(uint256 timepoint) external view returns (uint256);
+    function quorum() external view returns (uint256);
+
+    /// @dev Minimum number of cast voted required for a proposal to pass.
+    function minimumParticipation(uint256 proposalId) external view returns (uint256);
 
     /// @dev Voting power of an `account` at a specific `timepoint`.
     function getVotes(address account, uint256 timepoint) external view returns (uint256);

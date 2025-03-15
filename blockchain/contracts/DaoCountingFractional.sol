@@ -33,14 +33,16 @@ abstract contract DaoCountingFractional is Dao {
         return (proposalVote.againstVotes, proposalVote.forVotes, proposalVote.abstainVotes);
     }
 
-    function _quorumReached(uint256 proposalId) internal view virtual override returns (bool) {
+    function _quorumReached(uint256 proposalId) internal view override returns (bool) {
         ProposalVote storage proposalVote = proposalVotesMap[proposalId];
-        return _quorum(_proposalSnapshot(proposalId)) <= proposalVote.forVotes + proposalVote.abstainVotes;
+        return
+            (_totalVoted(proposalId) * quorumFraction.numerator) / quorumFraction.denominator <= proposalVote.forVotes;
     }
 
-    function _voteSucceeded(uint256 proposalId) internal view virtual override returns (bool) {
+    function _voteSucceeded(uint256 proposalId) internal view override returns (bool) {
         ProposalVote storage proposalVote = proposalVotesMap[proposalId];
-        return proposalVote.forVotes > proposalVote.againstVotes;
+        uint256 totalVotes = proposalVote.againstVotes + proposalVote.forVotes + proposalVote.abstainVotes;
+        return proposalVote.forVotes > proposalVote.againstVotes && totalVotes >= _minimumParticipation(proposalId);
     }
 
     function _countVote(
@@ -96,5 +98,10 @@ abstract contract DaoCountingFractional is Dao {
         details.usedVotes[account] += usedWeight;
 
         return usedWeight;
+    }
+
+    function _totalVoted(uint256 proposalId) internal view returns (uint256) {
+        ProposalVote storage proposalVote = proposalVotesMap[proposalId];
+        return proposalVote.againstVotes + proposalVote.forVotes + proposalVote.abstainVotes;
     }
 }

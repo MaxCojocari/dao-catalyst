@@ -2,6 +2,7 @@
 pragma solidity 0.8.28;
 
 import {IDao} from "./interfaces/IDao.sol";
+import {Fraction} from "./utils/Utils.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -14,6 +15,9 @@ abstract contract Dao is IDao, AccessControl {
     uint256 public proposalCounter;
     uint256 public minimalDuration;
     string public metadataURI;
+
+    Fraction public quorumFraction;
+    Fraction public minimumParticipationFraction;
 
     uint256 public constant MAX_ACTIONS = 32;
 
@@ -35,13 +39,28 @@ abstract contract Dao is IDao, AccessControl {
         _;
     }
 
+    modifier validFraction(Fraction memory fraction) {
+        if (fraction.numerator == 0 || fraction.denominator == 0) revert InvalidUint256(0);
+        if (fraction.numerator > fraction.denominator) revert InvalidFraction();
+        _;
+    }
+
     constructor(
         string memory metadataURI_,
         address[] memory members,
-        uint256 minimalDuration_
-    ) validURI(metadataURI_) validUint256(minimalDuration_) {
+        uint256 minimalDuration_,
+        Fraction memory quorumFraction_,
+        Fraction memory minimumParticipationFraction_
+    )
+        validURI(metadataURI_)
+        validUint256(minimalDuration_)
+        validFraction(quorumFraction_)
+        validFraction(minimumParticipationFraction_)
+    {
         metadataURI = metadataURI_;
         minimalDuration = minimalDuration_;
+        quorumFraction = quorumFraction_;
+        minimumParticipationFraction = minimumParticipationFraction_;
 
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
@@ -71,7 +90,7 @@ abstract contract Dao is IDao, AccessControl {
         uint64 voteDuration
     ) external validURI(descriptionURI) {
         address proposer = _msgSender();
-        if (!_isValidProposer(proposer)) revert InvalidProposer(proposer);
+        if (!_isValidProposer(proposer, block.timestamp)) revert InvalidProposer(proposer);
 
         if (actions.length == 0) revert NoActions();
         if (actions.length > MAX_ACTIONS) revert TooManyActions(actions.length);
@@ -177,8 +196,12 @@ abstract contract Dao is IDao, AccessControl {
         return _proposalSnapshot(proposalId);
     }
 
-    function quorum(uint256 timepoint) external view returns (uint256) {
-        return _quorum(timepoint);
+    function quorum() external view returns (uint256) {
+        return (quorumFraction.numerator * 100) / quorumFraction.denominator;
+    }
+
+    function minimumParticipation(uint256 proposalId) external view returns (uint256) {
+        return _minimumParticipation(proposalId);
     }
 
     function _castVote(uint256 proposalId, address voter, uint8 support, uint256 weight, bytes memory params) internal {
@@ -229,9 +252,9 @@ abstract contract Dao is IDao, AccessControl {
         return proposals[proposalId].snapshot;
     }
 
-    function _quorum(uint256 timepoint) internal view virtual returns (uint256);
+    function _minimumParticipation(uint256 proposalId) internal view virtual returns (uint256);
 
-    function _isValidProposer(address proposer) internal view virtual returns (bool);
+    function _isValidProposer(address proposer, uint256 timepoint) internal view virtual returns (bool);
 
     function _quorumReached(uint256 proposalId) internal view virtual returns (bool);
 
