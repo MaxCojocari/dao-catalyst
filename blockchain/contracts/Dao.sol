@@ -96,7 +96,14 @@ abstract contract Dao is IDao, AccessControl {
     }
 
     function castVote(uint256 proposalId, uint8 support) external validProposalId(proposalId) {
-        _castVote(proposalId, _msgSender(), support, "");
+        address voter = _msgSender();
+        uint256 weight = _getVotes(voter, proposals[proposalId].snapshot, "");
+        _castVote(proposalId, voter, support, weight, "");
+    }
+
+    function castVoteEqualWeight(uint256 proposalId, uint8 support) external validProposalId(proposalId) {
+        address voter = _msgSender();
+        _castVote(proposalId, voter, support, 1, "");
     }
 
     function castVoteWithParams(
@@ -104,7 +111,9 @@ abstract contract Dao is IDao, AccessControl {
         uint8 support,
         bytes memory params
     ) external validProposalId(proposalId) {
-        _castVote(proposalId, _msgSender(), support, params);
+        address voter = _msgSender();
+        uint256 weight = _getVotes(voter, proposals[proposalId].snapshot, "");
+        _castVote(proposalId, _msgSender(), support, weight, params);
     }
 
     function execute(uint256 proposalId) external payable validProposalId(proposalId) {
@@ -172,10 +181,9 @@ abstract contract Dao is IDao, AccessControl {
         return _quorum(timepoint);
     }
 
-    function _castVote(uint256 proposalId, address voter, uint8 support, bytes memory params) internal {
+    function _castVote(uint256 proposalId, address voter, uint8 support, uint256 weight, bytes memory params) internal {
         if (_state(proposalId) != ProposalState.Active) revert VotingNotActive(proposalId);
 
-        uint256 weight = _getVotes(voter, proposals[proposalId].snapshot, params);
         _countVote(proposalId, voter, support, weight, params);
 
         if (params.length == 0) {
