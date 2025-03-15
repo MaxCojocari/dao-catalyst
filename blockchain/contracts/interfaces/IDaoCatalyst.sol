@@ -2,9 +2,10 @@
 pragma solidity 0.8.28;
 
 interface IDaoCatalystErrors {
+    error AddressZero();
     error UnknownProposal(uint256 proposalId);
     error InvalidProposalId();
-    error InvalidProposalLength(uint256 length);
+    error InvalidString(string str);
     error InvalidProposer(address proposer);
     error InvalidProposalVotingTimestamps(uint256 currentTime, uint256 voteStart, uint256 voteEnd);
     error VotingNotActive(uint256 proposalId);
@@ -58,15 +59,17 @@ interface IDaoCatalyst is IDaoCatalystErrors {
 
     event VoteCastWithParams(address indexed voter, uint256 indexed proposalId, uint256 weight, bytes params);
 
+    event SetMetadataURI(string oldURI, string newURI);
+
     function propose(ProposalAction[] calldata actions, string calldata description) external;
 
     function execute(uint256 proposalId) external payable;
 
     function cancel(uint256 proposalId) external;
 
-    function state(uint256 proposalId) external view returns (ProposalState);
-
     function castVote(uint256 proposalId, uint8 support) external;
+
+    function state(uint256 proposalId) external view returns (ProposalState);
 
     function proposal(uint256 proposalId) external view returns (Proposal calldata);
 

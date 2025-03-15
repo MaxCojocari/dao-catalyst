@@ -4,18 +4,39 @@ pragma solidity 0.8.28;
 import {IDaoCatalyst} from "./interfaces/IDaoCatalyst.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {Context} from "@openzeppelin/contracts/utils/Context.sol";
+import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
-abstract contract DaoCatalyst is IDaoCatalyst, Context {
+abstract contract DaoCatalyst is IDaoCatalyst, Context, AccessControl {
+    mapping(uint256 => Proposal) public proposals;
     uint256 public proposalCounter;
     string public metadataURI;
-    mapping(uint256 => Proposal) public proposals;
+
+    /// @dev keccak256("MEMBER_ROLE")
+    bytes32 public constant MEMBER_ROLE = 0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636;
 
     modifier validProposalId(uint256 proposalId) {
         if (proposalId >= proposalCounter) revert InvalidProposalId();
         _;
     }
 
-    constructor(string memory metadataURI_) {
+    modifier validURI(string memory str) {
+        if (bytes(str).length == 0) revert InvalidString("");
+        _;
+    }
+
+    constructor(string memory metadataURI_, address[] memory members) {
+        metadataURI = metadataURI_;
+        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+
+        uint256 length = members.length;
+        for (uint256 i = 0; i < length; ++i) {
+            if (members[0] == address(0)) revert AddressZero();
+            _grantRole(MEMBER_ROLE, members[i]);
+        }
+    }
+
+    function setMetadataURI(string calldata metadataURI_) external onlyRole(DEFAULT_ADMIN_ROLE) validURI(metadataURI_) {
+        emit SetMetadataURI(metadataURI, metadataURI_);
         metadataURI = metadataURI_;
     }
 
@@ -24,11 +45,9 @@ abstract contract DaoCatalyst is IDaoCatalyst, Context {
         string memory descriptionURI,
         uint64 voteStart,
         uint64 voteEnd
-    ) external {
+    ) external validURI(descriptionURI) {
         address proposer = _msgSender();
         if (!_isValidProposer(proposer)) revert InvalidProposer(proposer);
-
-        if (bytes(descriptionURI).length == 0) revert InvalidProposalLength(0);
 
         bool validVotingStartAndEnd = block.timestamp <= voteStart && voteStart < voteEnd;
         if (!validVotingStartAndEnd) revert InvalidProposalVotingTimestamps(block.timestamp, voteStart, voteEnd);
