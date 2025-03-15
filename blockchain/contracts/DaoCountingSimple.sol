@@ -19,10 +19,6 @@ abstract contract DaoCountingSimple is Dao {
 
     mapping(uint256 proposalId => ProposalVote) private proposalVotesMap;
 
-    error AlreadyCastVote(address account);
-
-    error InvalidVoteType();
-
     function hasVoted(uint256 proposalId, address account) external view returns (bool) {
         return proposalVotesMap[proposalId].hasVoted[account];
     }
