@@ -1,15 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
-import {IDaoCatalyst} from "./interfaces/IDaoCatalyst.sol";
+import {IDao} from "./interfaces/IDao.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-abstract contract DaoCatalyst is IDaoCatalyst, Context, AccessControl {
+abstract contract Dao is IDao, AccessControl {
+    using SafeERC20 for IERC20;
+
     mapping(uint256 => Proposal) public proposals;
     uint256 public proposalCounter;
+    uint256 public minimalDuration;
     string public metadataURI;
+
+    uint256 public constant MAX_ACTIONS = 32;
 
     /// @dev keccak256("MEMBER_ROLE")
     bytes32 public constant MEMBER_ROLE = 0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636;
@@ -24,13 +30,24 @@ abstract contract DaoCatalyst is IDaoCatalyst, Context, AccessControl {
         _;
     }
 
-    constructor(string memory metadataURI_, address[] memory members) {
+    modifier validUint256(uint256 value) {
+        if (value == 0) revert InvalidUint256(0);
+        _;
+    }
+
+    constructor(
+        string memory metadataURI_,
+        address[] memory members,
+        uint256 minimalDuration_
+    ) validURI(metadataURI_) validUint256(minimalDuration_) {
         metadataURI = metadataURI_;
+        minimalDuration = minimalDuration_;
+
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
         uint256 length = members.length;
         for (uint256 i = 0; i < length; ++i) {
-            if (members[0] == address(0)) revert AddressZero();
+            if (members[0] == address(0)) revert InvalidAddress(address(0));
             _grantRole(MEMBER_ROLE, members[i]);
         }
     }
@@ -40,18 +57,29 @@ abstract contract DaoCatalyst is IDaoCatalyst, Context, AccessControl {
         metadataURI = metadataURI_;
     }
 
+    function setMinimalDuration(
+        uint256 minimalDuration_
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) validUint256(minimalDuration_) {
+        emit SetMinimalDuration(minimalDuration, minimalDuration_);
+        minimalDuration = minimalDuration_;
+    }
+
     function propose(
         ProposalAction[] calldata actions,
         string memory descriptionURI,
         uint64 voteStart,
-        uint64 voteEnd
+        uint64 voteDuration
     ) external validURI(descriptionURI) {
         address proposer = _msgSender();
         if (!_isValidProposer(proposer)) revert InvalidProposer(proposer);
 
-        bool validVotingStartAndEnd = block.timestamp <= voteStart && voteStart < voteEnd;
-        if (!validVotingStartAndEnd) revert InvalidProposalVotingTimestamps(block.timestamp, voteStart, voteEnd);
+        if (actions.length == 0) revert NoActions();
+        if (actions.length > MAX_ACTIONS) revert TooManyActions(actions.length);
 
+        if (voteDuration < minimalDuration) revert InvalidVoteDuration(voteDuration);
+        if (block.timestamp > voteStart) revert InvalidVoteStart(voteStart);
+
+        uint64 voteEnd = voteStart + voteDuration;
         proposals[proposalCounter] = Proposal({
             proposer: proposer,
             actions: actions,
@@ -77,8 +105,7 @@ abstract contract DaoCatalyst is IDaoCatalyst, Context, AccessControl {
     function execute(uint256 proposalId) external payable validProposalId(proposalId) {
         ProposalState currentState = _state(proposalId);
 
-        if (currentState != ProposalState.Succeeded && currentState != ProposalState.Queued)
-            revert ProposalNotSuccessful(proposalId);
+        if (currentState != ProposalState.Succeeded) revert ProposalNotSuccessful(proposalId);
 
         proposals[proposalId].executed = true;
 
@@ -109,6 +136,19 @@ abstract contract DaoCatalyst is IDaoCatalyst, Context, AccessControl {
         proposals[proposalId].canceled = true;
 
         emit ProposalCanceled(proposalId);
+    }
+
+    function deposit(address token, uint256 amount) external payable {
+        if (amount == 0) revert InvalidUint256(0);
+
+        if (token == address(0)) {
+            if (msg.value != amount) revert NativeTokenDepositAmountMismatch();
+        } else {
+            if (msg.value != 0) revert NativeTokenDepositAmountMismatch();
+            IERC20(token).safeTransferFrom(_msgSender(), address(this), amount);
+        }
+
+        emit Deposited(msg.sender, token, amount);
     }
 
     function getVotes(address account, uint256 timepoint) external view returns (uint256) {

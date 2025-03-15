@@ -1,28 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
-interface IDaoCatalystErrors {
-    error AddressZero();
+interface IDaoErrors {
+    error InvalidAddress(address addr);
+    error InvalidUint256(uint256 value);
     error UnknownProposal(uint256 proposalId);
     error InvalidProposalId();
     error InvalidString(string str);
     error InvalidProposer(address proposer);
-    error InvalidProposalVotingTimestamps(uint256 currentTime, uint256 voteStart, uint256 voteEnd);
+    error NoActions();
+    error TooManyActions(uint256 length);
+    error InvalidVoteDuration(uint256 duration);
+    error InvalidVoteStart(uint256 voteStart);
     error VotingNotActive(uint256 proposalId);
     error ProposalNotSuccessful(uint256 proposalId);
     error TooLateToCancel(uint256 proposalId);
     error OnlyProposerCanCancel();
     error ProposalNotActive(uint256 proposalId);
+    error NativeTokenDepositAmountMismatch();
 }
 
-interface IDaoCatalyst is IDaoCatalystErrors {
+interface IDao is IDaoErrors {
     enum ProposalState {
         Pending,
         Active,
         Canceled,
         Defeated,
         Succeeded,
-        Queued,
         Expired,
         Executed
     }
@@ -60,6 +64,10 @@ interface IDaoCatalyst is IDaoCatalystErrors {
     event VoteCastWithParams(address indexed voter, uint256 indexed proposalId, uint256 weight, bytes params);
 
     event SetMetadataURI(string oldURI, string newURI);
+
+    event SetMinimalDuration(uint256 oldDuration, uint256 newDuration);
+
+    event Deposited(address sender, address token, uint256 amount);
 
     /// @dev Create a new proposal.
     function propose(
