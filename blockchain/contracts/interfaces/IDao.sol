@@ -18,6 +18,9 @@ interface IDaoErrors {
     error OnlyProposerCanCancel();
     error ProposalNotActive(uint256 proposalId);
     error NativeTokenDepositAmountMismatch();
+    error AlreadyCastVote(address account);
+    error InvalidVoteParams();
+    error InvalidVoteType();
 }
 
 interface IDao is IDaoErrors {
@@ -40,6 +43,7 @@ interface IDao is IDaoErrors {
     struct Proposal {
         address proposer;
         ProposalAction[] actions;
+        uint64 snapshot;
         uint64 voteStart;
         uint64 voteEnd;
         bool executed;

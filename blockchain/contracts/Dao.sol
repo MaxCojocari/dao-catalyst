@@ -83,6 +83,7 @@ abstract contract Dao is IDao, AccessControl {
         proposals[proposalCounter] = Proposal({
             proposer: proposer,
             actions: actions,
+            snapshot: uint64(block.timestamp),
             voteStart: voteStart,
             voteEnd: voteEnd,
             executed: false,
@@ -174,7 +175,7 @@ abstract contract Dao is IDao, AccessControl {
     function _castVote(uint256 proposalId, address voter, uint8 support, bytes memory params) internal {
         if (_state(proposalId) != ProposalState.Active) revert VotingNotActive(proposalId);
 
-        uint256 weight = _getVotes(voter, proposals[proposalId].voteStart, params);
+        uint256 weight = _getVotes(voter, proposals[proposalId].snapshot, params);
         _countVote(proposalId, voter, support, weight, params);
 
         if (params.length == 0) {
@@ -217,7 +218,7 @@ abstract contract Dao is IDao, AccessControl {
     }
 
     function _proposalSnapshot(uint256 proposalId) internal view returns (uint256) {
-        return proposals[proposalId].voteStart;
+        return proposals[proposalId].snapshot;
     }
 
     function _quorum(uint256 timepoint) internal view virtual returns (uint256);

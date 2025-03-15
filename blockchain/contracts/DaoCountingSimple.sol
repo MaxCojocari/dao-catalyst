@@ -3,13 +3,13 @@ pragma solidity 0.8.28;
 
 import {Dao} from "./Dao.sol";
 
-abstract contract DaoCountingSimple is Dao {
-    enum VoteType {
-        Against,
-        For,
-        Abstain
-    }
+enum VoteType {
+    For,
+    Against,
+    Abstain
+}
 
+abstract contract DaoCountingSimple is Dao {
     struct ProposalVote {
         uint256 againstVotes;
         uint256 forVotes;
@@ -17,11 +17,11 @@ abstract contract DaoCountingSimple is Dao {
         mapping(address voter => bool) hasVoted;
     }
 
+    mapping(uint256 proposalId => ProposalVote) private proposalVotesMap;
+
     error AlreadyCastVote(address account);
 
     error InvalidVoteType();
-
-    mapping(uint256 proposalId => ProposalVote) proposalVotesMap;
 
     function hasVoted(uint256 proposalId, address account) external view returns (bool) {
         return proposalVotesMap[proposalId].hasVoted[account];
