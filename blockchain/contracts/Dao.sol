@@ -110,7 +110,15 @@ abstract contract Dao is IDao, AccessControl {
         });
 
         unchecked {
-            emit ProposalCreated(proposalCounter++, proposer, actions, voteStart, voteEnd, descriptionURI);
+            emit ProposalCreated(
+                proposalCounter++,
+                proposer,
+                actions,
+                uint64(block.timestamp),
+                voteStart,
+                voteEnd,
+                descriptionURI
+            );
         }
     }
 

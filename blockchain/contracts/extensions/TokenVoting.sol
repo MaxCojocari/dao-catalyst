@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
-import {Dao} from "./Dao.sol";
+import {Dao} from "../Dao.sol";
 import {IERC5805} from "@openzeppelin/contracts/interfaces/IERC5805.sol";
-import {IVotes} from "./interfaces/IVotes.sol";
+import {IVotes} from "../interfaces/IVotes.sol";
 
 abstract contract TokenVoting is Dao {
     IERC5805 public immutable token;

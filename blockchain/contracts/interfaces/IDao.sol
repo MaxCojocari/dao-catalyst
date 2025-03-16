@@ -55,8 +55,9 @@ interface IDao is IDaoErrors {
         uint256 indexed proposalId,
         address indexed proposer,
         ProposalAction[] actions,
-        uint256 voteStart,
-        uint256 voteEnd,
+        uint64 snapshot,
+        uint64 voteStart,
+        uint64 voteEnd,
         string description
     );
 

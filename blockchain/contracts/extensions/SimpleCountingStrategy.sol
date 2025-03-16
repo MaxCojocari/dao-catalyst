@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
-import {Dao} from "./Dao.sol";
+import {Dao} from "../Dao.sol";
 
 enum VoteType {
     For,
@@ -9,7 +9,7 @@ enum VoteType {
     Abstain
 }
 
-abstract contract DaoCountingSimple is Dao {
+abstract contract SimpleCountingStrategy is Dao {
     struct ProposalVote {
         uint256 againstVotes;
         uint256 forVotes;

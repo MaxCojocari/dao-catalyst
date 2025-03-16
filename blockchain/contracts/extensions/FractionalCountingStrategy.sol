@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
-import {Dao} from "./Dao.sol";
-import {VoteType} from "./DaoCountingSimple.sol";
+import {Dao} from "../Dao.sol";
+import {VoteType} from "./SimpleCountingStrategy.sol";
 
-abstract contract DaoCountingFractional is Dao {
+abstract contract FractionalCountingStrategy is Dao {
     uint8 internal constant VOTE_TYPE_FRACTIONAL = 255;
 
     struct ProposalVote {
