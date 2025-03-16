@@ -16,6 +16,7 @@ abstract contract Dao is IDao, AccessControl, Multicall {
     uint256 public proposalCounter;
     uint256 public minimalDuration;
     string public daoURI;
+    bool public initialized;
 
     Fraction public quorumFraction;
     Fraction public minimumParticipationFraction;
@@ -41,22 +42,6 @@ abstract contract Dao is IDao, AccessControl, Multicall {
         if (fraction.numerator == 0 || fraction.denominator == 0) revert InvalidUint256(0);
         if (fraction.numerator > fraction.denominator) revert InvalidFraction();
         _;
-    }
-
-    constructor(
-        address owner,
-        string memory daoURI_,
-        uint256 minimalDuration_,
-        Fraction memory quorumFraction_,
-        Fraction memory minimumParticipationFraction_
-    ) {
-        daoURI = daoURI_;
-        minimalDuration = minimalDuration_;
-        quorumFraction = quorumFraction_;
-        minimumParticipationFraction = minimumParticipationFraction_;
-
-        _grantRole(DEFAULT_ADMIN_ROLE, owner);
-        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
     function setDaoURI(string calldata daoURI_) external onlyRole(DEFAULT_ADMIN_ROLE) validURI(daoURI_) {

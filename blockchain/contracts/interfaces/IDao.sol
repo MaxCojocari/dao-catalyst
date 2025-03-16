@@ -24,6 +24,7 @@ interface IDaoErrors {
     error AlreadyCastVote(address account);
     error InvalidVoteParams();
     error InvalidVoteType();
+    error AlreadyInitialized();
 }
 
 interface IDao is IDaoErrors {

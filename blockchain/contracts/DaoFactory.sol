@@ -2,15 +2,21 @@
 pragma solidity 0.8.28;
 
 import {Fraction} from "./utils/Utils.sol";
-import {IERC5805} from "@openzeppelin/contracts/interfaces/IERC5805.sol";
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
-import {IDao, Dao} from "./Dao.sol";
+import {Dao} from "./Dao.sol";
 import {DaoSimpleVote} from "./dao/DaoSimpleVote.sol";
 import {DaoFractionalVote} from "./dao/DaoFractionalVote.sol";
 import {DaoMultisigVote} from "./dao/DaoMultisigVote.sol";
 import {DaoToken} from "./DaoToken.sol";
+import {IDaoFractionalVote} from "./interfaces/IDaoFractionalVote.sol";
+import {IDaoSimpleVote} from "./interfaces/IDaoSimpleVote.sol";
+import {IDaoMultisigVote} from "./interfaces/IDaoMultisigVote.sol";
 
-contract DaoFactory is Context {
+import {IERC5805} from "@openzeppelin/contracts/interfaces/IERC5805.sol";
+import {Context} from "@openzeppelin/contracts/utils/Context.sol";
+import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+
+contract DaoFactory is Context, Ownable {
     enum DaoType {
         SimpleVote,
         FractionalVote,
@@ -34,7 +40,12 @@ contract DaoFactory is Context {
         DaoTokenSettings daoToken;
         Fraction quorumFraction;
         Fraction minimumParticipationFraction;
+        bytes32 salt;
     }
+
+    address public daoSimpleVoteImplementation;
+    address public daoFractionalVoteImplementation;
+    address public daoMultisigVoteImplementation;
 
     event DaoCreated(
         address indexed daoAddress,
@@ -55,10 +66,22 @@ contract DaoFactory is Context {
 
     error InvalidAddress(address addr);
 
+    constructor(
+        address daoSimpleVoteImplementation_,
+        address daoFractionalVoteImplementation_,
+        address daoMultisigVoteImplementation_
+    ) Ownable(_msgSender()) {
+        _setImplementations(
+            daoSimpleVoteImplementation_,
+            daoFractionalVoteImplementation_,
+            daoMultisigVoteImplementation_
+        );
+    }
+
     function createDao(DaoSettings calldata param) external {
         _validateParams(param);
 
-        IDao dao;
+        address dao;
         IERC5805 daoToken;
 
         if (param.daoType == DaoType.SimpleVote || param.daoType == DaoType.FractionalVote) {
@@ -76,7 +99,8 @@ contract DaoFactory is Context {
         }
 
         if (param.daoType == DaoType.SimpleVote) {
-            dao = new DaoSimpleVote(
+            dao = Clones.cloneDeterministic(daoSimpleVoteImplementation, param.salt);
+            IDaoSimpleVote(dao).initialize(
                 _msgSender(),
                 param.daoURI,
                 param.minimalDuration,
@@ -85,7 +109,8 @@ contract DaoFactory is Context {
                 daoToken
             );
         } else if (param.daoType == DaoType.FractionalVote) {
-            dao = new DaoFractionalVote(
+            dao = Clones.cloneDeterministic(daoFractionalVoteImplementation, param.salt);
+            IDaoFractionalVote(dao).initialize(
                 _msgSender(),
                 param.daoURI,
                 param.minimalDuration,
@@ -94,19 +119,19 @@ contract DaoFactory is Context {
                 daoToken
             );
         } else if (param.daoType == DaoType.MultisigVote) {
-            dao = new DaoMultisigVote(
+            dao = Clones.cloneDeterministic(daoMultisigVoteImplementation, param.salt);
+            IDaoMultisigVote(dao).initialize(
                 _msgSender(),
                 param.daoURI,
                 param.members,
                 param.minimalDuration,
                 param.quorumFraction,
-                param.minimumParticipationFraction,
-                daoToken
+                param.minimumParticipationFraction
             );
         }
 
         emit DaoCreated(
-            address(dao),
+            dao,
             param.daoType,
             _msgSender(),
             param.daoURI,
@@ -115,6 +140,28 @@ contract DaoFactory is Context {
             param.quorumFraction,
             param.minimumParticipationFraction
         );
+    }
+
+    function setImplementations(
+        address daoSimpleVoteImplementation_,
+        address daoFractionalVoteImplementation_,
+        address daoMultisigVoteImplementation_
+    ) external onlyOwner {
+        _setImplementations(
+            daoSimpleVoteImplementation_,
+            daoFractionalVoteImplementation_,
+            daoMultisigVoteImplementation_
+        );
+    }
+
+    function _setImplementations(
+        address daoSimpleVoteImplementation_,
+        address daoFractionalVoteImplementation_,
+        address daoMultisigVoteImplementation_
+    ) internal {
+        daoSimpleVoteImplementation = daoSimpleVoteImplementation_;
+        daoFractionalVoteImplementation = daoFractionalVoteImplementation_;
+        daoMultisigVoteImplementation = daoMultisigVoteImplementation_;
     }
 
     function _validateParams(DaoSettings calldata param) internal pure {

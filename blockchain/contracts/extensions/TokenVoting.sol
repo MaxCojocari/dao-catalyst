@@ -5,11 +5,7 @@ import {Dao} from "../Dao.sol";
 import {IERC5805} from "@openzeppelin/contracts/interfaces/IERC5805.sol";
 
 abstract contract TokenVoting is Dao {
-    IERC5805 public immutable token;
-
-    constructor(IERC5805 token_) {
-        token = token_;
-    }
+    IERC5805 public token;
 
     function isValidProposer(address proposer) external view returns (bool) {
         return _isValidProposer(proposer, block.timestamp);
