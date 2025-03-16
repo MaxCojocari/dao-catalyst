@@ -9,14 +9,11 @@ import {Fraction} from "../utils/Utils.sol";
 
 contract DaoSimpleVote is Dao, SimpleCountingStrategy, TokenVoting {
     constructor(
-        string memory metadataURI_,
-        address[] memory members_,
+        address owner,
+        string memory daoURI_,
         uint256 minimalDuration_,
         Fraction memory quorumFraction_,
         Fraction memory minimumParticipationFraction_,
-        IERC5805 token
-    )
-        Dao(metadataURI_, members_, minimalDuration_, quorumFraction_, minimumParticipationFraction_)
-        TokenVoting(token)
-    {}
+        IERC5805 token_
+    ) Dao(owner, daoURI_, minimalDuration_, quorumFraction_, minimumParticipationFraction_) TokenVoting(token_) {}
 }

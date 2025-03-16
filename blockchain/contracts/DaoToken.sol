@@ -6,24 +6,22 @@ import {ERC20, ERC20Votes} from "@openzeppelin/contracts/token/ERC20/extensions/
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract DaoToken is ERC20Votes, AccessControl {
-    struct InitialRecipients {
-        address recipient;
-        uint256 amount;
-    }
-
     error InvalidInitialRecipientData(address recipient, uint256 amount);
 
     constructor(
         string memory _name,
         string memory _symbol,
-        InitialRecipients[] memory initialRecipients
+        address[] memory recipients,
+        uint256[] memory amounts
     ) ERC20(_name, _symbol) EIP712(_name, "1") {
-        uint256 length = initialRecipients.length;
+        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+
+        uint256 length = recipients.length;
         for (uint256 i = 0; i < length; ++i) {
-            address recipient = initialRecipients[i].recipient;
-            uint256 amount = initialRecipients[i].amount;
-            if (recipient == address(0) || amount == 0) revert InvalidInitialRecipientData(recipient, amount);
-            _mint(initialRecipients[i].recipient, initialRecipients[i].amount);
+            if (recipients[i] == address(0) || amounts[i] == 0)
+                revert InvalidInitialRecipientData(recipients[i], amounts[i]);
+
+            _mint(recipients[i], amounts[i]);
         }
     }
 

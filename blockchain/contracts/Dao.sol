@@ -7,22 +7,20 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {Multicall} from "@openzeppelin/contracts/utils/Multicall.sol";
 
-abstract contract Dao is IDao, AccessControl {
+abstract contract Dao is IDao, AccessControl, Multicall {
     using SafeERC20 for IERC20;
 
     mapping(uint256 => Proposal) public proposals;
     uint256 public proposalCounter;
     uint256 public minimalDuration;
-    string public metadataURI;
+    string public daoURI;
 
     Fraction public quorumFraction;
     Fraction public minimumParticipationFraction;
 
     uint256 public constant MAX_ACTIONS = 32;
-
-    /// @dev keccak256("MEMBER_ROLE")
-    bytes32 public constant MEMBER_ROLE = 0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636;
 
     modifier validProposalId(uint256 proposalId) {
         if (proposalId >= proposalCounter) revert InvalidProposalId();
@@ -39,41 +37,31 @@ abstract contract Dao is IDao, AccessControl {
         _;
     }
 
-    modifier validFraction(Fraction memory fraction) {
+    modifier validFraction(Fraction calldata fraction) {
         if (fraction.numerator == 0 || fraction.denominator == 0) revert InvalidUint256(0);
         if (fraction.numerator > fraction.denominator) revert InvalidFraction();
         _;
     }
 
     constructor(
-        string memory metadataURI_,
-        address[] memory members,
+        address owner,
+        string memory daoURI_,
         uint256 minimalDuration_,
         Fraction memory quorumFraction_,
         Fraction memory minimumParticipationFraction_
-    )
-        validURI(metadataURI_)
-        validUint256(minimalDuration_)
-        validFraction(quorumFraction_)
-        validFraction(minimumParticipationFraction_)
-    {
-        metadataURI = metadataURI_;
+    ) {
+        daoURI = daoURI_;
         minimalDuration = minimalDuration_;
         quorumFraction = quorumFraction_;
         minimumParticipationFraction = minimumParticipationFraction_;
 
+        _grantRole(DEFAULT_ADMIN_ROLE, owner);
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
-
-        uint256 length = members.length;
-        for (uint256 i = 0; i < length; ++i) {
-            if (members[0] == address(0)) revert InvalidAddress(address(0));
-            _grantRole(MEMBER_ROLE, members[i]);
-        }
     }
 
-    function setMetadataURI(string calldata metadataURI_) external onlyRole(DEFAULT_ADMIN_ROLE) validURI(metadataURI_) {
-        emit SetMetadataURI(metadataURI, metadataURI_);
-        metadataURI = metadataURI_;
+    function setDaoURI(string calldata daoURI_) external onlyRole(DEFAULT_ADMIN_ROLE) validURI(daoURI_) {
+        emit SetDaoURI(daoURI, daoURI_);
+        daoURI = daoURI_;
     }
 
     function setMinimalDuration(
@@ -81,6 +69,20 @@ abstract contract Dao is IDao, AccessControl {
     ) external onlyRole(DEFAULT_ADMIN_ROLE) validUint256(minimalDuration_) {
         emit SetMinimalDuration(minimalDuration, minimalDuration_);
         minimalDuration = minimalDuration_;
+    }
+
+    function setQuorumFraction(
+        Fraction calldata quorumFraction_
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) validFraction(quorumFraction_) {
+        emit SetQuorumFraction(quorumFraction, quorumFraction_);
+        quorumFraction = quorumFraction_;
+    }
+
+    function setMinimumParticipationFraction(
+        Fraction calldata minimumParticipationFraction_
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) validFraction(minimumParticipationFraction_) {
+        emit SetMinimumParticipationFraction(minimumParticipationFraction, minimumParticipationFraction_);
+        minimumParticipationFraction = minimumParticipationFraction_;
     }
 
     function propose(

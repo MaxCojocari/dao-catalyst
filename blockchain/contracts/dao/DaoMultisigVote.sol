@@ -9,13 +9,14 @@ import {Fraction} from "../utils/Utils.sol";
 
 contract DaoMultisigVote is Dao, MultisigCountingStrategy, MultisigVoting {
     constructor(
-        string memory metadataURI_,
+        address owner,
+        string memory daoURI_,
         address[] memory members_,
         uint256 minimalDuration_,
         Fraction memory quorumFraction_,
         Fraction memory minimumParticipationFraction_,
         IERC5805 token
-    ) Dao(metadataURI_, members_, minimalDuration_, quorumFraction_, minimumParticipationFraction_) {}
+    ) Dao(owner, daoURI_, minimalDuration_, quorumFraction_, minimumParticipationFraction_) MultisigVoting(members_) {}
 
     function _getVotes(address account, uint256, bytes memory param) internal view override returns (uint256) {
         uint256 proposalId = abi.decode(param, (uint256));

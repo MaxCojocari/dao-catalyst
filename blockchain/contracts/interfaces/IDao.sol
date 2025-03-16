@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
+import {Fraction} from "../utils/Utils.sol";
+
 interface IDaoErrors {
     error InvalidAddress(address addr);
     error InvalidUint256(uint256 value);
@@ -68,9 +70,13 @@ interface IDao is IDaoErrors {
 
     event VoteCastWithParams(address indexed voter, uint256 indexed proposalId, uint256 weight, bytes params);
 
-    event SetMetadataURI(string oldURI, string newURI);
+    event SetDaoURI(string oldURI, string newURI);
 
     event SetMinimalDuration(uint256 oldDuration, uint256 newDuration);
+
+    event SetQuorumFraction(Fraction oldFraction, Fraction newFraction);
+
+    event SetMinimumParticipationFraction(Fraction oldFraction, Fraction newFraction);
 
     event Deposited(address sender, address token, uint256 amount);
 
