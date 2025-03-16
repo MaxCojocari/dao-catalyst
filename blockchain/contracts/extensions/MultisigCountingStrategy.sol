@@ -9,7 +9,7 @@ abstract contract MultisigCountingStrategy is Dao {
         mapping(address voter => bool) hasVoted;
     }
 
-    mapping(uint256 proposalId => ProposalVote) private proposalVotesMap;
+    mapping(uint256 proposalId => ProposalVote) internal proposalVotesMap;
 
     function hasVoted(uint256 proposalId, address account) external view returns (bool) {
         return proposalVotesMap[proposalId].hasVoted[account];
@@ -20,7 +20,7 @@ abstract contract MultisigCountingStrategy is Dao {
     }
 
     function _quorumReached(uint256 proposalId) internal view override returns (bool) {
-        return proposalVotesMap[proposalId].confirmations > quorumFraction.numerator;
+        return proposalVotesMap[proposalId].confirmations >= quorumFraction.numerator;
     }
 
     function _voteSucceeded(uint256 proposalId) internal view override returns (bool) {
@@ -40,7 +40,7 @@ abstract contract MultisigCountingStrategy is Dao {
             revert AlreadyCastVote(account);
         }
         proposalVote.hasVoted[account] = true;
-        proposalVote.confirmations++;
+        ++proposalVote.confirmations;
 
         return 1;
     }

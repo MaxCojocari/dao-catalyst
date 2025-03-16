@@ -55,10 +55,9 @@ interface IDao is IDaoErrors {
         uint256 indexed proposalId,
         address indexed proposer,
         ProposalAction[] actions,
-        uint64 snapshot,
         uint64 voteStart,
         uint64 voteEnd,
-        string description
+        string descriptionURI
     );
 
     event ProposalExecuted(uint256 proposalId);
@@ -96,9 +95,6 @@ interface IDao is IDaoErrors {
 
     /// @dev Returns the current proposal state.
     function state(uint256 proposalId) external view returns (ProposalState);
-
-    /// @dev Returns the proposal details.
-    function proposal(uint256 proposalId) external view returns (Proposal calldata);
 
     /// @dev Minimum number of cast voted required for a proposal to be successful.
     function quorum() external view returns (uint256);

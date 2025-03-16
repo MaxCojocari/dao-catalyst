@@ -85,7 +85,7 @@ abstract contract Dao is IDao, AccessControl {
 
     function propose(
         ProposalAction[] calldata actions,
-        string memory descriptionURI,
+        string calldata descriptionURI,
         uint64 voteStart,
         uint64 voteDuration
     ) external validURI(descriptionURI) {
@@ -99,26 +99,20 @@ abstract contract Dao is IDao, AccessControl {
         if (block.timestamp > voteStart) revert InvalidVoteStart(voteStart);
 
         uint64 voteEnd = voteStart + voteDuration;
-        proposals[proposalCounter] = Proposal({
-            proposer: proposer,
-            actions: actions,
-            snapshot: uint64(block.timestamp),
-            voteStart: voteStart,
-            voteEnd: voteEnd,
-            executed: false,
-            canceled: false
-        });
+        Proposal storage proposal = proposals[proposalCounter];
+
+        proposal.proposer = _msgSender();
+        proposal.snapshot = uint64(block.timestamp);
+        proposal.voteStart = voteStart;
+        proposal.voteEnd = voteEnd;
+
+        uint256 length = actions.length;
+        for (uint256 i = 0; i < length; ++i) {
+            proposal.actions.push(actions[i]);
+        }
 
         unchecked {
-            emit ProposalCreated(
-                proposalCounter++,
-                proposer,
-                actions,
-                uint64(block.timestamp),
-                voteStart,
-                voteEnd,
-                descriptionURI
-            );
+            emit ProposalCreated(proposalCounter++, proposer, actions, voteStart, voteEnd, descriptionURI);
         }
     }
 
@@ -128,9 +122,8 @@ abstract contract Dao is IDao, AccessControl {
         _castVote(proposalId, voter, support, weight, "");
     }
 
-    function castVoteEqualWeight(uint256 proposalId, uint8 support) external validProposalId(proposalId) {
-        address voter = _msgSender();
-        _castVote(proposalId, voter, support, 1, "");
+    function castVoteEqualWeight(uint256 proposalId) external validProposalId(proposalId) {
+        _castVote(proposalId, _msgSender(), 0, 1, "");
     }
 
     function castVoteWithParams(
@@ -209,7 +202,7 @@ abstract contract Dao is IDao, AccessControl {
     }
 
     function minimumParticipation(uint256 proposalId) external view returns (uint256) {
-        return _minimumParticipation(proposalId);
+        return _minimumParticipation(_proposalSnapshot(proposalId));
     }
 
     function _castVote(uint256 proposalId, address voter, uint8 support, uint256 weight, bytes memory params) internal {
@@ -235,7 +228,7 @@ abstract contract Dao is IDao, AccessControl {
             return ProposalState.Canceled;
         }
 
-        uint256 voteStart = proposals[proposalId].voteStart;
+        uint256 voteStart = proposal.voteStart;
 
         if (voteStart == 0) {
             revert UnknownProposal(proposalId);
@@ -245,7 +238,7 @@ abstract contract Dao is IDao, AccessControl {
             return ProposalState.Pending;
         }
 
-        if (proposals[proposalId].voteEnd >= block.timestamp) {
+        if (proposal.voteEnd >= block.timestamp) {
             return ProposalState.Active;
         }
 
@@ -260,7 +253,7 @@ abstract contract Dao is IDao, AccessControl {
         return proposals[proposalId].snapshot;
     }
 
-    function _minimumParticipation(uint256 proposalId) internal view virtual returns (uint256);
+    function _minimumParticipation(uint256 timepoint) internal view virtual returns (uint256);
 
     function _isValidProposer(address proposer, uint256 timepoint) internal view virtual returns (bool);
 

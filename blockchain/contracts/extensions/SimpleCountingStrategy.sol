@@ -17,7 +17,7 @@ abstract contract SimpleCountingStrategy is Dao {
         mapping(address voter => bool) hasVoted;
     }
 
-    mapping(uint256 proposalId => ProposalVote) private proposalVotesMap;
+    mapping(uint256 proposalId => ProposalVote) internal proposalVotesMap;
 
     function hasVoted(uint256 proposalId, address account) external view returns (bool) {
         return proposalVotesMap[proposalId].hasVoted[account];

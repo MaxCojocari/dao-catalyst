@@ -3,7 +3,6 @@ pragma solidity 0.8.28;
 
 import {Dao} from "../Dao.sol";
 import {IERC5805} from "@openzeppelin/contracts/interfaces/IERC5805.sol";
-import {IVotes} from "../interfaces/IVotes.sol";
 
 abstract contract TokenVoting is Dao {
     IERC5805 public immutable token;
@@ -20,9 +19,9 @@ abstract contract TokenVoting is Dao {
         return token.getPastVotes(account, timepoint);
     }
 
-    function _minimumParticipation(uint256 proposalId) internal view override returns (uint256) {
+    function _minimumParticipation(uint256 timepoint) internal view override returns (uint256) {
         return
-            (token.getPastTotalSupply(_proposalSnapshot(proposalId)) * minimumParticipationFraction.numerator) /
+            (token.getPastTotalSupply(timepoint) * minimumParticipationFraction.numerator) /
             minimumParticipationFraction.denominator;
     }
 
