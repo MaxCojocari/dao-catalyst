@@ -3,6 +3,9 @@ pragma solidity 0.8.28;
 
 import {Dao} from "../Dao.sol";
 
+/// @dev keccak256("MEMBER_ROLE")
+bytes32 constant MEMBER_ROLE = 0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636;
+
 abstract contract MultisigCountingStrategy is Dao {
     struct ProposalVote {
         uint256 confirmations;
@@ -33,7 +36,7 @@ abstract contract MultisigCountingStrategy is Dao {
         uint8,
         uint256,
         bytes memory
-    ) internal virtual override returns (uint256) {
+    ) internal virtual override onlyRole(MEMBER_ROLE) returns (uint256) {
         ProposalVote storage proposalVote = proposalVotesMap[proposalId];
 
         if (proposalVote.hasVoted[account]) {

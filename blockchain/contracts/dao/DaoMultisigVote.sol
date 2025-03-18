@@ -7,6 +7,7 @@ import {MultisigVoting} from "../extensions/MultisigVoting.sol";
 import {Fraction} from "../utils/Utils.sol";
 import {IDaoMultisigVote} from "../interfaces/IDaoMultisigVote.sol";
 import {IERC5805} from "@openzeppelin/contracts/interfaces/IERC5805.sol";
+import {MEMBER_ROLE} from "../extensions/MultisigCountingStrategy.sol";
 
 contract DaoMultisigVote is IDaoMultisigVote, Dao, MultisigCountingStrategy, MultisigVoting {
     function initialize(

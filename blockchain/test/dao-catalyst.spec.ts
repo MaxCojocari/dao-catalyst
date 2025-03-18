@@ -4,6 +4,7 @@ import {
   Dao,
   DaoFactory,
   DaoMultisigVote,
+  DaoMultisigVote__factory,
   DaoSimpleVote,
   DaoSimpleVote__factory,
   DaoToken,
@@ -150,21 +151,13 @@ describe('DaoCatalyst', () => {
     });
 
     it('should not allow creating proposal to invalid members', async () => {
-      await expect(
-        dao
-          .connect(oscar)
-          .propose(
-            proposalSettings.actions,
-            proposalSettings.descriptionURI,
-            proposalSettings.voteStart,
-            proposalSettings.voteDuration,
-          ),
-      )
+      const { actions, descriptionURI, voteStart, voteDuration } = proposalSettings;
+      await expect(dao.connect(oscar).propose(actions, descriptionURI, voteStart, voteDuration))
         .to.be.revertedWithCustomError(dao, 'InvalidProposer')
         .withArgs(oscar.address);
     });
 
-    it('should allow creating proposal for valid members', async () => {
+    it('should allow creating proposals', async () => {
       const { actions, descriptionURI, voteStart, voteDuration } = proposalSettings;
       const tx = await dao.connect(alice).propose(actions, descriptionURI, voteStart, voteDuration);
       await tx.wait();
@@ -309,5 +302,158 @@ describe('DaoCatalyst', () => {
     });
   });
 
-  describe('Multisig voting', () => {});
+  describe('Multisig voting', () => {
+    let daoSettings: DaoFactory.DaoSettingsStruct;
+    let dao: DaoMultisigVote;
+    let proposalSettings: any;
+    const MEMBER_ROLE = '0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636';
+
+    beforeEach(async () => {
+      daoSettings = {
+        daoType: DaoType.MultisigVote,
+        daoURI: 'https://ipfs.io/ipfs/Qme4S56yfN8xjV2hd92pKv3mxSVzBfac9MisAVxoH33MQQ',
+        members: [alice, bob, john],
+        minimalDuration: ONE_DAY_SECONDS,
+        daoToken: {
+          isDeployed: false,
+          tokenAddress: ZeroAddress,
+          name: '',
+          symbol: '',
+          recipients: [],
+          amounts: [],
+        },
+        quorumFraction: { numerator: 2, denominator: 3 },
+        minimumParticipationFraction: { numerator: 2, denominator: 3 },
+        salt: '0x' + Buffer.from(ethers.randomBytes(32)).toString('hex'),
+      };
+
+      proposalSettings = {
+        actions: [
+          {
+            target: await fundToken.getAddress(),
+            value: 0n,
+            calldatas: fundToken.interface.encodeFunctionData('transfer', [
+              bob.address,
+              parseUnits('100'),
+            ]),
+          },
+        ],
+        descriptionURI:
+          'https://ipfs.io/ipfs/Ama1iJmxhgLpL4wLdNXpmbJo3NquH38wb35k4j4ARojkSJ/description.json',
+        voteStart: (await getCurrentTimestamp()) + ONE_MINUTE_SECONDS,
+        voteDuration: 3n * ONE_DAY_SECONDS,
+      };
+    });
+
+    it('should deploy dao contract with correct params', async () => {
+      const tx = await daoFactory.createDao(daoSettings);
+      await tx.wait();
+
+      const filter = daoFactory.filters.DaoCreated();
+      const events = await daoFactory.queryFilter(filter);
+      const eventArgs = events[1].args;
+
+      dao = DaoMultisigVote__factory.connect(eventArgs[0], deployer);
+
+      const [
+        minimalDuration_,
+        daoURI_,
+        initialized_,
+        quorumFraction_,
+        minimumParticipationFraction_,
+      ] = await Promise.all([
+        dao.minimalDuration(),
+        dao.daoURI(),
+        dao.initialized(),
+        dao.quorumFraction(),
+        dao.minimumParticipationFraction(),
+      ]);
+      expect(minimalDuration_).to.equal(daoSettings.minimalDuration);
+      expect(daoURI_).to.equal(daoSettings.daoURI);
+      expect(initialized_).to.equal(true);
+      expect(quorumFraction_).to.eql([2n, 3n]);
+      expect(minimumParticipationFraction_).to.eql([2n, 3n]);
+
+      expect(await dao.hasRole(MEMBER_ROLE, alice)).to.be.true;
+      expect(await dao.hasRole(MEMBER_ROLE, bob)).to.be.true;
+      expect(await dao.hasRole(MEMBER_ROLE, john)).to.be.true;
+    });
+
+    it('should not allow creating proposal to invalid members', async () => {
+      const { actions, descriptionURI, voteStart, voteDuration } = proposalSettings;
+      await expect(dao.connect(oscar).propose(actions, descriptionURI, voteStart, voteDuration))
+        .to.be.revertedWithCustomError(dao, 'InvalidProposer')
+        .withArgs(oscar.address);
+    });
+
+    it('should allow creating proposals', async () => {
+      const { actions, descriptionURI, voteStart, voteDuration } = proposalSettings;
+      const tx = await dao.connect(bob).propose(actions, descriptionURI, voteStart, voteDuration);
+      await tx.wait();
+
+      expect(await dao.proposalCounter()).to.equal(1);
+
+      const proposalId = 0n;
+      const proposal = await dao.proposals(proposalId);
+      expect(proposal.proposer).to.equal(bob);
+      expect(proposal.snapshot).to.equal((await tx.getBlock())?.timestamp);
+      expect(proposal.voteStart).to.equal(voteStart);
+      expect(proposal.voteEnd).to.equal(voteStart + voteDuration);
+      expect(await dao.state(proposalId)).to.equal(ProposalState.Pending);
+    });
+
+    it('should allow voting', async () => {
+      const proposalId = 0n;
+
+      await increaseTime(ONE_MINUTE_SECONDS);
+      expect(await dao.state(proposalId)).to.equal(ProposalState.Active);
+
+      expect(await dao.connect(bob).castVoteEqualWeight(proposalId)).to.not.be.reverted;
+      expect(await dao.confirmations(proposalId)).to.equal(1);
+    });
+
+    it('should not accept non-members to vote', async () => {
+      const proposalId = 0n;
+
+      await expect(dao.connect(oscar).castVoteEqualWeight(proposalId))
+        .to.be.revertedWithCustomError(dao, 'AccessControlUnauthorizedAccount')
+        .withArgs(oscar.address, MEMBER_ROLE);
+    });
+
+    it('should not allow voting to entities who already voted', async () => {
+      const proposalId = 0n;
+
+      await expect(dao.connect(bob).castVoteEqualWeight(proposalId))
+        .to.be.revertedWithCustomError(dao, 'AlreadyCastVote')
+        .withArgs(await bob.getAddress());
+    });
+
+    it('should transition the proposal to successful state after meeting approval criteria', async () => {
+      const proposalId = 0n;
+
+      await dao.connect(alice).castVoteEqualWeight(proposalId);
+      expect(await dao.confirmations(proposalId)).to.equal(2);
+
+      await increaseTime(3n * ONE_DAY_SECONDS);
+      expect(await dao.state(proposalId)).to.equal(ProposalState.Succeeded);
+    });
+
+    it('should transition the proposal to defeated state if it fails to meet approval criteria', async () => {
+      const { actions, descriptionURI, voteStart, voteDuration } = proposalSettings;
+      await dao.connect(bob).propose(actions, descriptionURI, voteStart, voteDuration);
+      expect(await dao.proposalCounter()).to.equal(2);
+
+      await increaseTime(ONE_MINUTE_SECONDS);
+
+      const proposalId = 1n;
+
+      await dao.connect(john).castVoteEqualWeight(proposalId);
+      expect(await dao.confirmations(proposalId)).to.equal(1);
+
+      await increaseTime(4n * ONE_DAY_SECONDS);
+
+      // not enough confirmations
+      expect(await dao.state(proposalId)).to.equal(ProposalState.Defeated);
+    });
+  });
 });
