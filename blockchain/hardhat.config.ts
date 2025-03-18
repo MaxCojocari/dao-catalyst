@@ -5,12 +5,6 @@ import 'dotenv/config';
 
 const config: HardhatUserConfig = {
   networks: {
-    hardhat: {
-      forking: {
-        url: `https://arb-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-        blockNumber: 314670200,
-      },
-    },
     localhost: {
       url: 'http://127.0.0.1:8545/',
     },

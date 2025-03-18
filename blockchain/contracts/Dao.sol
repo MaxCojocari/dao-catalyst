@@ -77,7 +77,7 @@ abstract contract Dao is IDao, AccessControl, Multicall {
         uint64 voteDuration
     ) external validURI(descriptionURI) {
         address proposer = _msgSender();
-        if (!_isValidProposer(proposer, block.timestamp)) revert InvalidProposer(proposer);
+        if (!_isValidProposer(proposer)) revert InvalidProposer(proposer);
 
         if (actions.length == 0) revert NoActions();
         if (actions.length > MAX_ACTIONS) revert TooManyActions(actions.length);
@@ -148,11 +148,6 @@ abstract contract Dao is IDao, AccessControl, Multicall {
 
         if (currentState != ProposalState.Pending) revert TooLateToCancel(proposalId);
         if (_msgSender() != proposals[proposalId].proposer) revert OnlyProposerCanCancel();
-        if (
-            currentState == ProposalState.Canceled ||
-            currentState == ProposalState.Expired ||
-            currentState == ProposalState.Executed
-        ) revert ProposalNotActive(proposalId);
 
         proposals[proposalId].canceled = true;
 
@@ -242,7 +237,7 @@ abstract contract Dao is IDao, AccessControl, Multicall {
 
     function _minimumParticipation(uint256 timepoint) internal view virtual returns (uint256);
 
-    function _isValidProposer(address proposer, uint256 timepoint) internal view virtual returns (bool);
+    function _isValidProposer(address proposer) internal view virtual returns (bool);
 
     function _quorumReached(uint256 proposalId) internal view virtual returns (bool);
 

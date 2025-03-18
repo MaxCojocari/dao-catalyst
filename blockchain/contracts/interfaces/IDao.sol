@@ -34,7 +34,6 @@ interface IDao is IDaoErrors {
         Canceled,
         Defeated,
         Succeeded,
-        Expired,
         Executed
     }
 

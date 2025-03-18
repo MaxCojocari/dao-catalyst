@@ -32,4 +32,12 @@ contract DaoToken is ERC20Votes, AccessControl {
     function burn(address account, uint256 amount) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _burn(account, amount);
     }
+
+    function clock() public view override returns (uint48) {
+        return uint48(block.timestamp);
+    }
+
+    function CLOCK_MODE() public pure override returns (string memory) {
+        return "mode=blocktimestamp";
+    }
 }

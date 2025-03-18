@@ -39,7 +39,9 @@ abstract contract SimpleCountingStrategy is Dao {
     function _voteSucceeded(uint256 proposalId) internal view override returns (bool) {
         ProposalVote storage proposalVote = proposalVotesMap[proposalId];
         uint256 totalVotes = proposalVote.againstVotes + proposalVote.forVotes + proposalVote.abstainVotes;
-        return proposalVote.forVotes > proposalVote.againstVotes && totalVotes >= _minimumParticipation(proposalId);
+        return
+            proposalVote.forVotes > proposalVote.againstVotes &&
+            totalVotes >= _minimumParticipation(_proposalSnapshot(proposalId));
     }
 
     function _countVote(
