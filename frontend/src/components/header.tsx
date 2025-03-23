@@ -2,18 +2,31 @@ import styled from "styled-components";
 import logo from "../assets/images/app-logo.svg";
 import { CustomWalletButton } from "./customWalletButton";
 import { CreateDaoButton } from "./createDaoButton";
+import { DaoLogo } from "./daoLogo";
 
-export const Header = () => {
+interface HeaderProps {
+  isDaoMainPage: boolean;
+  imageUri: string;
+  daoName: string;
+}
+
+export const Header = ({ isDaoMainPage, imageUri, daoName }: HeaderProps) => {
   return (
     <Container>
-      <LeftSection>
-        <img src={logo} alt="dao-catalyst-logo" width="150px" />
-        <p>Dashboard</p>
-        <p>Governance</p>
-        <p>Finance</p>
-        <p>Members</p>
-        <p>Settings</p>
-      </LeftSection>
+      {isDaoMainPage ? (
+        <LeftSection>
+          <DaoLogo imageUri={imageUri} name={daoName} />
+          <p>Dashboard</p>
+          <p>Governance</p>
+          <p>Finance</p>
+          <p>Members</p>
+          <p>Settings</p>
+        </LeftSection>
+      ) : (
+        <LeftSection>
+          <img src={logo} alt="dao-catalyst-logo" width="150px" />
+        </LeftSection>
+      )}
       <RightSection>
         <CreateDaoButton />
         <CustomWalletButton />
