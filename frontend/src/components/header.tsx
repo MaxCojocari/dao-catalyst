@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import logo from "../assets/images/app-logo.svg";
-import { CustomWalletButton } from "./customWalletButton";
-import { CreateDaoButton } from "./createDaoButton";
-import { DaoLogo } from "./daoLogo";
+import { CustomWalletButton } from "./custom-wallet-button";
+import { CreateDaoButton } from "./create-dao-button";
+import { DaoLogo } from "./dao-logo";
+import { useAccount } from "wagmi";
 
 interface HeaderProps {
   isDaoMainPage: boolean;
@@ -10,7 +11,10 @@ interface HeaderProps {
   daoName: string;
 }
 
-export const Header = ({ isDaoMainPage, imageUri, daoName }: HeaderProps) => {
+export const Header = ({ props }: { props: HeaderProps }) => {
+  const { isDaoMainPage, imageUri, daoName } = props;
+  const { isConnected } = useAccount();
+
   return (
     <Container>
       {isDaoMainPage ? (
@@ -28,7 +32,7 @@ export const Header = ({ isDaoMainPage, imageUri, daoName }: HeaderProps) => {
         </LeftSection>
       )}
       <RightSection>
-        <CreateDaoButton />
+        {isConnected && <CreateDaoButton />}
         <CustomWalletButton />
       </RightSection>
     </Container>
