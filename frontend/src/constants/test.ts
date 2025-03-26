@@ -3,3 +3,5 @@
 export const TEST_DAO_IMGAGE_URL =
   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib6rurdcxtxil5crchbjpnc76tiuvcifjezzef3cdc57awmk4mhti";
 export const TEST_DAO_NAME = "Taiko DAO";
+export const TEST_DAO_CONTRACT_ADDRESS =
+  "0xF079A5c205B622349A648965c4E5F05969eB0542";

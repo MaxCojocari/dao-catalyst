@@ -4,27 +4,36 @@ import { CustomWalletButton } from "./custom-wallet-button";
 import { CreateDaoButton } from "./create-dao-button";
 import { DaoLogo } from "./dao-logo";
 import { useAccount } from "wagmi";
+import { NavLink, useParams } from "react-router-dom";
 
 interface HeaderProps {
-  isDaoMainPage: boolean;
   imageUri: string;
   daoName: string;
 }
 
 export const Header = ({ props }: { props: HeaderProps }) => {
-  const { isDaoMainPage, imageUri, daoName } = props;
+  const { imageUri, daoName } = props;
   const { isConnected } = useAccount();
+  const { daoAddress } = useParams();
+
+  const links = [
+    { label: "Dashboard", path: "dashboard" },
+    { label: "Governance", path: "governance" },
+    { label: "Finance", path: "finance" },
+    { label: "Members", path: "members" },
+    { label: "Settings", path: "settings" },
+  ];
 
   return (
     <Container>
-      {isDaoMainPage ? (
+      {daoAddress ? (
         <LeftSection>
           <DaoLogo imageUri={imageUri} name={daoName} />
-          <p>Dashboard</p>
-          <p>Governance</p>
-          <p>Finance</p>
-          <p>Members</p>
-          <p>Settings</p>
+          {links.map(({ label, path }) => (
+            <NavLink key={path} to={`/daos/${daoAddress}/${path}`}>
+              {label}
+            </NavLink>
+          ))}
         </LeftSection>
       ) : (
         <LeftSection>
@@ -66,14 +75,16 @@ const LeftSection = styled.div`
   align-items: center;
   gap: 32px;
 
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  letter-spacing: -0.03em;
-
-  color: rgba(41, 41, 51, 0.9);
+  a {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    color: rgba(41, 41, 51, 0.9);
+  }
 `;
 
 const RightSection = styled.div`
