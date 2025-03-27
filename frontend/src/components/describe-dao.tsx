@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import stepIcon from "../assets/images/step1_icon.svg";
 import { LogoUploader } from "./logo-uploader";
+import { Links } from "./links";
+import { InputMetadata } from "./input-metadata";
 
 export const DescribeDao = () => {
   return (
@@ -15,12 +17,27 @@ export const DescribeDao = () => {
           </h2>
         </Header>
         <Input>
-          <a className="input-name">Name</a>
-          <a className="input-description">Maximum of 128 characters</a>
-          <input type="text" placeholder="Type your DAO's name" />
+          <InputMetadata
+            inputName="Name"
+            inputDescription="Maximum of 128 characters"
+          />
+          <input type="text" placeholder="Type your DAO's name ..." />
           <a className="input-description">0/128</a>
         </Input>
         <LogoUploader />
+        <Input>
+          <InputMetadata
+            inputName="Description"
+            inputDescription="Briefly explain the mission of your DAO. This will appear on the
+            Explore page to help others discover you."
+          />
+          <textarea placeholder="Type your summary ..."></textarea>
+        </Input>
+        <Links
+          inputName="Links"
+          inputDescription="Links to your DAO's website, social media profiles, or other you consider relevant."
+        />
+        <NextStepButton>Next Step</NextStepButton>
       </Container>
     </>
   );
@@ -40,7 +57,8 @@ export const Container = styled.div`
   h1,
   h2,
   a,
-  input {
+  input,
+  textarea {
     font-family: "Inter";
     font-style: normal;
   }
@@ -82,15 +100,6 @@ export const Input = styled.div`
   flex-direction: column;
   gap: 4px;
 
-  .input-name {
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 17px;
-    letter-spacing: -0.02em;
-
-    color: #555566;
-  }
-
   .input-description {
     font-weight: 400;
     font-size: 12px;
@@ -101,6 +110,7 @@ export const Input = styled.div`
   }
 
   input[type="text"],
+  textarea,
   .custom-upload {
     margin: 8px 0;
     display: flex;
@@ -124,19 +134,53 @@ export const Input = styled.div`
     letter-spacing: -0.03em;
   }
 
-  input[type="text"]::placeholder {
+  input[type="text"]::placeholder,
+  textarea::placeholder {
     color: rgba(143, 143, 178, 0.9);
   }
 
-  input[type="text"]:focus {
+  input[type="text"]:focus,
+  textarea:focus {
     outline-color: rgba(102, 102, 255, 0.8);
   }
 
-  .custom-upload {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    height: 149px;
+  textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+`;
+
+export const NextStepButton = styled.button`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 17px 24px;
+  box-sizing: border-box;
+
+  cursor: pointer;
+
+  width: 100%;
+  height: 48px;
+
+  background: #6666ff;
+  border-radius: 6px;
+  border: none;
+
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: -0.02em;
+
+  color: #ffffff;
+
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.7;
   }
 `;
