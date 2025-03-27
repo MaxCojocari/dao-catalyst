@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import stepIcon from "../assets/images/step1_icon.svg";
+import infoIcon from "../assets/images/info-icon.svg";
+import backIcon from "../assets/images/back-icon.svg";
 import { LogoUploader } from "./logo-uploader";
 import { Links } from "./links";
 import { InputMetadata } from "./input-metadata";
@@ -8,14 +10,21 @@ export const DescribeDao = () => {
   return (
     <>
       <Container>
+        <BackButton>
+          <img src={backIcon} alt="vector" />
+          <a>Back</a>
+        </BackButton>
         <Header>
           <img src={stepIcon} alt="step-icon" />
           <h1>Describe your DAO</h1>
+        </Header>
+        <StepInfo>
+          <img src={infoIcon} style={{ width: "20px" }} />
           <h2>
             Give it a name and brief description to guide new contributors. This
             info appears on the Explore page and can be updated by vote.
           </h2>
-        </Header>
+        </StepInfo>
         <Input>
           <InputMetadata
             inputName="Name"
@@ -44,6 +53,8 @@ export const DescribeDao = () => {
 };
 
 export const Container = styled.div`
+  position: relative;
+
   display: flex;
   flex-direction: column;
   padding: 80px 48px 48px;
@@ -64,11 +75,36 @@ export const Container = styled.div`
   }
 `;
 
+export const BackButton = styled.div`
+  position: absolute;
+  left: 48px;
+  top: 41px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+
+  cursor: pointer;
+
+  img {
+    width: 12.5px;
+    height: 12px;
+  }
+
+  a {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.02em;
+    color: #6666ff;
+  }
+`;
+
 export const Header = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 30px;
 
   h1 {
     margin-top: 10px;
@@ -91,6 +127,30 @@ export const Header = styled.div`
     text-align: center;
     letter-spacing: -0.02em;
 
+    color: #666680;
+  }
+`;
+
+export const StepInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 70px;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
+
+  background: rgba(102, 102, 255, 0.05);
+  border: 1px solid rgba(102, 102, 255, 0.2);
+  border-radius: 6px;
+
+  h2 {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    text-align: center;
+    letter-spacing: -0.02em;
     color: #666680;
   }
 `;

@@ -6,8 +6,8 @@ export const CreateDaoPage = () => {
     <>
       <Container>
         <ProgressBar
-          position={3}
-          finished={true}
+          position={1}
+          finished={false}
           firstStep="Describe DAO"
           secondStep="Define Membership"
           thirdStep="Select Governance Settings"
