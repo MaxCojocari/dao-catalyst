@@ -6,3 +6,4 @@ export { Loader } from "./loader";
 export { Footer } from "./footer";
 export { ProgressBar } from "./progress-bar";
 export { DescribeDao } from "./describe-dao";
+export { LogoUploader } from "./logo-uploader";

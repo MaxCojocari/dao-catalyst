@@ -28,7 +28,6 @@ const Logo = styled.div`
 
   color: #292933;
 
-  //   background-color: lightblue;
   img {
     width: 50px;
     border-radius: 50%;
