@@ -7,3 +7,5 @@ export { Footer } from "./footer";
 export { ProgressBar } from "./progress-bar";
 export { DescribeDao } from "./describe-dao";
 export { LogoUploader } from "./logo-uploader";
+export { InputMetadata } from "./input-metadata";
+export { OptionalInputMetadata } from "./optional-input-metadata";

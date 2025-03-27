@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import uploadFileIcon from "../assets/images/upload-file.svg";
 import styled from "styled-components";
-import optionalTagIcon from "../assets/images/optional-tag.svg";
 import deleteIcon from "../assets/images/delete-icon.svg";
+import { OptionalInputMetadata } from "./optional-input-metadata";
 
 export const LogoUploader = () => {
   const [, setLogo] = useState<File | null>(null);
@@ -40,24 +40,10 @@ export const LogoUploader = () => {
   return (
     <>
       <Container>
-        <a
-          className="input-name"
-          style={{ display: "flex", alignItems: "center" }}
-        >
-          Logo
-          <img
-            src={optionalTagIcon}
-            style={{
-              width: "55px",
-              height: "20px",
-              marginLeft: "10px",
-              marginBottom: "-2px",
-            }}
-          />
-        </a>
-        <a className="input-description">
-          JPG, PNG or GIF of no more than 3MB. We recommend 1024x1024px.
-        </a>
+        <OptionalInputMetadata
+          inputName="Logo"
+          inputDescription="JPG, PNG or GIF of no more than 3MB. We recommend 1024x1024px."
+        />
 
         {previewUrl && (
           <UploadedPreview>
@@ -69,8 +55,7 @@ export const LogoUploader = () => {
             <img
               src={deleteIcon}
               onClick={handleDelete}
-              className="delete-icon"
-              style={{ cursor: "pointer" }}
+              style={{ marginLeft: "8px", width: "20px", cursor: "pointer" }}
             />
           </UploadedPreview>
         )}
@@ -127,7 +112,7 @@ export const Container = styled.div`
   }
 
   .custom-upload {
-    margin: 8px 0;
+    margin-top: 8px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -165,9 +150,10 @@ export const UploadedPreview = styled.div`
     object-fit: cover;
     object-position: center;
   }
+`;
 
-  .delete-icon {
-    margin-left: 8px;
-    width: 20px;
-  }
+export const DeleteIcon = styled.img`
+  margin-left: 8px;
+  width: 20px;
+  cursor: pointer;
 `;
