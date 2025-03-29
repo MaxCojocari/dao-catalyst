@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { OptionalInputMetadata } from "./optional-input-metadata";
-import addLinkIcon from "../assets/images/add-link-icon.svg";
+import plusSign from "../assets/images/plus-sign.svg";
 import deleteIcon from "../assets/images/delete-icon.svg";
 import { useState } from "react";
+import { AddWalletButton } from "./distribution-table";
 
 interface LinksMetadataProps {
   inputName: string;
@@ -70,15 +71,10 @@ export const Links = ({ inputName, inputDescription }: LinksMetadataProps) => {
           </>
         )}
       </Grid>
-      <img
-        src={addLinkIcon}
-        onClick={addRow}
-        style={{
-          width: "72px",
-          height: "16px",
-          cursor: "pointer",
-        }}
-      />
+      <AddWalletButton onClick={addRow} style={{ margin: "0" }}>
+        <img src={plusSign} width="10px" />
+        Add link
+      </AddWalletButton>
     </Container>
   );
 };
