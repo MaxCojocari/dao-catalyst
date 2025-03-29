@@ -47,13 +47,13 @@ export const Links = ({ inputName, inputDescription }: LinksMetadataProps) => {
             </Row>
             {links.map((link, index) => (
               <Row key={index}>
-                <input
+                <Input
                   type="text"
                   placeholder="Lens, Discord, etc."
                   value={link.name}
                   onChange={(e) => handleChange(index, "name", e.target.value)}
                 />
-                <input
+                <Input
                   type="text"
                   placeholder="https://"
                   value={link.url}
@@ -108,35 +108,35 @@ export const Grid = styled.div`
     letter-spacing: -0.02em;
     color: #555566;
   }
+`;
 
-  input {
-    margin: 8px 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    gap: 8px;
-    box-sizing: border-box;
-    height: 50px;
-    color: rgba(41, 41, 51, 0.9);
+export const Input = styled.input`
+  margin: 8px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  gap: 8px;
+  box-sizing: border-box;
+  height: 50px;
+  color: rgba(41, 41, 51, 0.9);
 
-    background: #ffffff;
-    border: 1px solid #e6e6ff;
-    border-radius: 6px;
-    transition: border 0.2s ease;
+  background: #ffffff;
+  border: 1px solid #e6e6ff;
+  border-radius: 6px;
+  transition: border 0.2s ease;
 
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 17px;
-    letter-spacing: -0.03em;
-  }
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: -0.03em;
 
-  input::placeholder {
+  &::placeholder {
     color: rgba(143, 143, 178, 0.9);
   }
 
-  input:focus {
+  &:focus {
     outline-color: rgba(102, 102, 255, 0.8);
   }
 `;

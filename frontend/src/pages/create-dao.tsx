@@ -1,4 +1,4 @@
-import { DescribeDao, ProgressBar } from "../components";
+import { DefineMembership, DescribeDao, ProgressBar } from "../components";
 import styled from "styled-components";
 
 export const CreateDaoPage = () => {
@@ -12,7 +12,8 @@ export const CreateDaoPage = () => {
           secondStep="Define Membership"
           thirdStep="Select Governance Settings"
         />
-        <DescribeDao />
+        {/* <DescribeDao /> */}
+        <DefineMembership />
       </Container>
     </>
   );
@@ -23,4 +24,9 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 16px;
+
+  * {
+    font-family: "Inter";
+    font-style: normal;
+  }
 `;

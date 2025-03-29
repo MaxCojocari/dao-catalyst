@@ -64,15 +64,6 @@ export const Container = styled.div`
   box-shadow: 0px 1px 1px rgba(122, 122, 204, 0.08);
   border-radius: 8px;
   box-sizing: border-box;
-
-  h1,
-  h2,
-  a,
-  input,
-  textarea {
-    font-family: "Inter";
-    font-style: normal;
-  }
 `;
 
 export const BackButton = styled.div`

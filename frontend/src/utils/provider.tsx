@@ -24,7 +24,7 @@ export const Provider = ({ children }: PropsWithChildren) => {
           modalSize="compact"
           coolMode
           theme={lightTheme({
-            accentColor: "#7064F0", // Your purple
+            accentColor: "#7064F0",
             accentColorForeground: "white",
             borderRadius: "medium",
             fontStack: "system",
