@@ -5,10 +5,11 @@ import styled from "styled-components";
 
 export const AddressInput = ({ address }: { address: string }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [inputValue, setInputValue] = useState(address);
 
   const formatAddress = (addr: string) => {
     if (!isAddress(addr)) return addr;
-    return addr.length > 10 ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : addr;
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
   const handleCopy = async () => {
@@ -18,9 +19,10 @@ export const AddressInput = ({ address }: { address: string }) => {
   return (
     <Container>
       <Input
-        value={isFocused ? address : formatAddress(address)}
+        value={isFocused ? inputValue.trim() : formatAddress(inputValue.trim())}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        onChange={(e) => setInputValue(e.target.value)}
       />
       <img
         src={copyIcon}

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
 import deleteIcon from "../assets/images/delete-icon.svg";
-import { Input } from "./links";
 import { useAccount } from "wagmi";
 import { AddressInput } from ".";
 import plusSign from "../assets/images/plus-sign.svg";
@@ -9,24 +8,20 @@ import plusSign from "../assets/images/plus-sign.svg";
 interface WalletEntry {
   id: number;
   address: string | undefined;
-  tokens: number;
+  tokens: string;
 }
 
 export const DistributionTable = () => {
   const { address } = useAccount();
   const [wallets, setWallets] = useState<WalletEntry[]>([
-    { id: 1, address, tokens: 0 },
+    { id: 1, address, tokens: "1" },
   ]);
 
-  const totalTokens = wallets.reduce((sum, w) => sum + w.tokens, 0);
+  const totalTokens = wallets.reduce((sum, w) => sum + Number(w.tokens), 0);
 
-  const handleTokenChange = (id: number, delta: number) => {
+  const handleTokenChange = (id: number, tokens: string) => {
     setWallets((prev) =>
-      prev.map((entry) =>
-        entry.id === id
-          ? { ...entry, tokens: Math.max(entry.tokens + delta, 0) }
-          : entry
-      )
+      prev.map((entry) => (entry.id === id ? { ...entry, tokens } : entry))
     );
   };
 
@@ -36,7 +31,7 @@ export const DistributionTable = () => {
 
   const handleAddWallet = () => {
     const newId = wallets.length ? wallets[wallets.length - 1].id + 1 : 1;
-    setWallets([...wallets, { id: newId, address: "", tokens: 0 }]);
+    setWallets([...wallets, { id: newId, address: "", tokens: "" }]);
   };
 
   return (
@@ -52,24 +47,20 @@ export const DistributionTable = () => {
         {wallets.map((entry) => {
           const allocation =
             totalTokens > 0
-              ? ((entry.tokens / totalTokens) * 100).toFixed(0)
+              ? ((Number(entry.tokens) / totalTokens) * 100).toFixed(0)
               : 0;
           return (
             <>
               <AddressInput address={entry.address!} />
-              <CustomInput
+              <Input
                 type="number"
                 step={100}
                 value={entry.tokens}
-                onChange={(e) =>
-                  handleTokenChange(
-                    entry.id,
-                    parseInt(e.target.value) - entry.tokens
-                  )
-                }
+                placeholder="0"
+                onChange={(e) => handleTokenChange(entry.id, e.target.value)}
               />
 
-              <CustomInput
+              <Input
                 type="text"
                 value={`${allocation}%`}
                 readOnly
@@ -81,7 +72,9 @@ export const DistributionTable = () => {
                   const newTokens = Math.round((percent / 100) * totalTokens);
                   setWallets((prev) =>
                     prev.map((w) =>
-                      w.id === entry.id ? { ...w, tokens: newTokens } : w
+                      w.id === entry.id
+                        ? { ...w, tokens: newTokens.toString() }
+                        : w
                     )
                   );
                 }}
@@ -129,7 +122,7 @@ export const Table = styled.div`
   grid-template-columns: 2fr 1fr 80px 10px;
   column-gap: 12px;
   row-gap: 12px;
-  margin-top: 10px;
+  margin-top: 18px;
 `;
 
 export const HeaderRow = styled.a`
@@ -159,9 +152,36 @@ export const WalletRow = styled.div`
   align-items: center;
 `;
 
-export const CustomInput = styled(Input)`
-  flex: 1;
+export const Input = styled.input`
   margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  gap: 8px;
+  box-sizing: border-box;
+  height: 50px;
+  color: rgba(41, 41, 51, 0.9);
+  flex: 1;
+
+  background: #ffffff;
+  border: 1px solid #e6e6ff;
+  border-radius: 6px;
+  transition: border 0.2s ease;
+
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: -0.03em;
+
+  &::placeholder {
+    color: rgba(143, 143, 178, 0.9);
+  }
+
+  &:focus {
+    outline-color: rgba(102, 102, 255, 0.8);
+  }
 `;
 
 export const AddWalletButton = styled.button`
