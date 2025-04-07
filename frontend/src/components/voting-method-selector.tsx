@@ -1,14 +1,12 @@
-import { useState } from "react";
 import styled from "styled-components";
+import { GenericProps } from "../types";
 
-export const VotingMethodSelector = () => {
-  const [selected, setSelected] = useState("token");
-
+export const VotingMethodSelector = ({ value, onChange }: GenericProps) => {
   return (
     <RadioGroup>
       <div
-        className={`radio-card ${selected === "token" ? "active" : ""}`}
-        onClick={() => setSelected("token")}
+        className={`radio-card ${value === "token" ? "active" : ""}`}
+        onClick={() => onChange("token")}
       >
         <RadioHeader>
           <a className="title">Token holders</a>
@@ -16,8 +14,8 @@ export const VotingMethodSelector = () => {
             type="radio"
             name="voting-method"
             value="token"
-            checked={selected === "token"}
-            onChange={() => setSelected("token")}
+            checked={value === "token"}
+            onChange={() => onChange("token")}
           />
         </RadioHeader>
         <Description>
@@ -27,8 +25,8 @@ export const VotingMethodSelector = () => {
       </div>
 
       <label
-        className={`radio-card ${selected === "multisig" ? "active" : ""}`}
-        onClick={() => setSelected("multisig")}
+        className={`radio-card ${value === "multisig" ? "active" : ""}`}
+        onClick={() => onChange("multisig")}
       >
         <RadioHeader>
           <a className="title">Multisig members</a>
@@ -36,8 +34,8 @@ export const VotingMethodSelector = () => {
             type="radio"
             name="voting-method"
             value="multisig"
-            checked={selected === "multisig"}
-            onChange={() => setSelected("multisig")}
+            checked={value === "multisig"}
+            onChange={() => onChange("multisig")}
           />
         </RadioHeader>
         <Description>

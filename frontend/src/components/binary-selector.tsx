@@ -1,40 +1,38 @@
-import { useState } from "react";
 import styled from "styled-components";
 import { RadioHeader } from "./voting-method-selector";
+import { GenericProps } from "../types";
 
-export const BinarySelector = () => {
-  const [selected, setSelected] = useState("value1");
-
+export const BinarySelector = ({ value, onChange }: GenericProps) => {
   return (
     <RadioGroup>
       <label
-        className={`radio-card ${selected === "value1" ? "active" : ""}`}
-        onClick={() => setSelected("value1")}
+        className={`radio-card ${value === "No" ? "active" : ""}`}
+        onClick={() => onChange("No")}
       >
         <RadioHeader>
-          <span className="title">No</span>
+          <span className="title">{value}</span>
           <input
             type="radio"
             name="binary-selector"
-            value="value1"
-            checked={selected === "value1"}
-            onChange={() => setSelected("value1")}
+            value={value}
+            checked={value === "No"}
+            onChange={() => onChange("No")}
           />
         </RadioHeader>
       </label>
 
       <label
-        className={`radio-card ${selected === "value2" ? "active" : ""}`}
-        onClick={() => setSelected("value2")}
+        className={`radio-card ${value === "Yes" ? "active" : ""}`}
+        onClick={() => onChange("Yes")}
       >
         <RadioHeader>
           <span className="title">Yes</span>
           <input
             type="radio"
             name="binary-selector"
-            value="value2"
-            checked={selected === "value2"}
-            onChange={() => setSelected("value2")}
+            value="Yes"
+            checked={value === "Yes"}
+            onChange={() => onChange("Yes")}
           />
         </RadioHeader>
       </label>
