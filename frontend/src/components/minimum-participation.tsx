@@ -43,7 +43,7 @@ export const MinimumParticipation = () => {
             <IconButton onClick={decrement} size="small">
               <RemoveIcon />
             </IconButton>
-            <a className="percentage-display">{threshold}%</a>
+            <p className="percentage-display">{threshold}%</p>
             <IconButton onClick={increment} size="small">
               <AddIcon />
             </IconButton>
@@ -59,10 +59,10 @@ export const MinimumParticipation = () => {
             }}
           >
             <SliderDetails>
-              <a style={{ fontWeight: "600", color: "#6666FF" }}>
+              <p style={{ fontWeight: "600", color: "#6666FF" }}>
                 ≥ {tokenAmount.toLocaleString()}
-              </a>
-              <a>of {TOTAL_SUPPLY.toLocaleString()} tokens</a>
+              </p>
+              <p>of {TOTAL_SUPPLY.toLocaleString()} tokens</p>
             </SliderDetails>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Slider
@@ -86,7 +86,7 @@ export const Container = styled.div`
 `;
 
 export const Controls = styled.div`
-  a {
+  p {
     font-weight: 600;
     font-size: 14px;
     line-height: 17px;
@@ -104,7 +104,7 @@ export const SliderDetails = styled.div`
   box-sizing: border-box;
   padding: 0 14px;
 
-  a {
+  p {
     font-size: 12px;
     line-height: 15px;
     letter-spacing: -0.03em;

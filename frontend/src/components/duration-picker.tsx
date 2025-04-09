@@ -102,7 +102,7 @@ export const DurationPicker = () => {
   );
 };
 
-const RowContainer = styled.div`
+export const RowContainer = styled.div`
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
@@ -113,7 +113,7 @@ const RowContainer = styled.div`
   gap: 12px;
 `;
 
-const Label = styled.a`
+export const Label = styled.a`
   font-size: 12px;
   font-weight: 600;
   line-height: 15px;
@@ -121,7 +121,7 @@ const Label = styled.a`
   color: rgba(41, 41, 51, 0.9);
 `;
 
-const StyledInput = styled(InputBase)`
+export const StyledInput = styled(InputBase)`
   width: 100%;
   text-align: center;
 

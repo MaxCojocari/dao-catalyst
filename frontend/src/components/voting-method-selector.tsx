@@ -24,7 +24,7 @@ export const VotingMethodSelector = ({ value, onChange }: GenericProps) => {
         </Description>
       </div>
 
-      <label
+      <div
         className={`radio-card ${value === "multisig" ? "active" : ""}`}
         onClick={() => onChange("multisig")}
       >
@@ -41,7 +41,7 @@ export const VotingMethodSelector = ({ value, onChange }: GenericProps) => {
         <Description>
           Only multisig members can vote. 1 wallet address equals 1 approval.
         </Description>
-      </label>
+      </div>
     </RadioGroup>
   );
 };
@@ -99,6 +99,7 @@ export const Description = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
+  boxSizing: "border-box",
 
   font-weight: 400;
   font-size: 12px;

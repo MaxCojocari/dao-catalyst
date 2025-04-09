@@ -41,7 +41,7 @@ export const SupportThreshold = () => {
             <IconButton onClick={decrement} size="small">
               <RemoveIcon />
             </IconButton>
-            <a className="percentage-display">{threshold}%</a>
+            <p className="percentage-display">{threshold}%</p>
             <IconButton onClick={increment} size="small">
               <AddIcon />
             </IconButton>
@@ -56,7 +56,7 @@ export const SupportThreshold = () => {
               margin: "0 10px",
             }}
           >
-            <a className="vote-label">Yes</a>
+            <p className="vote-label">Yes</p>
             <Slider
               value={threshold}
               onChange={handleChange}
@@ -66,20 +66,20 @@ export const SupportThreshold = () => {
               sx={{ color: "#6666FF", margin: "0 18px" }}
               valueLabelDisplay="auto"
             />
-            <a className="vote-label">No</a>
+            <p className="vote-label">No</p>
           </div>
         </Box>
       </Controls>
       {threshold > 50 && (
         <ConfirmationSuccess>
           <img src={successIcon} width="14px" style={{ marginRight: "8px" }} />
-          <a>Proposal will be approved by majority</a>
+          <p>Proposal will be approved by majority</p>
         </ConfirmationSuccess>
       )}
       {threshold < 50 && (
         <Warning>
           <img src={warningIcon} width="14px" style={{ marginRight: "8px" }} />
-          <a>Proposal could be approved by a minority rather than a majority</a>
+          <p>Proposal could be approved by a minority rather than a majority</p>
         </Warning>
       )}
     </Container>
@@ -91,7 +91,7 @@ export const Container = styled.div`
 `;
 
 export const Controls = styled.div`
-  a {
+  p {
     font-weight: 600;
     font-size: 14px;
     line-height: 17px;
@@ -108,7 +108,7 @@ export const Confirmation = styled.div`
 `;
 
 export const ConfirmationSuccess = styled(Confirmation)`
-  a {
+  p {
     font-weight: 400;
     font-size: 13px;
     line-height: 150%;
@@ -118,7 +118,7 @@ export const ConfirmationSuccess = styled(Confirmation)`
 `;
 
 export const Warning = styled(Confirmation)`
-  a {
+  p {
     font-weight: 400;
     font-size: 13px;
     line-height: 150%;

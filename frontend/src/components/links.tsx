@@ -42,8 +42,8 @@ export const Links = ({ inputName, inputDescription }: LinksMetadataProps) => {
         {links.length > 0 && (
           <>
             <Row>
-              <a>Name/Description</a>
-              <a>Link</a>
+              <p>Name/Description</p>
+              <p>Link</p>
               <div style={{ width: "20px" }}></div>
             </Row>
             {links.map((link, index) => (
@@ -92,12 +92,12 @@ export const Row = styled.div`
 `;
 
 export const Grid = styled.div`
-  a,
+  p,
   input {
     flex: 1;
   }
 
-  a {
+  p {
     font-weight: 500;
     font-size: 13px;
     line-height: 16px;
