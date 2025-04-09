@@ -1,5 +1,6 @@
 import {
   BinarySelector,
+  DurationPicker,
   InputMetadata,
   MinimumParticipation,
   SupportThreshold,
@@ -66,7 +67,7 @@ export const SelectGovernanceSettings = () => {
             inputName="Minimum duration"
             inputDescription={`The shortest period of time a proposal is open for voting. Proposals can be created with a longer duration, but not shorter. Set this to a duration that is long enough for your members to have sufficient time to vote. It's recommended to set this to at least 1 day.`}
           />
-          <input type="text" placeholder="Type your DAO's name ..." />
+          <DurationPicker />
         </Input>
         <Input>
           <InputMetadata

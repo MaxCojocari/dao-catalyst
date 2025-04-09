@@ -21,3 +21,4 @@ export { MintDaoToken } from "./mint-dao-token";
 export { SelectGovernanceSettings } from "./create-dao/select-governance-settings";
 export { SupportThreshold } from "./support-threshold";
 export { MinimumParticipation } from "./minimum-participation";
+export { DurationPicker } from "./duration-picker";
