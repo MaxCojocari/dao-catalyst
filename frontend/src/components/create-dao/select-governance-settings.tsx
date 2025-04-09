@@ -3,6 +3,7 @@ import {
   DurationPicker,
   InputMetadata,
   MinimumParticipation,
+  ProposalCreationSettings,
   SupportThreshold,
 } from "..";
 import stepIcon from "../../assets/images/step1_icon.svg";
@@ -17,17 +18,12 @@ import {
   StepInfo,
 } from "./common-styles";
 import { useState } from "react";
-
-export const Slider = () => {
-  return (
-    <>
-      <div>Slider</div>
-    </>
-  );
-};
+import { TOKEN_HOLDERS } from "../../constants";
 
 export const SelectGovernanceSettings = () => {
   const [selectedOption, setSelectedOption] = useState("No");
+  const [proposalCreationSettings, setProposalCreationSettings] =
+    useState(TOKEN_HOLDERS);
 
   return (
     <>
@@ -81,7 +77,10 @@ export const SelectGovernanceSettings = () => {
             inputName="Proposal creation"
             inputDescription="Specify who is permitted to create proposals and what the minimum requirement is."
           />
-          <input type="text" placeholder="Type your DAO's name ..." />
+          <ProposalCreationSettings
+            value={proposalCreationSettings}
+            onChange={setProposalCreationSettings}
+          />
         </Input>
         <NextStepButton>Next Step</NextStepButton>
       </Container>

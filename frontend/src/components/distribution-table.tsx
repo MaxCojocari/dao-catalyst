@@ -41,7 +41,7 @@ export const DistributionTable = () => {
           <HeaderRow>Address</HeaderRow>
           <HeaderRow>Tokens</HeaderRow>
           <HeaderRow>Allocation</HeaderRow>
-          <a></a>
+          <p></p>
         </>
 
         {wallets.map((entry) => {
@@ -106,7 +106,7 @@ export const DistributionTable = () => {
           <Total>{wallets.length} addresses</Total>
           <Total>{totalTokens ? totalTokens : "0"}</Total>
           <Total>100%</Total>
-          <a></a>
+          <p></p>
         </>
       </Table>
       <AddWalletButton onClick={handleAddWallet}>

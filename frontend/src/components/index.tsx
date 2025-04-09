@@ -22,3 +22,4 @@ export { SelectGovernanceSettings } from "./create-dao/select-governance-setting
 export { SupportThreshold } from "./support-threshold";
 export { MinimumParticipation } from "./minimum-participation";
 export { DurationPicker } from "./duration-picker";
+export { ProposalCreationSettings } from "./proposal-creation-settings";
