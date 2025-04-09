@@ -1,4 +1,9 @@
-import { DefineMembership, DescribeDao, ProgressBar } from "../components";
+import {
+  DefineMembership,
+  DescribeDao,
+  ProgressBar,
+  SelectGovernanceSettings,
+} from "../components";
 import styled from "styled-components";
 
 export const CreateDaoPage = () => {
@@ -6,14 +11,15 @@ export const CreateDaoPage = () => {
     <>
       <Container>
         <ProgressBar
-          position={1}
+          position={3}
           finished={false}
           firstStep="Describe DAO"
           secondStep="Define Membership"
           thirdStep="Select Governance Settings"
         />
         {/* <DescribeDao /> */}
-        <DefineMembership />
+        {/* <DefineMembership /> */}
+        <SelectGovernanceSettings />
       </Container>
     </>
   );

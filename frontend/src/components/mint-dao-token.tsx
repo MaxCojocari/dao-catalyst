@@ -1,5 +1,5 @@
 import { DistributionTable, InputMetadata } from ".";
-import { Input } from "./describe-dao";
+import { Input } from "./create-dao/common-styles";
 
 export const MintDaoToken = () => {
   return (

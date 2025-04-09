@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BinarySelector, ImportDaoToken, MintDaoToken } from ".";
-import { Input } from "./describe-dao";
 import { InputMetadata } from "./input-metadata";
+import { Input } from "./create-dao/common-styles";
 
 export const DaoTokenInfo = () => {
   const [selectedOption, setSelectedOption] = useState("No");
