@@ -1,0 +1,98 @@
+import { Box, IconButton, Slider } from "@mui/material";
+import { useState } from "react";
+import styled from "styled-components";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import successIcon from "../assets/images/done.svg";
+
+export const SupportThreshold = () => {
+  const [threshold, setThreshold] = useState(50);
+
+  const handleChange = (e: any) => {
+    setThreshold(Number(e.target.value));
+  };
+
+  const increment = () => setThreshold((prev) => Math.min(prev + 1, 100));
+  const decrement = () => setThreshold((prev) => Math.max(prev - 1, 0));
+
+  return (
+    <Container>
+      <Controls>
+        <Box
+          sx={{
+            backgroundColor: "white",
+            border: "1px solid #E6E6FF",
+            borderRadius: "8px",
+            p: 2,
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <IconButton onClick={decrement} size="small">
+            <RemoveIcon />
+          </IconButton>
+          <a className="percentage-display">{threshold}%</a>
+          <IconButton onClick={increment} size="small">
+            <AddIcon />
+          </IconButton>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              width: "100%",
+              gap: "0",
+              margin: "0 10px",
+            }}
+          >
+            <a className="vote-label">Yes</a>
+            <Slider
+              value={threshold}
+              onChange={handleChange}
+              min={0}
+              max={100}
+              defaultValue={50}
+              sx={{ color: "#6666FF", margin: "0 18px" }}
+              valueLabelDisplay="auto"
+            />
+            <a className="vote-label">No</a>
+          </div>
+        </Box>
+      </Controls>
+      <Confirmation>
+        <img src={successIcon} width="14px" style={{ marginRight: "8px" }} />
+        <a>Proposal will be approved by majority</a>
+      </Confirmation>
+    </Container>
+  );
+};
+
+export const Container = styled.div`
+  margin-top: 8px;
+`;
+
+export const Controls = styled.div`
+  a {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.02em;
+    color: rgba(41, 41, 51, 0.9);
+  }
+`;
+
+export const Confirmation = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 7px;
+
+  a {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 150%;
+    letter-spacing: -0.02em;
+    color: #1fba66;
+  }
+`;

@@ -3,7 +3,7 @@ import {
   InputMetadata,
   MultisigMembers,
   VotingMethodSelector,
-} from ".";
+} from "..";
 import {
   BackButton,
   Container,
@@ -11,10 +11,10 @@ import {
   Input,
   NextStepButton,
   StepInfo,
-} from "./describe-dao";
-import stepIcon from "../assets/images/step2_icon.svg";
-import infoIcon from "../assets/images/info-icon.svg";
-import backIcon from "../assets/images/back-icon.svg";
+} from "./common-styles";
+import stepIcon from "../../assets/images/step2_icon.svg";
+import infoIcon from "../../assets/images/info-icon.svg";
+import backIcon from "../../assets/images/back-icon.svg";
 import { useState } from "react";
 
 export const DefineMembership = () => {

@@ -2,10 +2,10 @@ import styled from "styled-components";
 import { InputMetadata } from ".";
 import copyIcon from "../assets/images/copy-icon.svg";
 import { useState } from "react";
-import { Input } from "./describe-dao";
 import successIcon from "../assets/images/done.svg";
 import failureIcon from "../assets/images/failure.svg";
 import { isAddress } from "viem";
+import { Input } from "./create-dao/common-styles";
 
 export const ImportDaoToken = () => {
   const [address, setAddress] = useState("");
