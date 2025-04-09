@@ -1,4 +1,9 @@
-import { BinarySelector, InputMetadata, SupportThreshold } from "..";
+import {
+  BinarySelector,
+  InputMetadata,
+  MinimumParticipation,
+  SupportThreshold,
+} from "..";
 import stepIcon from "../../assets/images/step1_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
 import backIcon from "../../assets/images/back-icon.svg";
@@ -54,8 +59,7 @@ export const SelectGovernanceSettings = () => {
             inputName="Minimum participation"
             inputDescription={`For a proposal to be approved, at least this percentage of the total token supply must take part in the vote.`}
           />
-          <input type="text" placeholder="Type your DAO's name ..." />
-          {/* <Slider /> */}
+          <MinimumParticipation />
         </Input>
         <Input>
           <InputMetadata

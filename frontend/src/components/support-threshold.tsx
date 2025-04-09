@@ -4,6 +4,7 @@ import styled from "styled-components";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import successIcon from "../assets/images/done.svg";
+import warningIcon from "../assets/images/warning.svg";
 
 export const SupportThreshold = () => {
   const [threshold, setThreshold] = useState(50);
@@ -29,13 +30,22 @@ export const SupportThreshold = () => {
             gap: 2,
           }}
         >
-          <IconButton onClick={decrement} size="small">
-            <RemoveIcon />
-          </IconButton>
-          <a className="percentage-display">{threshold}%</a>
-          <IconButton onClick={increment} size="small">
-            <AddIcon />
-          </IconButton>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "170px",
+            }}
+          >
+            <IconButton onClick={decrement} size="small">
+              <RemoveIcon />
+            </IconButton>
+            <a className="percentage-display">{threshold}%</a>
+            <IconButton onClick={increment} size="small">
+              <AddIcon />
+            </IconButton>
+          </div>
           <div
             style={{
               display: "flex",
@@ -60,10 +70,18 @@ export const SupportThreshold = () => {
           </div>
         </Box>
       </Controls>
-      <Confirmation>
-        <img src={successIcon} width="14px" style={{ marginRight: "8px" }} />
-        <a>Proposal will be approved by majority</a>
-      </Confirmation>
+      {threshold > 50 && (
+        <ConfirmationSuccess>
+          <img src={successIcon} width="14px" style={{ marginRight: "8px" }} />
+          <a>Proposal will be approved by majority</a>
+        </ConfirmationSuccess>
+      )}
+      {threshold < 50 && (
+        <Warning>
+          <img src={warningIcon} width="14px" style={{ marginRight: "8px" }} />
+          <a>Proposal could be approved by a minority rather than a majority</a>
+        </Warning>
+      )}
     </Container>
   );
 };
@@ -87,12 +105,24 @@ export const Confirmation = styled.div`
   flex-direction: row;
   align-items: center;
   margin-top: 7px;
+`;
 
+export const ConfirmationSuccess = styled(Confirmation)`
   a {
     font-weight: 400;
     font-size: 13px;
     line-height: 150%;
     letter-spacing: -0.02em;
     color: #1fba66;
+  }
+`;
+
+export const Warning = styled(Confirmation)`
+  a {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 150%;
+    letter-spacing: -0.02em;
+    color: #ffd056;
   }
 `;
