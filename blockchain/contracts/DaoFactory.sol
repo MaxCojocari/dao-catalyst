@@ -37,6 +37,7 @@ contract DaoFactory is Context, Ownable {
         string daoURI;
         address[] members;
         uint256 minimalDuration;
+        uint256 proposalCreationMinVotingPower;
         DaoTokenSettings daoToken;
         Fraction quorumFraction;
         Fraction minimumParticipationFraction;

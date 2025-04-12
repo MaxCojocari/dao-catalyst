@@ -7,6 +7,7 @@ import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
 
 abstract contract TokenVoting is Dao {
     IERC5805 public token;
+    uint256 public proposalCreationMinVotingPower;
 
     function isValidProposer(address proposer) external view returns (bool) {
         return _isValidProposer(proposer);
@@ -23,6 +24,6 @@ abstract contract TokenVoting is Dao {
     }
 
     function _isValidProposer(address proposer) internal view override returns (bool) {
-        return IERC20(address(token)).balanceOf(proposer) > 0;
+        return IERC20(address(token)).balanceOf(proposer) > proposalCreationMinVotingPower;
     }
 }

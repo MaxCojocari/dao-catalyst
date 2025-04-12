@@ -67,6 +67,7 @@ describe('DaoCatalyst', () => {
         daoURI: 'https://ipfs.io/ipfs/QmdNz8ZNmUknqrfnBmfvU63NnU9FBSBrZwe5LcpDkwEaTb',
         members: [],
         minimalDuration: ONE_HOUR_SECONDS,
+        proposalCreationMinVotingPower: parseUnits('0.1'),
         daoToken: {
           isDeployed: false,
           tokenAddress: ZeroAddress,
@@ -314,6 +315,7 @@ describe('DaoCatalyst', () => {
         daoURI: 'https://ipfs.io/ipfs/Qme4S56yfN8xjV2hd92pKv3mxSVzBfac9MisAVxoH33MQQ',
         members: [alice, bob, john],
         minimalDuration: ONE_DAY_SECONDS,
+        proposalCreationMinVotingPower: parseUnits('0.1'),
         daoToken: {
           isDeployed: false,
           tokenAddress: ZeroAddress,
