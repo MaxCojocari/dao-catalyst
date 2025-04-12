@@ -23,3 +23,4 @@ export { SupportThreshold } from "./support-threshold";
 export { MinimumParticipation } from "./minimum-participation";
 export { DurationPicker } from "./duration-picker";
 export { ProposalCreationSettings } from "./proposal-creation-settings";
+export { DeployDao } from "./create-dao/deploy-dao";

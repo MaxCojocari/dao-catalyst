@@ -49,7 +49,7 @@ export const ProposalCreationSettings = ({ value, onChange }: GenericProps) => {
             onClick={() => onChange(TOKEN_HOLDERS)}
           >
             <RadioHeader>
-              <p className="title">Members</p>
+              <p className="title">Token holders</p>
               <input
                 type="radio"
                 value={TOKEN_HOLDERS}

@@ -1,5 +1,6 @@
 import {
   DefineMembership,
+  DeployDao,
   DescribeDao,
   ProgressBar,
   SelectGovernanceSettings,
@@ -12,14 +13,15 @@ export const CreateDaoPage = () => {
       <Container>
         <ProgressBar
           position={3}
-          finished={false}
+          finished={true}
           firstStep="Describe DAO"
           secondStep="Define Membership"
           thirdStep="Select Governance Settings"
         />
         {/* <DescribeDao /> */}
         {/* <DefineMembership /> */}
-        <SelectGovernanceSettings />
+        {/* <SelectGovernanceSettings /> */}
+        <DeployDao />
       </Container>
     </>
   );

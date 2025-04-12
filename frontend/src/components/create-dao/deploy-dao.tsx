@@ -1,0 +1,244 @@
+import {
+  BackButton,
+  Container,
+  Header,
+  NextStepButton,
+  StepInfo,
+} from "./common-styles";
+import stepIcon from "../../assets/images/step1_icon.svg";
+import infoIcon from "../../assets/images/info-icon.svg";
+import backIcon from "../../assets/images/back-icon.svg";
+import styled from "styled-components";
+import { TEST_DAO_INFO as dao } from "../../constants";
+import { DaoType } from "../../types";
+
+export const EditButton = () => {
+  return <Button>Edit</Button>;
+};
+
+export const DeployDao = () => {
+  const amount = dao.token.amounts.reduce((acc, amount) => acc + amount, 0);
+  return (
+    <Container>
+      <BackButton>
+        <img src={backIcon} alt="vector" />
+        <a>Back</a>
+      </BackButton>
+      <Header>
+        <img src={stepIcon} alt="step-icon" />
+        <h1>Deploy your DAO</h1>
+      </Header>
+      <StepInfo>
+        <img src={infoIcon} style={{ width: "20px" }} />
+        <h2>
+          Double-check that everything is correct before deploying your DAO.
+        </h2>
+      </StepInfo>
+      <InfoBox>
+        <InfoBoxHeader>
+          <h2>DAO</h2>
+          <EditButton />
+        </InfoBoxHeader>
+        <Content>
+          <ContentRow>
+            <h3>Logo</h3>
+            <img src={""} />
+          </ContentRow>
+          <ContentRow>
+            <h3>Name</h3>
+            <p>{dao.name}</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Summary</h3>
+            <p>{dao.summary}</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Links</h3>
+            <Links>
+              {dao.links.map((link) => (
+                <Link>
+                  <p>{link.label}</p>
+                  <a href={link.url}>{link.url}</a>
+                </Link>
+              ))}
+            </Links>
+          </ContentRow>
+        </Content>
+      </InfoBox>
+      <InfoBox>
+        <InfoBoxHeader>
+          <h2>Voters</h2>
+          <EditButton />
+        </InfoBoxHeader>
+        <Content>
+          <ContentRow>
+            <h3>Eligible voters</h3>
+            {dao.type === DaoType.SimpleVote && <p>Token holders</p>}
+            {dao.type === DaoType.MultisigVote && <p>Multisig members</p>}
+          </ContentRow>
+          <ContentRow>
+            <h3>Token</h3>
+            <p>
+              {dao.token.name} ({dao.token.symbol})
+            </p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Supply</h3>
+            <p>{amount}</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Distribution</h3>
+            <p>{dao.members.length} addresses</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Proposal creation</h3>
+            <p>
+              Members with ≥ {dao.proposalCreationMinVotingPower}{" "}
+              {dao.token.symbol} voting power or balance
+            </p>
+          </ContentRow>
+        </Content>
+      </InfoBox>
+      <InfoBox>
+        <InfoBoxHeader>
+          <h2>Voting parameters</h2>
+          <EditButton />
+        </InfoBoxHeader>
+        <Content>
+          <ContentRow>
+            <h3>Support threshold</h3>
+            <p>
+              {"> "}
+              {(dao.quorumFraction.numerator / dao.quorumFraction.denominator) *
+                100}
+              %
+            </p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Minimum participation</h3>
+            <p>
+              {"≥ "}
+              {(dao.minimumParticipation.numerator /
+                dao.minimumParticipation.denominator) *
+                100}
+              % ({"≥ "}
+              {(dao.minimumParticipation.numerator /
+                dao.minimumParticipation.denominator) *
+                amount}{" "}
+              {dao.token.symbol})
+            </p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Minimum duration</h3>
+            <p>
+              {dao.minimumDuration.days} days {dao.minimumDuration.hours} hours{" "}
+              {dao.minimumDuration.minutes} minutes
+            </p>
+          </ContentRow>
+        </Content>
+      </InfoBox>
+      <NextStepButton>Deploy DAO</NextStepButton>
+    </Container>
+  );
+};
+
+export const InfoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: -0.03em;
+    color: #292933;
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 19px;
+    letter-spacing: -0.02em;
+    color: #555566;
+  }
+
+  h3 {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: -0.02em;
+    color: #292933;
+    margin-right: 0 !important;
+  }
+`;
+
+export const InfoBoxHeader = styled.div`
+  display: flex;
+  flexdirection: row;
+  justify-content: space-between;
+`;
+
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  gap: 12px;
+`;
+
+export const ContentRow = styled.div`
+  display: grid;
+  grid-template-columns: 200px 1fr;
+
+  h3 {
+    margin-right: 240px;
+  }
+`;
+
+export const Links = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const Link = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+
+  a {
+    color: #6c63ff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 19px;
+    letter-spacing: -0.02em;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+`;
+
+export const Button = styled.button`
+  box-sizing: border-box;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  padding: 12px 28px;
+  gap: 8px;
+
+  width: fit-content;
+
+  background: #ffffff;
+  border: 1px solid rgba(102, 102, 255, 0.2);
+  border-radius: 6px;
+
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: -0.02em;
+  color: #6666ff;
+`;
