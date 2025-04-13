@@ -1,66 +1,51 @@
 import stepIcon from "../../assets/images/step1_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
-import backIcon from "../../assets/images/back-icon.svg";
 import { LogoUploader } from "../logo-uploader";
 import { Links } from "../links";
 import { InputMetadata } from "../input-metadata";
-import {
-  BackButton,
-  Container,
-  Header,
-  NextStepButton,
-  StepInfo,
-  Input,
-} from "./common-styles";
+import { Header, StepInfo, Input } from "./common-styles";
 import { useState } from "react";
 
 export const DescribeDao = () => {
   const [name, setName] = useState("");
   return (
     <>
-      <Container>
-        <BackButton>
-          <img src={backIcon} alt="vector" />
-          <a>Back</a>
-        </BackButton>
-        <Header>
-          <img src={stepIcon} alt="step-icon" />
-          <h1>Describe your DAO</h1>
-        </Header>
-        <StepInfo>
-          <img src={infoIcon} style={{ width: "20px" }} />
-          <h2>
-            Give it a name and brief description to guide new contributors. This
-            info appears on the Explore page and can be updated by vote.
-          </h2>
-        </StepInfo>
-        <Input>
-          <InputMetadata
-            inputName="Name"
-            inputDescription="Maximum of 128 characters"
-          />
-          <input
-            type="text"
-            placeholder="Type your DAO's name ..."
-            onChange={(e) => setName(e.target.value)}
-          />
-          <a className="input-description">{name.length}/128</a>
-        </Input>
-        <LogoUploader />
-        <Input>
-          <InputMetadata
-            inputName="Description"
-            inputDescription="Briefly explain the mission of your DAO. This will appear on the
-            Explore page to help others discover you."
-          />
-          <textarea placeholder="Type your summary ..."></textarea>
-        </Input>
-        <Links
-          inputName="Links"
-          inputDescription="Links to your DAO's website, social media profiles, or other you consider relevant."
+      <Header>
+        <img src={stepIcon} alt="step-icon" />
+        <h1>Describe your DAO</h1>
+      </Header>
+      <StepInfo>
+        <img src={infoIcon} style={{ width: "20px" }} />
+        <h2>
+          Give it a name and brief description to guide new contributors. This
+          info appears on the Explore page and can be updated by vote.
+        </h2>
+      </StepInfo>
+      <Input>
+        <InputMetadata
+          inputName="Name"
+          inputDescription="Maximum of 128 characters"
         />
-        <NextStepButton>Next Step</NextStepButton>
-      </Container>
+        <input
+          type="text"
+          placeholder="Type your DAO's name ..."
+          onChange={(e) => setName(e.target.value)}
+        />
+        <a className="input-description">{name.length}/128</a>
+      </Input>
+      <LogoUploader />
+      <Input>
+        <InputMetadata
+          inputName="Description"
+          inputDescription="Briefly explain the mission of your DAO. This will appear on the
+            Explore page to help others discover you."
+        />
+        <textarea placeholder="Type your summary ..."></textarea>
+      </Input>
+      <Links
+        inputName="Links"
+        inputDescription="Links to your DAO's website, social media profiles, or other you consider relevant."
+      />
     </>
   );
 };

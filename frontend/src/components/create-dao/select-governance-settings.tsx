@@ -8,15 +8,7 @@ import {
 } from "..";
 import stepIcon from "../../assets/images/step1_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
-import backIcon from "../../assets/images/back-icon.svg";
-import {
-  BackButton,
-  Container,
-  Header,
-  Input,
-  NextStepButton,
-  StepInfo,
-} from "./common-styles";
+import { Header, Input, StepInfo } from "./common-styles";
 import { useState } from "react";
 import { TOKEN_HOLDERS } from "../../constants";
 
@@ -27,11 +19,7 @@ export const SelectGovernanceSettings = () => {
 
   return (
     <>
-      <Container>
-        <BackButton>
-          <img src={backIcon} alt="vector" />
-          <a>Back</a>
-        </BackButton>
+      <>
         <Header>
           <img src={stepIcon} alt="step-icon" />
           <h1>Select Governance Settings</h1>
@@ -82,8 +70,7 @@ export const SelectGovernanceSettings = () => {
             onChange={setProposalCreationSettings}
           />
         </Input>
-        <NextStepButton>Next Step</NextStepButton>
-      </Container>
+      </>
     </>
   );
 };
