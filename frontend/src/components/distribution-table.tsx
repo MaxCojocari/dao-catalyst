@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import styled from "styled-components";
 import deleteIcon from "../assets/images/delete-icon.svg";
 import { useAccount } from "wagmi";
@@ -50,7 +50,7 @@ export const DistributionTable = () => {
               ? ((Number(entry.tokens) / totalTokens) * 100).toFixed(0)
               : 0;
           return (
-            <>
+            <Fragment key={`wallet-entry-${entry.id}`}>
               <AddressInput address={entry.address!} />
               <Input
                 type="number"
@@ -99,7 +99,7 @@ export const DistributionTable = () => {
                   style={{ width: "20px" }}
                 />
               </div>
-            </>
+            </Fragment>
           );
         })}
         <>

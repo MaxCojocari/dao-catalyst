@@ -4,28 +4,16 @@ import {
   MultisigMembers,
   VotingMethodSelector,
 } from "..";
-import {
-  BackButton,
-  Container,
-  Header,
-  Input,
-  NextStepButton,
-  StepInfo,
-} from "./common-styles";
+import { Header, Input, StepInfo } from "./common-styles";
 import stepIcon from "../../assets/images/step2_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
-import backIcon from "../../assets/images/back-icon.svg";
 import { useState } from "react";
 
 export const DefineMembership = () => {
   const [selectedVotingMethod, setSelectedVotingMethod] = useState("token");
 
   return (
-    <Container>
-      <BackButton>
-        <img src={backIcon} alt="vector" />
-        <a>Back</a>
-      </BackButton>
+    <>
       <Header>
         <img src={stepIcon} alt="step-icon" />
         <h1>Define Membership</h1>
@@ -47,7 +35,6 @@ export const DefineMembership = () => {
       </Input>
       {selectedVotingMethod === "token" && <DaoTokenInfo />}
       {selectedVotingMethod === "multisig" && <MultisigMembers />}
-      <NextStepButton>Next Step</NextStepButton>
-    </Container>
+    </>
   );
 };

@@ -1,29 +1,35 @@
-import {
-  BackButton,
-  Container,
-  Header,
-  NextStepButton,
-  StepInfo,
-} from "./common-styles";
+import { Header, StepInfo } from "./common-styles";
 import stepIcon from "../../assets/images/step1_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
-import backIcon from "../../assets/images/back-icon.svg";
 import styled from "styled-components";
 import { TEST_DAO_INFO as dao } from "../../constants";
 import { DaoType } from "../../types";
+import CheckBoxRoundedIcon from "@mui/icons-material/CheckBoxRounded";
+import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutlineBlankRounded";
 
-export const EditButton = () => {
-  return <Button>Edit</Button>;
+interface DeployDaoProps {
+  confirmed: boolean;
+  setConfirmed: (v: any) => void;
+  setStep: (v: any) => void;
+}
+
+interface EditButtonProps {
+  step: number;
+  setStep: (v: any) => void;
+}
+
+export const EditButton = ({ step, setStep }: EditButtonProps) => {
+  return <Button onClick={() => setStep(step)}>Edit</Button>;
 };
 
-export const DeployDao = () => {
+export const DeployDao = ({
+  confirmed,
+  setConfirmed,
+  setStep,
+}: DeployDaoProps) => {
   const amount = dao.token.amounts.reduce((acc, amount) => acc + amount, 0);
   return (
-    <Container>
-      <BackButton>
-        <img src={backIcon} alt="vector" />
-        <a>Back</a>
-      </BackButton>
+    <>
       <Header>
         <img src={stepIcon} alt="step-icon" />
         <h1>Deploy your DAO</h1>
@@ -32,17 +38,18 @@ export const DeployDao = () => {
         <img src={infoIcon} style={{ width: "20px" }} />
         <h2>
           Double-check that everything is correct before deploying your DAO.
+          Most of these settings can be changed later with a vote.
         </h2>
       </StepInfo>
       <InfoBox>
         <InfoBoxHeader>
           <h2>DAO</h2>
-          <EditButton />
+          <EditButton step={1} setStep={setStep} />
         </InfoBoxHeader>
         <Content>
           <ContentRow>
             <h3>Logo</h3>
-            <img src={""} />
+            <img src={dao.logo} />
           </ContentRow>
           <ContentRow>
             <h3>Name</h3>
@@ -55,8 +62,8 @@ export const DeployDao = () => {
           <ContentRow>
             <h3>Links</h3>
             <Links>
-              {dao.links.map((link) => (
-                <Link>
+              {dao.links.map((link, index) => (
+                <Link key={index}>
                   <p>{link.label}</p>
                   <a href={link.url}>{link.url}</a>
                 </Link>
@@ -68,7 +75,7 @@ export const DeployDao = () => {
       <InfoBox>
         <InfoBoxHeader>
           <h2>Voters</h2>
-          <EditButton />
+          <EditButton step={2} setStep={setStep} />
         </InfoBoxHeader>
         <Content>
           <ContentRow>
@@ -102,7 +109,7 @@ export const DeployDao = () => {
       <InfoBox>
         <InfoBoxHeader>
           <h2>Voting parameters</h2>
-          <EditButton />
+          <EditButton step={3} setStep={setStep} />
         </InfoBoxHeader>
         <Content>
           <ContentRow>
@@ -137,8 +144,21 @@ export const DeployDao = () => {
           </ContentRow>
         </Content>
       </InfoBox>
-      <NextStepButton>Deploy DAO</NextStepButton>
-    </Container>
+      <CheckBox>
+        {confirmed ? (
+          <CheckBoxRoundedIcon
+            sx={{ color: "#6c63ff", fontSize: 20, cursor: "pointer" }}
+            onClick={() => setConfirmed(!confirmed)}
+          />
+        ) : (
+          <CheckBoxOutlineBlankRoundedIcon
+            sx={{ color: "#E6E6FF", fontSize: 20, cursor: "pointer" }}
+            onClick={() => setConfirmed(!confirmed)}
+          />
+        )}
+        <p>I confirm these values are correct.</p>
+      </CheckBox>
+    </>
   );
 };
 
@@ -192,6 +212,15 @@ export const ContentRow = styled.div`
   h3 {
     margin-right: 240px;
   }
+
+  img {
+    margin-top: 12px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+  }
 `;
 
 export const Links = styled.div`
@@ -241,4 +270,19 @@ export const Button = styled.button`
   font-size: 13px;
   letter-spacing: -0.02em;
   color: #6666ff;
+`;
+
+export const CheckBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+
+  p {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: -0.02em;
+    color: #555566;
+  }
 `;

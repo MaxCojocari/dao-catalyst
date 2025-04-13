@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Box = styled.div`
   position: relative;
 
   display: flex;
@@ -182,4 +182,27 @@ export const NextStepButton = styled.button`
   &:active {
     opacity: 0.7;
   }
+`;
+
+export const DisabledButton = styled.button`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 17px 24px;
+  box-sizing: border-box;
+
+  width: 100%;
+  height: 48px;
+
+  background: #b8b8cc;
+  border-radius: 6px;
+  border: none;
+
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: -0.02em;
+
+  color: #ffffff;
 `;
