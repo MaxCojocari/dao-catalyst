@@ -206,3 +206,30 @@ export const DisabledButton = styled.button`
 
   color: #ffffff;
 `;
+
+export const Confirmation = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 7px;
+`;
+
+export const ConfirmationSuccess = styled(Confirmation)`
+  p {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 150%;
+    letter-spacing: -0.02em;
+    color: #1fba66;
+  }
+`;
+
+export const Warning = styled(Confirmation)`
+  p {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 150%;
+    letter-spacing: -0.02em;
+    color: #ffd056;
+  }
+`;

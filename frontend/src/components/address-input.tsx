@@ -2,6 +2,7 @@ import { useState } from "react";
 import copyIcon from "../assets/images/copy-icon.svg";
 import { isAddress } from "viem";
 import styled from "styled-components";
+import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 
 export const AddressInput = ({ address }: { address: string }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -14,6 +15,13 @@ export const AddressInput = ({ address }: { address: string }) => {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(address);
+  };
+
+  const openInExplorer = (addr: string) => {
+    if (isAddress(address)) {
+      const url = `https://arbiscan.io/address/${addr}`;
+      window.open(url, "_blank");
+    }
   };
 
   return (
@@ -30,6 +38,10 @@ export const AddressInput = ({ address }: { address: string }) => {
         width="20px"
         onClick={handleCopy}
         style={{ cursor: "pointer" }}
+      />
+      <OpenInNewRoundedIcon
+        onClick={() => openInExplorer(address)}
+        sx={{ cursor: "pointer", width: "20px", color: "#B8B8CC" }}
       />
     </Container>
   );

@@ -24,3 +24,6 @@ export { MinimumParticipation } from "./minimum-participation";
 export { DurationPicker } from "./duration-picker";
 export { ProposalCreationSettings } from "./proposal-creation-settings";
 export { DeployDao } from "./create-dao/deploy-dao";
+export { OwnershipTable } from "./ownership-table";
+export { MinimumParticipationMultisig } from "./minimum-participation-multisig";
+export { ProposalCreationSettingsMultisig } from "./proposal-creation-settings-multisig";

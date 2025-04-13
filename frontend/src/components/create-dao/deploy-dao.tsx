@@ -22,56 +22,10 @@ export const EditButton = ({ step, setStep }: EditButtonProps) => {
   return <Button onClick={() => setStep(step)}>Edit</Button>;
 };
 
-export const DeployDao = ({
-  confirmed,
-  setConfirmed,
-  setStep,
-}: DeployDaoProps) => {
+export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
   const amount = dao.token.amounts.reduce((acc, amount) => acc + amount, 0);
   return (
     <>
-      <Header>
-        <img src={stepIcon} alt="step-icon" />
-        <h1>Deploy your DAO</h1>
-      </Header>
-      <StepInfo>
-        <img src={infoIcon} style={{ width: "20px" }} />
-        <h2>
-          Double-check that everything is correct before deploying your DAO.
-          Most of these settings can be changed later with a vote.
-        </h2>
-      </StepInfo>
-      <InfoBox>
-        <InfoBoxHeader>
-          <h2>DAO</h2>
-          <EditButton step={1} setStep={setStep} />
-        </InfoBoxHeader>
-        <Content>
-          <ContentRow>
-            <h3>Logo</h3>
-            <img src={dao.logo} />
-          </ContentRow>
-          <ContentRow>
-            <h3>Name</h3>
-            <p>{dao.name}</p>
-          </ContentRow>
-          <ContentRow>
-            <h3>Summary</h3>
-            <p>{dao.summary}</p>
-          </ContentRow>
-          <ContentRow>
-            <h3>Links</h3>
-            <Links>
-              {dao.links.map((link, index) => (
-                <Link key={index}>
-                  <p>{link.label}</p>
-                  <a href={link.url}>{link.url}</a>
-                </Link>
-              ))}
-            </Links>
-          </ContentRow>
-        </Content>
-      </InfoBox>
       <InfoBox>
         <InfoBoxHeader>
           <h2>Voters</h2>
@@ -80,8 +34,7 @@ export const DeployDao = ({
         <Content>
           <ContentRow>
             <h3>Eligible voters</h3>
-            {dao.type === DaoType.SimpleVote && <p>Token holders</p>}
-            {dao.type === DaoType.MultisigVote && <p>Multisig members</p>}
+            <p>Token holders</p>
           </ContentRow>
           <ContentRow>
             <h3>Token</h3>
@@ -144,6 +97,105 @@ export const DeployDao = ({
           </ContentRow>
         </Content>
       </InfoBox>
+    </>
+  );
+};
+
+export const MultisigVoting = ({ setStep }: { setStep: (v: any) => void }) => {
+  return (
+    <>
+      <InfoBox>
+        <InfoBoxHeader>
+          <h2>Voters</h2>
+          <EditButton step={2} setStep={setStep} />
+        </InfoBoxHeader>
+        <Content>
+          <ContentRow>
+            <h3>Eligible voters</h3>
+            <p>Multisig members</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Distribution</h3>
+            <p>{dao.members.length} addresses</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Proposal creation</h3>
+            <p>Multisig members</p>
+          </ContentRow>
+        </Content>
+      </InfoBox>
+      <InfoBox>
+        <InfoBoxHeader>
+          <h2>Voting parameters</h2>
+          <EditButton step={3} setStep={setStep} />
+        </InfoBoxHeader>
+        <Content>
+          <ContentRow>
+            <h3>Minimum approval</h3>
+            <p>
+              {dao.minimumParticipation.numerator} of{" "}
+              {dao.minimumParticipation.denominator} addresses
+            </p>
+          </ContentRow>
+        </Content>
+      </InfoBox>
+    </>
+  );
+};
+
+export const DeployDao = ({
+  confirmed,
+  setConfirmed,
+  setStep,
+}: DeployDaoProps) => {
+  return (
+    <>
+      <Header>
+        <img src={stepIcon} alt="step-icon" />
+        <h1>Deploy your DAO</h1>
+      </Header>
+      <StepInfo>
+        <img src={infoIcon} style={{ width: "20px" }} />
+        <h2>
+          Double-check that everything is correct before deploying your DAO.
+          Most of these settings can be changed later with a vote.
+        </h2>
+      </StepInfo>
+      <InfoBox>
+        <InfoBoxHeader>
+          <h2>DAO</h2>
+          <EditButton step={1} setStep={setStep} />
+        </InfoBoxHeader>
+        <Content>
+          <ContentRow>
+            <h3>Logo</h3>
+            <img src={dao.logo} />
+          </ContentRow>
+          <ContentRow>
+            <h3>Name</h3>
+            <p>{dao.name}</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Summary</h3>
+            <p>{dao.summary}</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Links</h3>
+            <Links>
+              {dao.links.map((link, index) => (
+                <Link key={index}>
+                  <p>{link.label}</p>
+                  <a href={link.url}>{link.url}</a>
+                </Link>
+              ))}
+            </Links>
+          </ContentRow>
+        </Content>
+      </InfoBox>
+      {dao.type === DaoType.SimpleVote && <TokenVoting setStep={setStep} />}
+      {dao.type === DaoType.MultisigVote && (
+        <MultisigVoting setStep={setStep} />
+      )}
       <CheckBox>
         {confirmed ? (
           <CheckBoxRoundedIcon

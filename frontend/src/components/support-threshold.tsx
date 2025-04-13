@@ -5,6 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import successIcon from "../assets/images/done.svg";
 import warningIcon from "../assets/images/warning.svg";
+import { ConfirmationSuccess, Warning } from "./create-dao/common-styles";
 
 export const SupportThreshold = () => {
   const [threshold, setThreshold] = useState(50);
@@ -97,32 +98,5 @@ export const Controls = styled.div`
     line-height: 17px;
     letter-spacing: -0.02em;
     color: rgba(41, 41, 51, 0.9);
-  }
-`;
-
-export const Confirmation = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 7px;
-`;
-
-export const ConfirmationSuccess = styled(Confirmation)`
-  p {
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 150%;
-    letter-spacing: -0.02em;
-    color: #1fba66;
-  }
-`;
-
-export const Warning = styled(Confirmation)`
-  p {
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 150%;
-    letter-spacing: -0.02em;
-    color: #ffd056;
   }
 `;

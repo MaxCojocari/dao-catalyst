@@ -51,10 +51,10 @@ export const RadioGroup = styled.div`
   flex-direction: column;
   gap: 4px;
   margin-top: 8px;
-  box-sizing: border-box;
+  box-sizing: "border-box";
 
   input[type="radio"] {
-    accent-color: rgba(102, 102, 255, 0.8); /* your custom color */
+    accent-color: rgba(102, 102, 255, 0.8);
   }
 
   .radio-card {

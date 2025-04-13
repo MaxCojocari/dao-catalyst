@@ -10,7 +10,7 @@ export const TEST_DAO_CONTRACT_ADDRESS =
   "0xF079A5c205B622349A648965c4E5F05969eB0542";
 
 export const TEST_DAO_INFO = {
-  type: DaoType.SimpleVote,
+  type: DaoType.MultisigVote,
   name: "PikaDAO",
   logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreihbik6lvzagahquz52qcyxqhuiaafumepejtsfof56gkmglojkjie",
   summary:
