@@ -3,43 +3,62 @@ import styled from "styled-components";
 import deleteIcon from "../../../assets/images/delete-icon.svg";
 import { AddressInput } from "../..";
 import plusSign from "../../../assets/images/plus-sign.svg";
-import { $daoInfo, updateDaoInfo } from "../../../store";
+import {
+  $members,
+  addMember,
+  removeMember,
+  updateMemberAddress,
+} from "../../../store";
 import { useUnit } from "effector-react";
 
 export const OwnershipTable = () => {
-  const daoInfo = useUnit($daoInfo);
-  const wallets = daoInfo.members;
+  const wallets = useUnit($members);
 
-  const handleAddWallet = () => {
-    const newId = wallets.length ? wallets[wallets.length - 1].id + 1 : 1;
-    updateDaoInfo({
-      members: [...wallets, { id: newId, address: "" }],
-      quorum: { ...daoInfo.quorum, denominator: wallets.length + 1 },
-      minimumParticipation: {
-        numerator: Math.ceil(((wallets.length + 1) * 2) / 3),
-        denominator: wallets.length + 1,
-      },
-    });
-  };
+  const handleAddWallet = () => addMember();
+  const handleRemove = (id: number) => removeMember(id);
+  const handleAddressChange = (id: number, newAddress: string) =>
+    updateMemberAddress({ id, address: newAddress });
 
-  const handleRemove = (id: number) => {
-    updateDaoInfo({
-      members: wallets.filter((entry) => entry.id !== id),
-      quorum: { ...daoInfo.quorum, denominator: wallets.length - 1 },
-      minimumParticipation: {
-        numerator: Math.ceil(((wallets.length - 1) * 2) / 3),
-        denominator: wallets.length - 1,
-      },
-    });
-  };
+  // const handleAddWallet = () => {
+  //   const newId = wallets.length ? wallets[wallets.length - 1].id + 1 : 1;
+  //   const fraction = {
+  //     numerator: Math.floor(((wallets.length + 1) * 2) / 3),
+  //     denominator: wallets.length + 1,
+  //   };
+  //   updateDaoInfo({
+  //     members: [...wallets, { id: newId, address: "" }],
+  //     quorum: fraction,
+  //     minimumParticipation: fraction,
+  //   });
+  // };
 
-  const handleAddressChange = (id: number, newAddress: string) => {
-    updateDaoInfo({
-      members: wallets.map((entry) =>
-        entry.id === id ? { ...entry, address: newAddress } : entry
-      ),
-    });
-  };
+  // const handleRemove = (id: number) => {
+  //   const fraction = {
+  //     numerator: Math.floor(((wallets.length - 1) * 2) / 3),
+  //     denominator: wallets.length - 1,
+  //   };
+  //   updateDaoInfo({
+  //     members: wallets.filter((entry) => entry.id !== id),
+  //     quorum: fraction,
+  //     minimumParticipation: fraction,
+  //   });
+  // };
+
+  // const handleAddressChange = (id: number, newAddress: string) => {
+  //   updateDaoInfo({
+  //     members: wallets.map((entry) =>
+  //       entry.id === id ? { ...entry, address: newAddress } : entry
+  //     ),
+  //   });
+  //   const fraction = {
+  //     numerator: Math.floor((daoInfo.members.length * 2) / 3),
+  //     denominator: daoInfo.members.length,
+  //   };
+  //   updateDaoInfo({
+  //     quorum: fraction,
+  //     minimumParticipation: fraction,
+  //   });
+  // };
 
   return (
     <>

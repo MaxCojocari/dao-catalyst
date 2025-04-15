@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DefineMembership,
   DeployDao,
@@ -10,18 +10,44 @@ import styled from "styled-components";
 import {
   BackButton,
   Box,
-  DisabledButton,
   NextStepButton,
 } from "../components/create-dao/common-styles";
 import backIcon from "../assets/images/back-icon.svg";
 import { ProgressBarPosition } from "../components/progress-bar";
 import { $daoInfo } from "../store";
 import { useUnit } from "effector-react";
+import { DaoSettings, DaoType } from "../types";
+
+const isNextEnabled = (step: number, dao: DaoSettings): boolean => {
+  if (step === 1) {
+    return dao.name.trim() !== "" && dao.summary.trim() !== "";
+  }
+
+  if (step === 2) {
+    const hasAtLeastOneMember = dao.members.some(
+      (member) => member.address?.trim() !== ""
+    );
+
+    if (dao.type === DaoType.MultisigVote && hasAtLeastOneMember) return true;
+
+    if (dao.token.isDeployed) {
+      return dao.token.tokenAddress.trim() !== "";
+    } else {
+      return dao.token.name.trim() !== "" && dao.token.symbol.trim() !== "";
+    }
+  }
+
+  return true;
+};
 
 export const CreateDaoPage = () => {
   const dao = useUnit($daoInfo);
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [step]);
 
   return (
     <>
@@ -54,20 +80,18 @@ export const CreateDaoPage = () => {
           )}
           {step >= 1 && step < 4 && (
             <NextStepButton
+              disabled={!isNextEnabled(step, dao)}
               onClick={() => {
+                if (!isNextEnabled(step, dao)) return;
                 setStep((prev) => Math.min(4, prev + 1));
-                window.scrollTo({ top: 0, behavior: "smooth" });
                 console.log(dao);
               }}
             >
               Next Step
             </NextStepButton>
           )}
-          {step === 4 && confirmed && (
-            <NextStepButton>Deploy DAO</NextStepButton>
-          )}
-          {step === 4 && !confirmed && (
-            <DisabledButton>Deploy DAO</DisabledButton>
+          {step === 4 && (
+            <NextStepButton disabled={!confirmed}>Deploy DAO</NextStepButton>
           )}
         </Box>
       </Container>

@@ -61,12 +61,8 @@ export const ProgressBar = ({
           <p>{secondStep}</p>
         </div>
         <div
-          className={`${styles.progress_line} ${
-            position === 3 && finished
-              ? styles.finished_line
-              : (position === 3 && !finished) || (position === 2 && finished)
-              ? styles.solid
-              : ""
+          className={`${styles.progress_line} ${styles.solid} ${
+            position === 3 ? styles.finished_line : ""
           }`}
         />
         <div

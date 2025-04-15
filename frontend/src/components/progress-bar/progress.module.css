@@ -68,7 +68,7 @@ p {
   max-width: 120px;
   /* height: 2px;
     background: #e0e0e0; */
-  border: 1px dashed #e5e5ff;
+  border: 1px solid #e5e5ff;
   position: relative;
 }
 

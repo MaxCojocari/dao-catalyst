@@ -33,6 +33,7 @@ export const DescribeDao = () => {
           placeholder="Type your DAO's name ..."
           onChange={(e) => updateDaoInfo({ name: e.target.value })}
           value={daoInfo.name}
+          maxLength={128}
         />
         <a className="input-description">{daoInfo.name.length}/128</a>
       </Input>

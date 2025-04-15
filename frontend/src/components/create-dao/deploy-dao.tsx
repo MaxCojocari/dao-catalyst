@@ -59,7 +59,10 @@ export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
           <ContentRow>
             <h3>Proposal creation</h3>
             <p>
-              Members with ≥ {dao.proposalCreationMinVotingPower}{" "}
+              Members with ≥{" "}
+              {!dao.proposalCreationMinVotingPower
+                ? 0
+                : dao.proposalCreationMinVotingPower}{" "}
               {dao.token.symbol} voting power or balance
             </p>
           </ContentRow>
@@ -195,12 +198,18 @@ export const DeployDao = ({
           <ContentRow>
             <h3>Links</h3>
             <Links>
-              {dao.links.map((link, index) => (
-                <Link key={index}>
-                  <p>{link.label}</p>
-                  <a href={link.url}>{link.url}</a>
-                </Link>
-              ))}
+              {dao.links.length === 1 &&
+              dao.links[0].label === "" &&
+              dao.links[0].url === "" ? (
+                <p>None</p>
+              ) : (
+                dao.links.map((link, index) => (
+                  <Link key={index}>
+                    <p>{link.label}</p>
+                    <a href={link.url}>{link.url}</a>
+                  </Link>
+                ))
+              )}
             </Links>
           </ContentRow>
         </Content>
