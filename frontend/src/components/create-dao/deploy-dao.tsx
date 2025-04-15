@@ -1,4 +1,4 @@
-import { Header, StepInfo } from "./common-styles";
+import { Header, StepInfo } from "../common-styles";
 import stepIcon from "../../assets/images/step1_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
 import styled from "styled-components";
@@ -26,10 +26,12 @@ export const EditButton = ({ step, setStep }: EditButtonProps) => {
 
 export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
   const dao = useUnit($daoInfo);
-  const amount = dao.token.initialDistribution.reduce(
-    (acc, recipient) => acc + Number(recipient.tokens),
-    0
-  );
+  const amount = dao.token.isDeployed
+    ? dao.token.totalSupply
+    : dao.token.initialDistribution.reduce(
+        (acc, recipient) => acc + Number(recipient.tokens),
+        0
+      );
   return (
     <>
       <InfoBox>
@@ -206,7 +208,9 @@ export const DeployDao = ({
                 dao.links.map((link, index) => (
                   <Link key={index}>
                     <p>{link.label}</p>
-                    <a href={link.url}>{link.url}</a>
+                    <a href={link.url} target="_blank" rel="noreferrer">
+                      {link.url}
+                    </a>
                   </Link>
                 ))
               )}

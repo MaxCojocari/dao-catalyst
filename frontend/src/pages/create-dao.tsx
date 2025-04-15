@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
+import { useUnit } from "effector-react";
 import {
   DefineMembership,
   DeployDao,
   DescribeDao,
   ProgressBar,
   SelectGovernanceSettings,
+  TransactionModal,
 } from "../components";
 import styled from "styled-components";
-import {
-  BackButton,
-  Box,
-  NextStepButton,
-} from "../components/create-dao/common-styles";
+import { BackButton, Box, NextStepButton } from "../components/common-styles";
 import backIcon from "../assets/images/back-icon.svg";
 import { ProgressBarPosition } from "../components/progress-bar";
 import { $daoInfo } from "../store";
-import { useUnit } from "effector-react";
-import { DaoSettings, DaoType } from "../types";
+import { DaoSettings, DaoType, TxStatus } from "../types";
+import { useWriteContract } from "wagmi";
+import { ERC20__factory } from "../typechain-types";
+import { parseUnits } from "viem";
+import { waitForTransactionReceipt } from "@wagmi/core";
+import { wagmiConfig } from "../utils/provider";
 
 const isNextEnabled = (step: number, dao: DaoSettings): boolean => {
   if (step === 1) {
@@ -27,6 +29,10 @@ const isNextEnabled = (step: number, dao: DaoSettings): boolean => {
     const hasAtLeastOneMember = dao.members.some(
       (member) => member.address?.trim() !== ""
     );
+    console.log("isNextEnabled");
+    console.log("dao.type", dao.type);
+    console.log("dao.members", dao.members);
+    console.log("hasAtLeastOneMember", hasAtLeastOneMember);
 
     if (dao.type === DaoType.MultisigVote && hasAtLeastOneMember) return true;
 
@@ -44,6 +50,40 @@ export const CreateDaoPage = () => {
   const dao = useUnit($daoInfo);
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
+  const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.Idle);
+  const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
+  const { writeContractAsync } = useWriteContract();
+
+  const handleDeploy = async () => {
+    try {
+      setTxStatus(TxStatus.Waiting);
+      const hash = await writeContractAsync({
+        address: "0x34f2c50DBA5e998690C1b5047A74405c2FF2C54F" as `0x${string}`,
+        abi: ERC20__factory.abi,
+        functionName: "transfer",
+        args: [
+          "0x03C25c5Dd860B021165A127A6553c67C371551b0",
+          parseUnits("0.01", 6),
+        ],
+      });
+      setTxHash(hash);
+
+      const receipt = await waitForTransactionReceipt(wagmiConfig, { hash });
+
+      if (receipt.status === "success") {
+        setTxStatus(TxStatus.Submitted);
+      } else {
+        setTxStatus(TxStatus.Failed);
+      }
+    } catch (err: any) {
+      console.error("Transaction failed:", err);
+      setTxStatus(TxStatus.Failed);
+    }
+  };
+
+  const handleClose = () => {
+    setTxStatus(TxStatus.Idle);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -91,9 +131,20 @@ export const CreateDaoPage = () => {
             </NextStepButton>
           )}
           {step === 4 && (
-            <NextStepButton disabled={!confirmed}>Deploy DAO</NextStepButton>
+            <NextStepButton disabled={!confirmed} onClick={handleDeploy}>
+              Deploy DAO
+            </NextStepButton>
           )}
         </Box>
+        <TransactionModal
+          status={txStatus}
+          txHash={txHash}
+          onClose={handleClose}
+          titleWaiting="Waiting for Confirmation"
+          titleSubmitted="DAO Created Successfully!"
+          successLabel="Open DAO Page"
+          explorerUrl="https://sepolia.etherscan.io/tx/"
+        />
       </Container>
     </>
   );

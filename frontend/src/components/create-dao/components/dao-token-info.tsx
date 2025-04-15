@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BinarySelector, ImportDaoToken, MintDaoToken } from "../..";
 import { InputMetadata } from "../../input-metadata";
-import { Input } from "../common-styles";
+import { Input } from "../../common-styles";
 import { $daoInfo } from "../../../store";
 import { useUnit } from "effector-react";
 

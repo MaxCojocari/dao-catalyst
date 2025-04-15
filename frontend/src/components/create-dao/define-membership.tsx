@@ -4,7 +4,7 @@ import {
   MultisigMembers,
   VotingMethodSelector,
 } from "..";
-import { Header, Input, StepInfo } from "./common-styles";
+import { Header, Input, StepInfo } from "../common-styles";
 import stepIcon from "../../assets/images/step2_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
 import { useState } from "react";

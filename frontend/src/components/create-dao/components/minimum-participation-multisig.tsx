@@ -3,7 +3,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import styled from "styled-components";
 import { Container, Controls } from "./minimum-participation";
-import { ConfirmationSuccess, Warning } from "../common-styles";
+import { ConfirmationSuccess, Warning } from "../../common-styles";
 import successIcon from "../../../assets/images/done.svg";
 import warningIcon from "../../../assets/images/warning.svg";
 import { $daoInfo, setMinimumParticipationNumerator } from "../../../store";
