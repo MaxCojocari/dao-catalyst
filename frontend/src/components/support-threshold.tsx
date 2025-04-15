@@ -1,21 +1,23 @@
 import { Box, IconButton, Slider } from "@mui/material";
-import { useState } from "react";
 import styled from "styled-components";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import successIcon from "../assets/images/done.svg";
 import warningIcon from "../assets/images/warning.svg";
 import { ConfirmationSuccess, Warning } from "./create-dao/common-styles";
+import { useUnit } from "effector-react";
+import { $daoInfo, setQuorumNumerator } from "../store";
 
 export const SupportThreshold = () => {
-  const [threshold, setThreshold] = useState(50);
+  const daoInfo = useUnit($daoInfo);
+  const threshold = daoInfo.quorum.numerator;
 
   const handleChange = (e: any) => {
-    setThreshold(Number(e.target.value));
+    setQuorumNumerator(Number(e.target.value));
   };
 
-  const increment = () => setThreshold((prev) => Math.min(prev + 1, 100));
-  const decrement = () => setThreshold((prev) => Math.max(prev - 1, 0));
+  const increment = () => setQuorumNumerator(Math.min(threshold + 1, 100));
+  const decrement = () => setQuorumNumerator(Math.max(threshold - 1, 0));
 
   return (
     <Container>
@@ -79,7 +81,11 @@ export const SupportThreshold = () => {
       )}
       {threshold < 50 && (
         <Warning>
-          <img src={warningIcon} width="14px" style={{ marginRight: "8px" }} />
+          <img
+            src={warningIcon}
+            width="14px"
+            style={{ marginRight: "8px", marginTop: "3px" }}
+          />
           <p>Proposal could be approved by a minority rather than a majority</p>
         </Warning>
       )}

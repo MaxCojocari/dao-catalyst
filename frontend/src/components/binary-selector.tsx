@@ -6,33 +6,33 @@ export const BinarySelector = ({ value, onChange }: GenericProps) => {
   return (
     <RadioGroup>
       <label
-        className={`radio-card ${value === "No" ? "active" : ""}`}
-        onClick={() => onChange("No")}
+        className={`radio-card ${!value ? "active" : ""}`}
+        onClick={() => onChange(false)}
       >
         <RadioHeader>
-          <span className="title">{value}</span>
+          <span className="title">No</span>
           <input
             type="radio"
             name="binary-selector"
             value={value}
-            checked={value === "No"}
-            onChange={() => onChange("No")}
+            checked={!value}
+            onChange={() => onChange(false)}
           />
         </RadioHeader>
       </label>
 
       <label
-        className={`radio-card ${value === "Yes" ? "active" : ""}`}
-        onClick={() => onChange("Yes")}
+        className={`radio-card ${value ? "active" : ""}`}
+        onClick={() => onChange(true)}
       >
         <RadioHeader>
           <span className="title">Yes</span>
           <input
             type="radio"
             name="binary-selector"
-            value="Yes"
-            checked={value === "Yes"}
-            onChange={() => onChange("Yes")}
+            value={value}
+            checked={value}
+            onChange={() => onChange(value)}
           />
         </RadioHeader>
       </label>

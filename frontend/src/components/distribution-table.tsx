@@ -1,37 +1,41 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import styled from "styled-components";
 import deleteIcon from "../assets/images/delete-icon.svg";
-import { useAccount } from "wagmi";
 import { AddressInput } from ".";
 import plusSign from "../assets/images/plus-sign.svg";
-
-interface WalletEntry {
-  id: number;
-  address: string | undefined;
-  tokens: string;
-}
+import { $daoInfo, setInitialRecipients } from "../store";
+import { useUnit } from "effector-react";
 
 export const DistributionTable = () => {
-  const { address } = useAccount();
-  const [wallets, setWallets] = useState<WalletEntry[]>([
-    { id: 1, address, tokens: "1" },
-  ]);
+  const daoInfo = useUnit($daoInfo);
+  const wallets = daoInfo.token.initialDistribution;
 
-  const totalTokens = wallets.reduce((sum, w) => sum + Number(w.tokens), 0);
+  const totalTokens = daoInfo.token.initialDistribution.reduce(
+    (sum, w) => sum + Number(w.tokens),
+    0
+  );
 
   const handleTokenChange = (id: number, tokens: string) => {
-    setWallets((prev) =>
-      prev.map((entry) => (entry.id === id ? { ...entry, tokens } : entry))
+    setInitialRecipients(
+      wallets.map((entry) => (entry.id === id ? { ...entry, tokens } : entry))
     );
   };
 
   const handleRemove = (id: number) => {
-    setWallets((prev) => prev.filter((entry) => entry.id !== id));
+    setInitialRecipients(wallets.filter((entry) => entry.id !== id));
   };
 
   const handleAddWallet = () => {
     const newId = wallets.length ? wallets[wallets.length - 1].id + 1 : 1;
-    setWallets([...wallets, { id: newId, address: "", tokens: "" }]);
+    setInitialRecipients([...wallets, { id: newId, address: "", tokens: "" }]);
+  };
+
+  const handleAddressChange = (id: number, newAddress: string) => {
+    setInitialRecipients(
+      wallets.map((entry) =>
+        entry.id === id ? { ...entry, address: newAddress } : entry
+      )
+    );
   };
 
   return (
@@ -51,7 +55,10 @@ export const DistributionTable = () => {
               : 0;
           return (
             <Fragment key={`wallet-entry-${entry.id}`}>
-              <AddressInput address={entry.address!} />
+              <AddressInput
+                address={entry.address ?? ""}
+                onChange={(val) => handleAddressChange(entry.id, val)}
+              />
               <Input
                 type="number"
                 step={100}
@@ -70,8 +77,8 @@ export const DistributionTable = () => {
                   if (isNaN(percent)) return;
                   if (percent > 100) return;
                   const newTokens = Math.round((percent / 100) * totalTokens);
-                  setWallets((prev) =>
-                    prev.map((w) =>
+                  setInitialRecipients(
+                    wallets.map((w) =>
                       w.id === entry.id
                         ? { ...w, tokens: newTokens.toString() }
                         : w

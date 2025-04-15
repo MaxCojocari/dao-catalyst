@@ -10,9 +10,9 @@ export type Fraction = {
 };
 
 export type Duration = {
-  days: number;
-  hours: number;
-  minutes: number;
+  days: string;
+  hours: string;
+  minutes: string;
 };
 
 export type DaoLink = {
@@ -20,27 +20,38 @@ export type DaoLink = {
   url: string;
 };
 
+export type Recipient = {
+  id: number;
+  address: string | undefined;
+  tokens: string;
+};
+
+export type Member = {
+  id: number;
+  address: string | undefined;
+};
+
 export interface DaoTokenSettings {
   isDeployed: boolean;
   tokenAddress: string;
   name: string;
   symbol: string;
-  recipients: string[];
-  amounts: bigint[];
+  initialDistribution: Recipient[];
 }
 
 export interface DaoSettings {
-  daoType: DaoType;
+  type: DaoType;
   name: string;
   summary: string;
-  links: DaoLink;
+  links: DaoLink[];
   daoURI: string;
-  members: string[];
-  minimalDuration: Duration;
-  daoToken: DaoTokenSettings;
-  quorumFraction: Fraction;
-  minimumParticipationFraction: Fraction;
-  proposalCreationMinVotingPower: number;
+  members: Member[];
+  minimumDuration: Duration;
+  token: DaoTokenSettings;
+  quorum: Fraction; // support threshold
+  minimumParticipation: Fraction;
+  proposalCreationMinVotingPower: number | string;
+  earlyExecution: boolean;
   salt: string;
 }
 

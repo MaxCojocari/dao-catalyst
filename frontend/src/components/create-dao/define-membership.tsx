@@ -8,9 +8,15 @@ import { Header, Input, StepInfo } from "./common-styles";
 import stepIcon from "../../assets/images/step2_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
 import { useState } from "react";
+import { $daoInfo } from "../../store";
+import { useUnit } from "effector-react";
+import { DaoType } from "../../types";
 
 export const DefineMembership = () => {
-  const [selectedVotingMethod, setSelectedVotingMethod] = useState("token");
+  const daoInfo = useUnit($daoInfo);
+  const [selectedVotingMethod, setSelectedVotingMethod] = useState(
+    daoInfo.type === DaoType.SimpleVote ? "token" : "multisig"
+  );
 
   return (
     <>
@@ -33,8 +39,8 @@ export const DefineMembership = () => {
           onChange={setSelectedVotingMethod}
         />
       </Input>
-      {selectedVotingMethod === "token" && <DaoTokenInfo />}
-      {selectedVotingMethod === "multisig" && <MultisigMembers />}
+      {daoInfo.type === DaoType.SimpleVote && <DaoTokenInfo />}
+      {daoInfo.type === DaoType.MultisigVote && <MultisigMembers />}
     </>
   );
 };

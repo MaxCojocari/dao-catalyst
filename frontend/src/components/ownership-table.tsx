@@ -1,26 +1,44 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import styled from "styled-components";
 import deleteIcon from "../assets/images/delete-icon.svg";
-import { useAccount } from "wagmi";
 import { AddressInput } from ".";
 import plusSign from "../assets/images/plus-sign.svg";
-
-interface WalletEntry {
-  id: number;
-  address: string | undefined;
-}
+import { $daoInfo, updateDaoInfo } from "../store";
+import { useUnit } from "effector-react";
 
 export const OwnershipTable = () => {
-  const { address } = useAccount();
-  const [wallets, setWallets] = useState<WalletEntry[]>([{ id: 1, address }]);
+  const daoInfo = useUnit($daoInfo);
+  const wallets = daoInfo.members;
 
   const handleAddWallet = () => {
     const newId = wallets.length ? wallets[wallets.length - 1].id + 1 : 1;
-    setWallets([...wallets, { id: newId, address: "" }]);
+    updateDaoInfo({
+      members: [...wallets, { id: newId, address: "" }],
+      quorum: { ...daoInfo.quorum, denominator: wallets.length + 1 },
+      minimumParticipation: {
+        numerator: Math.ceil(((wallets.length + 1) * 2) / 3),
+        denominator: wallets.length + 1,
+      },
+    });
   };
 
   const handleRemove = (id: number) => {
-    setWallets((prev) => prev.filter((entry) => entry.id !== id));
+    updateDaoInfo({
+      members: wallets.filter((entry) => entry.id !== id),
+      quorum: { ...daoInfo.quorum, denominator: wallets.length - 1 },
+      minimumParticipation: {
+        numerator: Math.ceil(((wallets.length - 1) * 2) / 3),
+        denominator: wallets.length - 1,
+      },
+    });
+  };
+
+  const handleAddressChange = (id: number, newAddress: string) => {
+    updateDaoInfo({
+      members: wallets.map((entry) =>
+        entry.id === id ? { ...entry, address: newAddress } : entry
+      ),
+    });
   };
 
   return (
@@ -34,7 +52,10 @@ export const OwnershipTable = () => {
         {wallets.map((entry) => {
           return (
             <Fragment key={`wallet-entry-${entry.id}`}>
-              <AddressInput address={entry.address!} />
+              <AddressInput
+                address={entry.address!}
+                onChange={(val) => handleAddressChange(entry.id, val)}
+              />
               <div
                 style={{
                   display: "flex",

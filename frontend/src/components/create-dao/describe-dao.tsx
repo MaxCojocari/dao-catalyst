@@ -4,10 +4,12 @@ import { LogoUploader } from "../logo-uploader";
 import { Links } from "../links";
 import { InputMetadata } from "../input-metadata";
 import { Header, StepInfo, Input } from "./common-styles";
-import { useState } from "react";
+import { $daoInfo, updateDaoInfo } from "../../store";
+import { useUnit } from "effector-react";
 
 export const DescribeDao = () => {
-  const [name, setName] = useState("");
+  const daoInfo = useUnit($daoInfo);
+
   return (
     <>
       <Header>
@@ -29,9 +31,10 @@ export const DescribeDao = () => {
         <input
           type="text"
           placeholder="Type your DAO's name ..."
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => updateDaoInfo({ name: e.target.value })}
+          value={daoInfo.name}
         />
-        <a className="input-description">{name.length}/128</a>
+        <a className="input-description">{daoInfo.name.length}/128</a>
       </Input>
       <LogoUploader />
       <Input>
@@ -40,7 +43,11 @@ export const DescribeDao = () => {
           inputDescription="Briefly explain the mission of your DAO. This will appear on the
             Explore page to help others discover you."
         />
-        <textarea placeholder="Type your summary ..."></textarea>
+        <textarea
+          placeholder="Type your summary ..."
+          onChange={(e) => updateDaoInfo({ summary: e.target.value })}
+          value={daoInfo.summary}
+        ></textarea>
       </Input>
       <Links
         inputName="Links"
