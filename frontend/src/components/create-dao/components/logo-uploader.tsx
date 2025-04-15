@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import uploadFileIcon from "../assets/images/upload-file.svg";
+import uploadFileIcon from "../../../assets/images/upload-file.svg";
 import styled from "styled-components";
-import deleteIcon from "../assets/images/delete-icon.svg";
-import { OptionalInputMetadata } from "./optional-input-metadata";
+import deleteIcon from "../../../assets/images/delete-icon.svg";
+import { OptionalInputMetadata } from "../../optional-input-metadata";
 
 export const LogoUploader = () => {
   const [, setLogo] = useState<File | null>(null);

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { DaoType, GenericProps } from "../types";
-import { updateDaoInfo } from "../store";
+import { DaoType, GenericProps } from "../../../types";
+import { updateDaoInfo } from "../../../store";
 
 export const VotingMethodSelector = ({ value, onChange }: GenericProps) => {
   return (

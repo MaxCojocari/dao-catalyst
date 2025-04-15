@@ -1,7 +1,7 @@
 import stepIcon from "../../assets/images/step1_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
-import { LogoUploader } from "../logo-uploader";
-import { Links } from "../links";
+import { LogoUploader } from "./components/logo-uploader";
+import { Links } from "./components/links";
 import { InputMetadata } from "../input-metadata";
 import { Header, StepInfo, Input } from "./common-styles";
 import { $daoInfo, updateDaoInfo } from "../../store";

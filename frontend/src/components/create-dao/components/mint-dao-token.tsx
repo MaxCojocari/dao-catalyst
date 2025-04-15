@@ -1,7 +1,7 @@
 import { useUnit } from "effector-react";
-import { DistributionTable, InputMetadata } from ".";
-import { $daoInfo, updateDaoInfo } from "../store";
-import { Input } from "./create-dao/common-styles";
+import { DistributionTable, InputMetadata } from "../../.";
+import { $daoInfo, updateDaoInfo } from "../../../store";
+import { Input } from "../common-styles";
 
 export const MintDaoToken = () => {
   const daoInfo = useUnit($daoInfo);

@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { InputMetadata } from ".";
-import copyIcon from "../assets/images/copy-icon.svg";
+import { InputMetadata } from "../..";
+import copyIcon from "../../../assets/images/copy-icon.svg";
 import { useState } from "react";
-import successIcon from "../assets/images/done.svg";
-import failureIcon from "../assets/images/failure.svg";
+import successIcon from "../../../assets/images/success_progress.svg";
+import failureIcon from "../../../assets/images/failure.svg";
 import { isAddress } from "viem";
-import { Input } from "./create-dao/common-styles";
-import { $daoInfo, updateDaoInfo } from "../store";
+import { Input } from "../common-styles";
+import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
 
 export const ImportDaoToken = () => {

@@ -1,15 +1,15 @@
 import styled from "styled-components";
 import { Description, RadioGroup, RadioHeader } from "./voting-method-selector";
-import { GenericProps } from "../types";
-import { ANY_WALLET, TOKEN_HOLDERS } from "../constants";
+import { GenericProps } from "../../../types";
+import { ANY_WALLET, TOKEN_HOLDERS } from "../../../constants";
 import { Box, IconButton } from "@mui/material";
 import { StyledInput } from "./duration-picker";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { $daoInfo, updateDaoInfo } from "../store";
+import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
-import { Warning } from "./create-dao/common-styles";
-import warningIcon from "../assets/images/warning.svg";
+import { Warning } from "../common-styles";
+import warningIcon from "../../../assets/images/warning.svg";
 
 export const ProposalCreationSettings = ({ value, onChange }: GenericProps) => {
   const daoInfo = useUnit($daoInfo);

@@ -2,11 +2,11 @@ import { Box, IconButton, Slider } from "@mui/material";
 import styled from "styled-components";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import successIcon from "../assets/images/done.svg";
-import warningIcon from "../assets/images/warning.svg";
-import { ConfirmationSuccess, Warning } from "./create-dao/common-styles";
+import successIcon from "../../../assets/images/done.svg";
+import warningIcon from "../../../assets/images/warning.svg";
+import { ConfirmationSuccess, Warning } from "../common-styles";
 import { useUnit } from "effector-react";
-import { $daoInfo, setQuorumNumerator } from "../store";
+import { $daoInfo, setQuorumNumerator } from "../../../store";
 
 export const SupportThreshold = () => {
   const daoInfo = useUnit($daoInfo);

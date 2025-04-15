@@ -1,9 +1,9 @@
 import { Fragment } from "react";
 import styled from "styled-components";
-import deleteIcon from "../assets/images/delete-icon.svg";
-import { AddressInput } from ".";
-import plusSign from "../assets/images/plus-sign.svg";
-import { $daoInfo, updateDaoInfo } from "../store";
+import deleteIcon from "../../../assets/images/delete-icon.svg";
+import { AddressInput } from "../..";
+import plusSign from "../../../assets/images/plus-sign.svg";
+import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
 
 export const OwnershipTable = () => {
