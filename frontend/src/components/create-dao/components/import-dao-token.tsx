@@ -4,28 +4,48 @@ import copyIcon from "../../../assets/images/copy-icon.svg";
 import { useEffect, useState } from "react";
 import successIcon from "../../../assets/images/success_progress.svg";
 import failureIcon from "../../../assets/images/failure.svg";
-import { isAddress } from "viem";
+import { formatUnits, isAddress } from "viem";
 import { Input } from "../common-styles";
 import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
-import { useReadContract } from "wagmi";
+import { useReadContracts } from "wagmi";
 import { DaoToken__factory } from "../../../typechain-types";
 import { ERC20Votes_INTERFACE_ID } from "../../../constants";
 
 export const ImportDaoToken = () => {
   const daoInfo = useUnit($daoInfo);
-  const address = daoInfo.token.tokenAddress;
   const [isFocused, setIsFocused] = useState(false);
-  const { data } = useReadContract({
-    abi: DaoToken__factory.abi,
-    functionName: "supportsInterface",
-    address: daoInfo.token.tokenAddress as `0x${string}`,
-    args: [ERC20Votes_INTERFACE_ID],
+
+  const abi = DaoToken__factory.abi;
+  const address = daoInfo.token.tokenAddress as `0x${string}`;
+  const { data, isPending } = useReadContracts({
+    contracts: [
+      {
+        abi,
+        functionName: "supportsInterface",
+        address,
+        args: [ERC20Votes_INTERFACE_ID],
+      },
+      {
+        abi,
+        functionName: "totalSupply",
+        address,
+      },
+      {
+        abi,
+        functionName: "name",
+        address,
+      },
+      {
+        abi,
+        functionName: "symbol",
+        address,
+      },
+    ],
   });
 
-  console.log("supportsInterface:", data);
-
-  const success = true;
+  const [supportsInterface, totalSupply, name, symbol] =
+    data?.map((d) => d.result) || [];
 
   const formatAddress = (addr: string) => {
     if (!isAddress(addr)) return addr;
@@ -83,70 +103,80 @@ export const ImportDaoToken = () => {
           />
         </Container>
       </Input>
-      <TokenCard>
-        {success ? (
-          <>
+      {!isPending && (
+        <TokenCard>
+          {supportsInterface ? (
             <>
-              <h1>Pickachu (PIK)</h1>
-              <TokenInfo>
-                <InfoRow>
-                  <h2>Standard</h2>
-                  <h2>ERC-20</h2>
-                </InfoRow>
-                <InfoRow>
-                  <h2>Total supply</h2>
-                  <h2>13k PIK</h2>
-                </InfoRow>
-                <InfoRow>
-                  <h2>Current holders</h2>
-                  <h2>3</h2>
-                </InfoRow>
-              </TokenInfo>
+              <>
+                <h1>
+                  {name?.toString()} ({symbol?.toString()})
+                </h1>
+                <TokenInfo>
+                  <InfoRow>
+                    <h2>Standard</h2>
+                    <h2>ERC-20</h2>
+                  </InfoRow>
+                  <InfoRow>
+                    <h2>Total supply</h2>
+                    <h2>
+                      {formatUnits(
+                        BigInt(totalSupply?.toString() as string),
+                        18
+                      )}{" "}
+                      {symbol?.toString()}
+                    </h2>
+                  </InfoRow>
+                  <InfoRow>
+                    <h2>Current holders</h2>
+                    <h2>3</h2>
+                  </InfoRow>
+                </TokenInfo>
+              </>
+              <ImportSuccess>
+                <img
+                  src={successIcon}
+                  width="16px"
+                  style={{ marginRight: "10px", marginTop: "2px" }}
+                />
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <h2 style={{ marginBottom: "4px" }}>Supported token</h2>
+                  <h3>
+                    This token can be used for governance in your DAO as it
+                    implements the ERC20Votes extension of the ERC-20 standard.
+                  </h3>
+                </div>
+              </ImportSuccess>
             </>
-            <ImportSuccess>
-              <img
-                src={successIcon}
-                width="16px"
-                style={{ marginRight: "10px", marginTop: "2px" }}
-              />
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <h2 style={{ marginBottom: "4px" }}>Supported token</h2>
-                <h3>
-                  This token can be used for governance in your DAO as it
-                  implements the ERC20Votes extension of the ERC-20 standard.
-                </h3>
-              </div>
-            </ImportSuccess>
-          </>
-        ) : (
-          <>
+          ) : (
             <>
-              <h1>{formatAddress(address.trim())}</h1>
-              <TokenInfo>
-                <InfoRow>
-                  <h2>Standard</h2>
-                  <h2>Unknown</h2>
-                </InfoRow>
-              </TokenInfo>
+              <>
+                <h1>{formatAddress(address.trim())}</h1>
+                <TokenInfo>
+                  <InfoRow>
+                    <h2>Standard</h2>
+                    <h2>Unknown</h2>
+                  </InfoRow>
+                </TokenInfo>
+              </>
+              <ImportFailure>
+                <img
+                  src={failureIcon}
+                  width="16px"
+                  style={{ marginRight: "10px", marginTop: "2px" }}
+                />
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <h2 style={{ marginBottom: "4px" }}>Not supported token!</h2>
+                  <h3>
+                    This token is not supported in the DAO Catalyst app. Try a
+                    different token or specify that you don't have a governance
+                    token yet.
+                  </h3>
+                </div>
+              </ImportFailure>
             </>
-            <ImportFailure>
-              <img
-                src={failureIcon}
-                width="16px"
-                style={{ marginRight: "10px", marginTop: "2px" }}
-              />
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <h2 style={{ marginBottom: "4px" }}>Not supported token!</h2>
-                <h3>
-                  This token is not supported in the DAO Catalyst app. Try a
-                  different token or specify that you don't have a governance
-                  token yet.
-                </h3>
-              </div>
-            </ImportFailure>
-          </>
-        )}
-      </TokenCard>
+          )}
+        </TokenCard>
+      )}
     </>
   );
 };
