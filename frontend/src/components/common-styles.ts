@@ -146,6 +146,7 @@ export const Input = styled.div`
   textarea {
     min-height: 140px;
     resize: vertical;
+    line-height: 160%;
   }
 `;
 

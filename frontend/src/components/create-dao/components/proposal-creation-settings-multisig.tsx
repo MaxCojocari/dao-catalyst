@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Description, RadioGroup, RadioHeader } from "./voting-method-selector";
 import { GenericProps } from "../../../types";
 import { ANY_WALLET, MULTISIG_MEMBERS } from "../../../constants";
-import { Warning } from "../common-styles";
+import { Warning } from "../../common-styles";
 import warningIcon from "../../../assets/images/warning.svg";
 
 export const ProposalCreationSettingsMultisig = ({

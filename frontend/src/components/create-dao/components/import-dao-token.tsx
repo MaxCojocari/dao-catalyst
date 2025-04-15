@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { InputMetadata } from "../..";
 import copyIcon from "../../../assets/images/copy-icon.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import successIcon from "../../../assets/images/success_progress.svg";
 import failureIcon from "../../../assets/images/failure.svg";
 import { formatUnits, isAddress } from "viem";
-import { Input } from "../common-styles";
+import { Input } from "../../common-styles";
 import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
 import { useReadContracts } from "wagmi";
@@ -55,6 +55,21 @@ export const ImportDaoToken = () => {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(address);
   };
+
+  useEffect(() => {
+    if (name && symbol && totalSupply) {
+      updateDaoInfo({
+        token: {
+          ...daoInfo.token,
+          name: name?.toString()!,
+          symbol: symbol?.toString()!,
+          totalSupply: Number(
+            formatUnits(BigInt(totalSupply?.toString() as string), 18)
+          ),
+        },
+      });
+    }
+  }, [data]);
 
   return (
     <>

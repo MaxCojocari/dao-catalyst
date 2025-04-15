@@ -1,5 +1,5 @@
 import { InputMetadata, OwnershipTable } from "../..";
-import { Input } from "../common-styles";
+import { Input } from "../../common-styles";
 
 export const MultisigMembers = () => {
   return (

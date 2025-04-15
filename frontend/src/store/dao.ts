@@ -1,4 +1,4 @@
-import { createEvent, createStore } from "effector";
+import { combine, createEvent, createStore } from "effector";
 import { DaoSettings, DaoType, Recipient } from "../types";
 
 export const updateDaoInfo = createEvent<Partial<DaoSettings>>();
@@ -22,6 +22,7 @@ export const $daoInfo = createStore<DaoSettings>({
     tokenAddress: "",
     name: "",
     symbol: "",
+    totalSupply: 0,
     initialDistribution: [
       {
         id: 1,
@@ -99,16 +100,20 @@ export const $members = createStore<MemberEntry[]>([{ id: 1, address: "" }])
   );
 
 // Sync to daoInfo members + update quorum/participation
-$members.watch((members) => {
-  const denominator = members.length || 1;
-  const quorum = {
-    numerator: Math.floor((denominator * 2) / 3),
-    denominator,
-  };
+combine($members, $daoInfo, (members, daoInfo) => ({ members, daoInfo })).watch(
+  ({ members, daoInfo }) => {
+    if (daoInfo.type !== DaoType.MultisigVote) return;
 
-  updateDaoInfo({
-    members,
-    quorum,
-    minimumParticipation: quorum,
-  });
-});
+    const denominator = members.length || 1;
+    const quorum = {
+      numerator: Math.floor((denominator * 2) / 3),
+      denominator,
+    };
+
+    updateDaoInfo({
+      members,
+      quorum,
+      minimumParticipation: quorum,
+    });
+  }
+);

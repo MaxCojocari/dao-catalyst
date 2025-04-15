@@ -10,7 +10,7 @@ import {
 } from "..";
 import stepIcon from "../../assets/images/step1_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
-import { Header, Input, StepInfo } from "./common-styles";
+import { Header, Input, StepInfo } from "../common-styles";
 import { useState } from "react";
 import { MULTISIG_MEMBERS, TOKEN_HOLDERS } from "../../constants";
 import { DaoType } from "../../types";

@@ -20,10 +20,12 @@ export const MinimumParticipation = () => {
   const decrement = () =>
     setMinimumParticipationNumerator(Math.max(threshold - 1, 0));
 
-  const totalSupply = daoInfo.token.initialDistribution.reduce(
-    (acc, walletEntry) => acc + Number(walletEntry.tokens),
-    0
-  );
+  const totalSupply = daoInfo.token.isDeployed
+    ? daoInfo.token.totalSupply
+    : daoInfo.token.initialDistribution.reduce(
+        (acc, recipient) => acc + Number(recipient.tokens),
+        0
+      );
   const tokenAmount = ((threshold / 100) * totalSupply).toFixed(1);
 
   return (

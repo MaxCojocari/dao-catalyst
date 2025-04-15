@@ -1,6 +1,3 @@
 export * from "./create-dao";
-
-export interface GenericProps {
-  value: any;
-  onChange: (v: any) => void;
-}
+export * from "./tx-status";
+export * from "./generic-props";

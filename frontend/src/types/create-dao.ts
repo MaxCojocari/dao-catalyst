@@ -37,6 +37,7 @@ export interface DaoTokenSettings {
   name: string;
   symbol: string;
   initialDistribution: Recipient[];
+  totalSupply: number;
 }
 
 export interface DaoSettings {

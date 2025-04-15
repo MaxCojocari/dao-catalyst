@@ -8,7 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
-import { Warning } from "../common-styles";
+import { Warning } from "../../common-styles";
 import warningIcon from "../../../assets/images/warning.svg";
 
 export const ProposalCreationSettings = ({ value, onChange }: GenericProps) => {
@@ -20,9 +20,7 @@ export const ProposalCreationSettings = ({ value, onChange }: GenericProps) => {
       updateDaoInfo({ proposalCreationMinVotingPower: "" });
       return;
     }
-    const num = parseInt(val, 10);
-    if (!isNaN(num))
-      updateDaoInfo({ proposalCreationMinVotingPower: Math.max(0, num) });
+    updateDaoInfo({ proposalCreationMinVotingPower: Math.max(0, Number(val)) });
   };
 
   const handleBlur = () => {

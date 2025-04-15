@@ -3,7 +3,7 @@ import infoIcon from "../../assets/images/info-icon.svg";
 import { LogoUploader } from "./components/logo-uploader";
 import { Links } from "./components/links";
 import { InputMetadata } from "../input-metadata";
-import { Header, StepInfo, Input } from "./common-styles";
+import { Header, StepInfo, Input } from "../common-styles";
 import { $daoInfo, updateDaoInfo } from "../../store";
 import { useUnit } from "effector-react";
 
