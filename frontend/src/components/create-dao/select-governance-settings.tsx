@@ -13,13 +13,15 @@ import infoIcon from "../../assets/images/info-icon.svg";
 import { Header, Input, StepInfo } from "./common-styles";
 import { useState } from "react";
 import { MULTISIG_MEMBERS, TOKEN_HOLDERS } from "../../constants";
-import { TEST_DAO_INFO as dao } from "../../constants";
 import { DaoType } from "../../types";
+import { $daoInfo, setEarlyExecution } from "../../store";
+import { useUnit } from "effector-react";
 
 const GovernanceSettingsTokenMembership = () => {
-  const [selectedOption, setSelectedOption] = useState("No");
+  const daoInfo = useUnit($daoInfo);
   const [proposalCreationSettings, setProposalCreationSettings] =
     useState(TOKEN_HOLDERS);
+
   return (
     <>
       <Input>
@@ -48,7 +50,10 @@ const GovernanceSettingsTokenMembership = () => {
           inputName="Early execution"
           inputDescription="Enables a proposal to be carried out before the voting period ends, as long as it has already reached the required support and participation levels, and additional votes can no longer alter the result."
         />
-        <BinarySelector value={selectedOption} onChange={setSelectedOption} />
+        <BinarySelector
+          value={daoInfo.earlyExecution}
+          onChange={setEarlyExecution}
+        />
       </Input>
       <Input>
         <InputMetadata
@@ -79,6 +84,13 @@ const GovernanceSettingsMultisigMembership = () => {
       </Input>
       <Input>
         <InputMetadata
+          inputName="Minimum duration"
+          inputDescription={`The shortest period of time a proposal is open for voting. Proposals can be created with a longer duration, but not shorter. Set this to a duration that is long enough for your members to have sufficient time to vote. It's recommended to set this to at least 1 day.`}
+        />
+        <DurationPicker />
+      </Input>
+      <Input>
+        <InputMetadata
           inputName="Proposal creation"
           inputDescription="Specify who is permitted to create proposals and what the minimum requirement is."
         />
@@ -92,6 +104,7 @@ const GovernanceSettingsMultisigMembership = () => {
 };
 
 export const SelectGovernanceSettings = () => {
+  const daoInfo = useUnit($daoInfo);
   return (
     <>
       <Header>
@@ -106,8 +119,10 @@ export const SelectGovernanceSettings = () => {
           How long should proposals remain open for voting?
         </h2>
       </StepInfo>
-      {dao.type === DaoType.SimpleVote && <GovernanceSettingsTokenMembership />}
-      {dao.type === DaoType.MultisigVote && (
+      {daoInfo.type === DaoType.SimpleVote && (
+        <GovernanceSettingsTokenMembership />
+      )}
+      {daoInfo.type === DaoType.MultisigVote && (
         <GovernanceSettingsMultisigMembership />
       )}
     </>

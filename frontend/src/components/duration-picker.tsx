@@ -1,65 +1,78 @@
-import { useState } from "react";
 import { Box, IconButton, InputBase } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import styled from "styled-components";
+import { $daoInfo, updateDaoInfo } from "../store";
+import { useUnit } from "effector-react";
 
 type TimeUnit = "minutes" | "hours" | "days";
 
-interface DurationState {
-  minutes: string | number;
-  hours: string | number;
-  days: string | number;
-}
-
 export const DurationPicker = () => {
-  const [duration, setDuration] = useState<DurationState>({
-    minutes: "0",
-    hours: "0",
-    days: "1",
-  });
+  const daoInfo = useUnit($daoInfo);
+  const prevMinDuration = daoInfo.minimumDuration;
 
   const isClampedUnit = (unit: TimeUnit) =>
     unit === "minutes" || unit === "hours";
-  const clampValue = (value: number, unit: TimeUnit) =>
-    isClampedUnit(unit) ? Math.min(59, Math.max(0, value)) : Math.max(0, value);
+  const clampValue = (value: number, unit: TimeUnit) => {
+    if (unit === "minutes") {
+      return Math.min(59, Math.max(0, value));
+    } else if (unit === "hours") {
+      return Math.min(23, Math.max(0, value));
+    }
+    return Math.max(0, value);
+  };
 
   const handleChange = (unit: TimeUnit, value: string) => {
     if (value === "") {
-      setDuration((prev) => ({ ...prev, [unit]: "" }));
+      updateDaoInfo({
+        minimumDuration: { ...prevMinDuration, [unit]: "" },
+      });
       return;
     }
 
     const num = parseInt(value, 10);
     if (!isNaN(num)) {
-      setDuration((prev) => ({ ...prev, [unit]: clampValue(num, unit) }));
+      updateDaoInfo({
+        minimumDuration: {
+          ...prevMinDuration,
+          [unit]: clampValue(num, unit),
+        },
+      });
     }
   };
 
   const handleBlur = (unit: TimeUnit) => {
-    setDuration((prev) => ({
-      ...prev,
-      [unit]: prev[unit] === "" ? 0 : prev[unit],
-    }));
+    updateDaoInfo({
+      minimumDuration: {
+        ...prevMinDuration,
+        [unit]: prevMinDuration[unit] === "" ? 0 : prevMinDuration[unit],
+      },
+    });
   };
 
   const increment = (unit: TimeUnit) => {
-    setDuration((prev) => {
-      const current =
-        typeof prev[unit] === "string"
-          ? parseInt(prev[unit] || "0", 10)
-          : prev[unit];
-      return { ...prev, [unit]: clampValue(current + 1, unit) };
+    const current =
+      typeof prevMinDuration[unit] === "string"
+        ? parseInt(prevMinDuration[unit] || "0", 10)
+        : prevMinDuration[unit];
+    updateDaoInfo({
+      minimumDuration: {
+        ...prevMinDuration,
+        [unit]: clampValue(current + 1, unit),
+      },
     });
   };
 
   const decrement = (unit: TimeUnit) => {
-    setDuration((prev) => {
-      const current =
-        typeof prev[unit] === "string"
-          ? parseInt(prev[unit] || "0", 10)
-          : prev[unit];
-      return { ...prev, [unit]: clampValue(current - 1, unit) };
+    const current =
+      typeof prevMinDuration[unit] === "string"
+        ? parseInt(prevMinDuration[unit] || "0", 10)
+        : prevMinDuration[unit];
+    updateDaoInfo({
+      minimumDuration: {
+        ...prevMinDuration,
+        [unit]: clampValue(current - 1, unit),
+      },
     });
   };
 
@@ -84,7 +97,7 @@ export const DurationPicker = () => {
             </IconButton>
             <StyledInput
               type="number"
-              value={duration[unit]}
+              value={daoInfo.minimumDuration[unit]}
               inputProps={{
                 min: 0,
                 max: isClampedUnit(unit) ? 59 : undefined,

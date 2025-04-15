@@ -2,8 +2,9 @@ import styled from "styled-components";
 import { OptionalInputMetadata } from "./optional-input-metadata";
 import plusSign from "../assets/images/plus-sign.svg";
 import deleteIcon from "../assets/images/delete-icon.svg";
-import { useState } from "react";
 import { AddWalletButton } from "./distribution-table";
+import { $daoInfo, updateDaoInfo } from "../store";
+import { useUnit } from "effector-react";
 
 interface LinksMetadataProps {
   inputName: string;
@@ -11,25 +12,25 @@ interface LinksMetadataProps {
 }
 
 export const Links = ({ inputName, inputDescription }: LinksMetadataProps) => {
-  const [links, setLinks] = useState([{ name: "", url: "" }]);
+  const daoInfo = useUnit($daoInfo);
 
   const addRow = () => {
-    setLinks([...links, { name: "", url: "" }]);
+    updateDaoInfo({ links: [...daoInfo.links, { label: "", url: "" }] });
   };
 
   const handleDelete = (index: number) => {
-    const updated = links.filter((_, i) => i !== index);
-    setLinks(updated);
+    const updated = daoInfo.links.filter((_, i) => i !== index);
+    updateDaoInfo({ links: updated });
   };
 
   const handleChange = (
     index: number,
-    field: "name" | "url",
+    field: "label" | "url",
     value: string
   ) => {
-    const updated = [...links];
+    const updated = [...daoInfo.links];
     updated[index][field] = value;
-    setLinks(updated);
+    updateDaoInfo({ links: updated });
   };
 
   return (
@@ -39,20 +40,20 @@ export const Links = ({ inputName, inputDescription }: LinksMetadataProps) => {
         inputDescription={inputDescription}
       />
       <Grid>
-        {links.length > 0 && (
+        {daoInfo.links.length > 0 && (
           <>
             <Row>
               <p>Name/Description</p>
               <p>Link</p>
               <div style={{ width: "20px" }}></div>
             </Row>
-            {links.map((link, index) => (
+            {daoInfo.links.map((link, index) => (
               <Row key={index}>
                 <Input
                   type="text"
                   placeholder="Lens, Discord, etc."
-                  value={link.name}
-                  onChange={(e) => handleChange(index, "name", e.target.value)}
+                  value={link.label}
+                  onChange={(e) => handleChange(index, "label", e.target.value)}
                 />
                 <Input
                   type="text"

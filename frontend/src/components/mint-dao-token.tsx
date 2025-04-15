@@ -1,7 +1,10 @@
+import { useUnit } from "effector-react";
 import { DistributionTable, InputMetadata } from ".";
+import { $daoInfo, updateDaoInfo } from "../store";
 import { Input } from "./create-dao/common-styles";
 
 export const MintDaoToken = () => {
+  const daoInfo = useUnit($daoInfo);
   return (
     <>
       <Input>
@@ -23,14 +26,38 @@ export const MintDaoToken = () => {
           inputName="Name"
           inputDescription="The full name of the token. Example: SHIBA"
         />
-        <input type="text" placeholder="Type name..." />
+        <input
+          type="text"
+          placeholder="Type name..."
+          value={daoInfo.token.name}
+          onChange={(e) =>
+            updateDaoInfo({
+              token: {
+                ...daoInfo.token,
+                name: e.target.value,
+              },
+            })
+          }
+        />
       </Input>
       <Input>
         <InputMetadata
           inputName="Symbol"
           inputDescription="The abbreviation of the token. Example: SHI"
         />
-        <input type="text" placeholder="Type symbol..." />
+        <input
+          type="text"
+          placeholder="Type symbol..."
+          value={daoInfo.token.symbol}
+          onChange={(e) =>
+            updateDaoInfo({
+              token: {
+                ...daoInfo.token,
+                symbol: e.target.value,
+              },
+            })
+          }
+        />
       </Input>
       <Input>
         <InputMetadata

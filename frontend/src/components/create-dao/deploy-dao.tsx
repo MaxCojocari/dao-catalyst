@@ -2,10 +2,12 @@ import { Header, StepInfo } from "./common-styles";
 import stepIcon from "../../assets/images/step1_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
 import styled from "styled-components";
-import { TEST_DAO_INFO as dao } from "../../constants";
+import { TEST_DAO_INFO } from "../../constants";
 import { DaoType } from "../../types";
 import CheckBoxRoundedIcon from "@mui/icons-material/CheckBoxRounded";
 import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutlineBlankRounded";
+import { $daoInfo } from "../../store";
+import { useUnit } from "effector-react";
 
 interface DeployDaoProps {
   confirmed: boolean;
@@ -23,7 +25,11 @@ export const EditButton = ({ step, setStep }: EditButtonProps) => {
 };
 
 export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
-  const amount = dao.token.amounts.reduce((acc, amount) => acc + amount, 0);
+  const dao = useUnit($daoInfo);
+  const amount = dao.token.initialDistribution.reduce(
+    (acc, recipient) => acc + Number(recipient.tokens),
+    0
+  );
   return (
     <>
       <InfoBox>
@@ -69,9 +75,7 @@ export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
             <h3>Support threshold</h3>
             <p>
               {"> "}
-              {(dao.quorumFraction.numerator / dao.quorumFraction.denominator) *
-                100}
-              %
+              {(dao.quorum.numerator / dao.quorum.denominator) * 100}%
             </p>
           </ContentRow>
           <ContentRow>
@@ -102,6 +106,7 @@ export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
 };
 
 export const MultisigVoting = ({ setStep }: { setStep: (v: any) => void }) => {
+  const dao = useUnit($daoInfo);
   return (
     <>
       <InfoBox>
@@ -137,6 +142,13 @@ export const MultisigVoting = ({ setStep }: { setStep: (v: any) => void }) => {
               {dao.minimumParticipation.denominator} addresses
             </p>
           </ContentRow>
+          <ContentRow>
+            <h3>Minimum duration</h3>
+            <p>
+              {dao.minimumDuration.days} days {dao.minimumDuration.hours} hours{" "}
+              {dao.minimumDuration.minutes} minutes
+            </p>
+          </ContentRow>
         </Content>
       </InfoBox>
     </>
@@ -148,6 +160,7 @@ export const DeployDao = ({
   setConfirmed,
   setStep,
 }: DeployDaoProps) => {
+  const dao = useUnit($daoInfo);
   return (
     <>
       <Header>
@@ -169,7 +182,7 @@ export const DeployDao = ({
         <Content>
           <ContentRow>
             <h3>Logo</h3>
-            <img src={dao.logo} />
+            <img src={TEST_DAO_INFO.logo} />
           </ContentRow>
           <ContentRow>
             <h3>Name</h3>

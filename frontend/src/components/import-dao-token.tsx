@@ -6,9 +6,12 @@ import successIcon from "../assets/images/done.svg";
 import failureIcon from "../assets/images/failure.svg";
 import { isAddress } from "viem";
 import { Input } from "./create-dao/common-styles";
+import { $daoInfo, updateDaoInfo } from "../store";
+import { useUnit } from "effector-react";
 
 export const ImportDaoToken = () => {
-  const [address, setAddress] = useState("");
+  const daoInfo = useUnit($daoInfo);
+  const address = daoInfo.token.tokenAddress;
   const [isFocused, setIsFocused] = useState(false);
 
   const success = true;
@@ -47,7 +50,15 @@ export const ImportDaoToken = () => {
           <input
             type="text"
             placeholder="Enter token address..."
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={(e) =>
+              updateDaoInfo({
+                token: {
+                  ...daoInfo.token,
+                  isDeployed: true,
+                  tokenAddress: e.target.value,
+                },
+              })
+            }
             value={isFocused ? address.trim() : formatAddress(address.trim())}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}

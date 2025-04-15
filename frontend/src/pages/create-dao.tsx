@@ -15,12 +15,13 @@ import {
 } from "../components/create-dao/common-styles";
 import backIcon from "../assets/images/back-icon.svg";
 import { ProgressBarPosition } from "../components/progress-bar";
+import { $daoInfo } from "../store";
+import { useUnit } from "effector-react";
 
 export const CreateDaoPage = () => {
+  const dao = useUnit($daoInfo);
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
-
-  console.log("step", step);
 
   return (
     <>
@@ -56,6 +57,7 @@ export const CreateDaoPage = () => {
               onClick={() => {
                 setStep((prev) => Math.min(4, prev + 1));
                 window.scrollTo({ top: 0, behavior: "smooth" });
+                console.log(dao);
               }}
             >
               Next Step

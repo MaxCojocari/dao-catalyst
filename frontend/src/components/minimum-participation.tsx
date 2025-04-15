@@ -1,22 +1,30 @@
-import { useState } from "react";
 import { Box, IconButton, Slider } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import styled from "styled-components";
-
-const TOTAL_SUPPLY = 13000;
+import { useUnit } from "effector-react";
+import { $daoInfo, setMinimumParticipationNumerator } from "../store";
 
 export const MinimumParticipation = () => {
-  const [threshold, setThreshold] = useState(50);
+  const daoInfo = useUnit($daoInfo);
+  const threshold = daoInfo.minimumParticipation.numerator;
 
   const handleChange = (_: Event, newValue: number | number[]) => {
-    setThreshold(typeof newValue === "number" ? newValue : newValue[0]);
+    setMinimumParticipationNumerator(
+      typeof newValue === "number" ? newValue : newValue[0]
+    );
   };
 
-  const increment = () => setThreshold((prev) => Math.min(prev + 1, 100));
-  const decrement = () => setThreshold((prev) => Math.max(prev - 1, 0));
+  const increment = () =>
+    setMinimumParticipationNumerator(Math.min(threshold + 1, 100));
+  const decrement = () =>
+    setMinimumParticipationNumerator(Math.max(threshold - 1, 0));
 
-  const tokenAmount = Math.round((threshold / 100) * TOTAL_SUPPLY);
+  const totalSupply = daoInfo.token.initialDistribution.reduce(
+    (acc, walletEntry) => acc + Number(walletEntry.tokens),
+    0
+  );
+  const tokenAmount = ((threshold / 100) * totalSupply).toFixed(1);
 
   return (
     <Container>
@@ -59,10 +67,16 @@ export const MinimumParticipation = () => {
             }}
           >
             <SliderDetails>
-              <p style={{ fontWeight: "600", color: "#6666FF" }}>
+              <p
+                style={{
+                  fontWeight: "600",
+                  color: "#6666FF",
+                  marginRight: "5px",
+                }}
+              >
                 ≥ {tokenAmount.toLocaleString()}
               </p>
-              <p>of {TOTAL_SUPPLY.toLocaleString()} tokens</p>
+              <p>of {totalSupply.toLocaleString()} tokens</p>
             </SliderDetails>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Slider
@@ -71,7 +85,7 @@ export const MinimumParticipation = () => {
                 min={0}
                 max={100}
                 defaultValue={50}
-                sx={{ color: "#6666FF", width: "405.03px" }}
+                sx={{ color: "#6666FF", width: "405.03px", marginTop: "-8px" }}
               />
             </div>
           </Box>
@@ -98,11 +112,12 @@ export const Controls = styled.div`
 export const SliderDetails = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-contents: center;
   width: 100%;
   box-sizing: border-box;
   padding: 0 14px;
+  margin-top: -10px;
 
   p {
     font-size: 12px;

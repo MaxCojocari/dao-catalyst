@@ -1,12 +1,16 @@
 import styled from "styled-components";
-import { GenericProps } from "../types";
+import { DaoType, GenericProps } from "../types";
+import { updateDaoInfo } from "../store";
 
 export const VotingMethodSelector = ({ value, onChange }: GenericProps) => {
   return (
     <RadioGroup>
       <div
         className={`radio-card ${value === "token" ? "active" : ""}`}
-        onClick={() => onChange("token")}
+        onClick={() => {
+          updateDaoInfo({ type: DaoType.SimpleVote });
+          onChange("token");
+        }}
       >
         <RadioHeader>
           <a className="title">Token holders</a>
@@ -26,7 +30,10 @@ export const VotingMethodSelector = ({ value, onChange }: GenericProps) => {
 
       <div
         className={`radio-card ${value === "multisig" ? "active" : ""}`}
-        onClick={() => onChange("multisig")}
+        onClick={() => {
+          updateDaoInfo({ type: DaoType.MultisigVote });
+          onChange("multisig");
+        }}
       >
         <RadioHeader>
           <a className="title">Multisig members</a>

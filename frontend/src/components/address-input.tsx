@@ -4,9 +4,13 @@ import { isAddress } from "viem";
 import styled from "styled-components";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 
-export const AddressInput = ({ address }: { address: string }) => {
+interface AddressInputProps {
+  address: string;
+  onChange: (val: string) => void;
+}
+
+export const AddressInput = ({ address, onChange }: AddressInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [inputValue, setInputValue] = useState(address);
 
   const formatAddress = (addr: string) => {
     if (!isAddress(addr)) return addr;
@@ -27,10 +31,11 @@ export const AddressInput = ({ address }: { address: string }) => {
   return (
     <Container>
       <Input
-        value={isFocused ? inputValue.trim() : formatAddress(inputValue.trim())}
+        value={isFocused ? address.trim() : formatAddress(address.trim())}
+        onChange={(e) => onChange(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Enter address..."
       />
       <img
         src={copyIcon}
@@ -79,4 +84,8 @@ export const Input = styled.input`
   line-height: 17px;
   letter-spacing: -0.03em;
   color: rgba(41, 41, 51, 0.9);
+
+  &::placeholder {
+    color: #8f8fb2;
+  }
 `;

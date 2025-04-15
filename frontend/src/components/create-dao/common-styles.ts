@@ -225,6 +225,8 @@ export const ConfirmationSuccess = styled(Confirmation)`
 `;
 
 export const Warning = styled(Confirmation)`
+  display: flex;
+  align-items: flex-start;
   p {
     font-weight: 400;
     font-size: 13px;

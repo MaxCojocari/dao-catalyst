@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Box, IconButton, Slider } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
@@ -8,18 +7,26 @@ import { Container, Controls } from "./minimum-participation";
 import { ConfirmationSuccess, Warning } from "./create-dao/common-styles";
 import successIcon from "../assets/images/done.svg";
 import warningIcon from "../assets/images/warning.svg";
+import { $daoInfo, setMinimumParticipationNumerator } from "../store";
+import { useUnit } from "effector-react";
 
 export const MinimumParticipationMultisig = () => {
-  const minParticipation = Math.ceil((dao.members.length * 2) / 3);
-  const [threshold, setThreshold] = useState(minParticipation);
+  const daoInfo = useUnit($daoInfo);
+  const minParticipation = Math.ceil((daoInfo.members.length * 2) / 3);
+  const threshold = daoInfo.minimumParticipation.numerator;
 
   const handleChange = (_: Event, newValue: number | number[]) => {
-    setThreshold(typeof newValue === "number" ? newValue : newValue[0]);
+    setMinimumParticipationNumerator(
+      typeof newValue === "number" ? newValue : newValue[0]
+    );
   };
 
   const increment = () =>
-    setThreshold((prev) => Math.min(prev + 1, dao.members.length));
-  const decrement = () => setThreshold((prev) => Math.max(prev - 1, 0));
+    setMinimumParticipationNumerator(
+      Math.min(threshold + 1, daoInfo.members.length)
+    );
+  const decrement = () =>
+    setMinimumParticipationNumerator(Math.max(threshold - 1, 0));
 
   return (
     <Container>

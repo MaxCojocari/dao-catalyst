@@ -1,6 +1,6 @@
 export * from "./create-dao";
 
 export interface GenericProps {
-  value: string;
+  value: any;
   onChange: (v: any) => void;
 }
