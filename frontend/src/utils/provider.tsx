@@ -6,12 +6,12 @@ import {
 import { Config, WagmiProvider } from "wagmi";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
-import { arbitrum, arbitrumSepolia } from "viem/chains";
+import { arbitrum, arbitrumSepolia, sepolia } from "viem/chains";
 
 export const wagmiConfig = getDefaultConfig({
   appName: "DAO Catalyst",
   projectId: import.meta.env.VITE_WALLET_CONNECT_ID,
-  chains: [arbitrum, arbitrumSepolia],
+  chains: [arbitrum, arbitrumSepolia, sepolia],
 }) as Config;
 
 const queryClient = new QueryClient();

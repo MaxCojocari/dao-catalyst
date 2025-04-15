@@ -13,7 +13,7 @@ const config: HardhatUserConfig = {
       accounts: [`${process.env.MAINNET_DEPLOYER_PK}`],
     },
     testnet: {
-      url: `https://arb-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
       accounts: [`${process.env.TESTNET_DEPLOYER_PK}`],
     },
   },
