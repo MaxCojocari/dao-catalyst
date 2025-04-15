@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { InputMetadata } from "../..";
 import copyIcon from "../../../assets/images/copy-icon.svg";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import successIcon from "../../../assets/images/success_progress.svg";
 import failureIcon from "../../../assets/images/failure.svg";
 import { formatUnits, isAddress } from "viem";

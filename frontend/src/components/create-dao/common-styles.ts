@@ -149,7 +149,7 @@ export const Input = styled.div`
   }
 `;
 
-export const NextStepButton = styled.button`
+export const NextStepButton = styled.button<{ disabled?: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -157,12 +157,9 @@ export const NextStepButton = styled.button`
   padding: 17px 24px;
   box-sizing: border-box;
 
-  cursor: pointer;
-
   width: 100%;
   height: 48px;
 
-  background: #6666ff;
   border-radius: 6px;
   border: none;
 
@@ -172,39 +169,19 @@ export const NextStepButton = styled.button`
   letter-spacing: -0.02em;
 
   color: #ffffff;
+  cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
 
+  background: ${({ disabled }) => (disabled ? "#b8b8cc" : "#6666ff")};
+  opacity: ${({ disabled }) => (disabled ? 1 : 1)};
   transition: opacity 0.15s;
 
   &:hover {
-    opacity: 0.8;
+    opacity: ${({ disabled }) => (disabled ? 1 : 0.8)};
   }
 
   &:active {
-    opacity: 0.7;
+    opacity: ${({ disabled }) => (disabled ? 1 : 0.7)};
   }
-`;
-
-export const DisabledButton = styled.button`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 17px 24px;
-  box-sizing: border-box;
-
-  width: 100%;
-  height: 48px;
-
-  background: #b8b8cc;
-  border-radius: 6px;
-  border: none;
-
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 17px;
-  letter-spacing: -0.02em;
-
-  color: #ffffff;
 `;
 
 export const Confirmation = styled.div`

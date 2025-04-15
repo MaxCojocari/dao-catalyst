@@ -2,7 +2,6 @@ import { Box, IconButton, Slider } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import styled from "styled-components";
-import { TEST_DAO_INFO as dao } from "../../../constants";
 import { Container, Controls } from "./minimum-participation";
 import { ConfirmationSuccess, Warning } from "../common-styles";
 import successIcon from "../../../assets/images/done.svg";
@@ -78,14 +77,14 @@ export const MinimumParticipationMultisig = () => {
               >
                 {threshold}
               </p>
-              <p>out of {dao.members.length} addresses</p>
+              <p>out of {daoInfo.members.length} addresses</p>
             </SliderDetails>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Slider
                 value={threshold}
                 onChange={handleChange}
                 min={0}
-                max={dao.members.length}
+                max={daoInfo.members.length}
                 defaultValue={minParticipation}
                 sx={{ color: "#6666FF", width: "405.03px" }}
                 valueLabelDisplay="auto"
