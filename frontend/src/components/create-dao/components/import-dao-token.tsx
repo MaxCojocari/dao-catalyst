@@ -1,18 +1,29 @@
 import styled from "styled-components";
 import { InputMetadata } from "../..";
 import copyIcon from "../../../assets/images/copy-icon.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import successIcon from "../../../assets/images/success_progress.svg";
 import failureIcon from "../../../assets/images/failure.svg";
 import { isAddress } from "viem";
 import { Input } from "../common-styles";
 import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
+import { useReadContract } from "wagmi";
+import { DaoToken__factory } from "../../../typechain-types";
+import { ERC20Votes_INTERFACE_ID } from "../../../constants";
 
 export const ImportDaoToken = () => {
   const daoInfo = useUnit($daoInfo);
   const address = daoInfo.token.tokenAddress;
   const [isFocused, setIsFocused] = useState(false);
+  const { data } = useReadContract({
+    abi: DaoToken__factory.abi,
+    functionName: "supportsInterface",
+    address: daoInfo.token.tokenAddress as `0x${string}`,
+    args: [ERC20Votes_INTERFACE_ID],
+  });
+
+  console.log("supportsInterface:", data);
 
   const success = true;
 
