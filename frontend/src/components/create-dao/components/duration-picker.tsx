@@ -2,7 +2,7 @@ import { Box, IconButton, InputBase } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import styled from "styled-components";
-import { $daoInfo, updateDaoInfo } from "../store";
+import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
 
 type TimeUnit = "minutes" | "hours" | "days";

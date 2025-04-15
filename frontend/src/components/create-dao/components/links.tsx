@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { OptionalInputMetadata } from "./optional-input-metadata";
-import plusSign from "../assets/images/plus-sign.svg";
-import deleteIcon from "../assets/images/delete-icon.svg";
+import { OptionalInputMetadata } from "../../optional-input-metadata";
+import plusSign from "../../../assets/images/plus-sign.svg";
+import deleteIcon from "../../../assets/images/delete-icon.svg";
 import { AddWalletButton } from "./distribution-table";
-import { $daoInfo, updateDaoInfo } from "../store";
+import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
 
 interface LinksMetadataProps {

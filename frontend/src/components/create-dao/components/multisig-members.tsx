@@ -1,5 +1,5 @@
-import { InputMetadata, OwnershipTable } from ".";
-import { Input } from "./create-dao/common-styles";
+import { InputMetadata, OwnershipTable } from "../..";
+import { Input } from "../common-styles";
 
 export const MultisigMembers = () => {
   return (

@@ -2,12 +2,12 @@ import { Box, IconButton, Slider } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import styled from "styled-components";
-import { TEST_DAO_INFO as dao } from "../constants";
+import { TEST_DAO_INFO as dao } from "../../../constants";
 import { Container, Controls } from "./minimum-participation";
-import { ConfirmationSuccess, Warning } from "./create-dao/common-styles";
-import successIcon from "../assets/images/done.svg";
-import warningIcon from "../assets/images/warning.svg";
-import { $daoInfo, setMinimumParticipationNumerator } from "../store";
+import { ConfirmationSuccess, Warning } from "../common-styles";
+import successIcon from "../../../assets/images/done.svg";
+import warningIcon from "../../../assets/images/warning.svg";
+import { $daoInfo, setMinimumParticipationNumerator } from "../../../store";
 import { useUnit } from "effector-react";
 
 export const MinimumParticipationMultisig = () => {

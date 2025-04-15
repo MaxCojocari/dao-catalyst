@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { RadioHeader } from "./voting-method-selector";
+import { RadioHeader } from "./create-dao/components/voting-method-selector";
 import { GenericProps } from "../types";
 
 export const BinarySelector = ({ value, onChange }: GenericProps) => {

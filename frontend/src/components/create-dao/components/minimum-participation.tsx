@@ -3,7 +3,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import styled from "styled-components";
 import { useUnit } from "effector-react";
-import { $daoInfo, setMinimumParticipationNumerator } from "../store";
+import { $daoInfo, setMinimumParticipationNumerator } from "../../../store";
 
 export const MinimumParticipation = () => {
   const daoInfo = useUnit($daoInfo);
