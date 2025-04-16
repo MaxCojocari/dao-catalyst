@@ -213,3 +213,18 @@ export const Warning = styled(Confirmation)`
     color: #ffd056;
   }
 `;
+
+export const CheckBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+
+  p {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: -0.02em;
+    color: #555566;
+  }
+`;

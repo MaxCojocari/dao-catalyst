@@ -1,24 +1,10 @@
+import { Duration, Fraction, Link } from ".";
+
 export enum DaoType {
   SimpleVote,
   FractionalVote,
   MultisigVote,
 }
-
-export type Fraction = {
-  numerator: number;
-  denominator: number;
-};
-
-export type Duration = {
-  days: string;
-  hours: string;
-  minutes: string;
-};
-
-export type DaoLink = {
-  label: string;
-  url: string;
-};
 
 export type Recipient = {
   id: number;
@@ -44,7 +30,7 @@ export interface DaoSettings {
   type: DaoType;
   name: string;
   summary: string;
-  links: DaoLink[];
+  links: Link[];
   daoURI: string;
   members: Member[];
   minimumDuration: Duration;
