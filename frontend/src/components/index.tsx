@@ -28,3 +28,7 @@ export { OwnershipTable } from "./create-dao/components/ownership-table";
 export { MinimumParticipationMultisig } from "./create-dao/components/minimum-participation-multisig";
 export { ProposalCreationSettingsMultisig } from "./create-dao/components/proposal-creation-settings-multisig";
 export { TransactionModal } from "./transaction-modal";
+export { ConfigureVoting } from "./create-proposal/configure-voting";
+export { DeployProposal } from "./create-proposal/deploy-proposal";
+export { DescribeProposal } from "./create-proposal/describe-proposal";
+export { SetActions } from "./create-proposal/set-actions";
