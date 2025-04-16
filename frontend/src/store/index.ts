@@ -1,4 +1,5 @@
 export * from "./dao";
+export * from "./proposal";
 
 import { createEvent, createStore } from "effector";
 
