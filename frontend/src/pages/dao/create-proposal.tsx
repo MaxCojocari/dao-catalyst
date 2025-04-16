@@ -17,7 +17,7 @@ import {
 import backIcon from "../../assets/images/back-icon.svg";
 import { ProgressBarPosition } from "../../components/progress-bar";
 import { ProposalSettings, TxStatus } from "../../types";
-import { $proposalSettings } from "../../store/proposal";
+import { $proposalInfo } from "../../store/proposal";
 
 const isNextEnabled = (step: number, proposal: ProposalSettings): boolean => {
   // if (step === 1) {
@@ -45,7 +45,7 @@ const isNextEnabled = (step: number, proposal: ProposalSettings): boolean => {
 };
 
 export const CreateProposalPage = () => {
-  const proposal = useUnit($proposalSettings);
+  const proposal = useUnit($proposalInfo);
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.Idle);
