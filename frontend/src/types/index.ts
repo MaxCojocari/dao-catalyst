@@ -2,6 +2,7 @@ export * from "./create-dao";
 export * from "./tx-status";
 export * from "./generic-props";
 export * from "./create-proposal";
+export * from "./voting-options";
 
 export type Fraction = {
   numerator: number;

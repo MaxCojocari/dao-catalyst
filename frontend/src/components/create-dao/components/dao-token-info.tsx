@@ -16,7 +16,11 @@ export const DaoTokenInfo = () => {
       <Input>
         <br />
         <InputMetadata inputName="Does your community already have an ERC-20 token to govern your DAO?" />
-        <BinarySelector value={selectedOption} onChange={setSelectedOption} />
+        <BinarySelector
+          value={selectedOption}
+          onChange={setSelectedOption}
+          headerText={["Yes", "No"]}
+        />
       </Input>
       {selectedOption ? <ImportDaoToken /> : <MintDaoToken />}
     </>

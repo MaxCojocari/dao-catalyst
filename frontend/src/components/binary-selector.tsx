@@ -1,8 +1,17 @@
 import styled from "styled-components";
 import { RadioHeader } from "./create-dao/components/voting-method-selector";
-import { GenericProps } from "../types";
 
-export const BinarySelector = ({ value, onChange }: GenericProps) => {
+export interface BinarySelectorProps {
+  value: any;
+  onChange: (v: any) => void;
+  headerText: string[];
+}
+
+export const BinarySelector = ({
+  value,
+  onChange,
+  headerText,
+}: BinarySelectorProps) => {
   return (
     <RadioGroup>
       <label
@@ -10,13 +19,12 @@ export const BinarySelector = ({ value, onChange }: GenericProps) => {
         onClick={() => onChange(false)}
       >
         <RadioHeader>
-          <span className="title">No</span>
+          <span className="title">{headerText[0]}</span>
           <input
             type="radio"
-            name="binary-selector"
             value={value}
             checked={!value}
-            onChange={() => onChange(false)}
+            onChange={() => onChange(value)}
           />
         </RadioHeader>
       </label>
@@ -26,10 +34,9 @@ export const BinarySelector = ({ value, onChange }: GenericProps) => {
         onClick={() => onChange(true)}
       >
         <RadioHeader>
-          <span className="title">Yes</span>
+          <span className="title">{headerText[1]}</span>
           <input
             type="radio"
-            name="binary-selector"
             value={value}
             checked={value}
             onChange={() => onChange(value)}

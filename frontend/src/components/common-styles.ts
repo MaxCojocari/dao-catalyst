@@ -214,6 +214,16 @@ export const Warning = styled(Confirmation)`
   }
 `;
 
+export const Error = styled(Warning)`
+  p {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 150%;
+    letter-spacing: -0.02em;
+    color: #ff6161;
+  }
+`;
+
 export const CheckBox = styled.div`
   display: flex;
   flex-direction: row;

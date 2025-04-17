@@ -1,4 +1,5 @@
-import { Link } from ".";
+import { Dayjs } from "dayjs";
+import { Duration, Link, VotingOption } from ".";
 
 export type ProposalAction = {
   target: string;
@@ -6,14 +7,35 @@ export type ProposalAction = {
   calldatas: string;
 };
 
+export enum VoteStartOptions {
+  Now,
+  SpecificTimestamp,
+}
+
+export enum EndDurationOptions {
+  Duration,
+  SpecificTimestamp,
+}
+
 export interface ProposalSettings {
   author: string;
   title: string;
   summary: string;
-  body: string;
+  votingOption: VotingOption;
   resources: Link[];
   actions: ProposalAction[];
   descriptionURI: string;
-  voteStart: number;
-  voteDuration: number;
+  voteStart: {
+    optionSelected: VoteStartOptions | boolean;
+    date: Dayjs;
+    time: Dayjs;
+    timezone: string;
+  };
+  endDuration: {
+    optionSelected: EndDurationOptions | boolean;
+    duration: Duration;
+    date: Dayjs;
+    time: Dayjs;
+    timezone: string;
+  };
 }
