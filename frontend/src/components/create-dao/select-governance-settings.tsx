@@ -53,6 +53,7 @@ const GovernanceSettingsTokenMembership = () => {
         <BinarySelector
           value={daoInfo.earlyExecution}
           onChange={setEarlyExecution}
+          headerText={["Yes", "No"]}
         />
       </Input>
       <Input>

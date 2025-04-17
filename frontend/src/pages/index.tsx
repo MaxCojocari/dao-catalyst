@@ -10,6 +10,17 @@ import { HomePage } from "./home";
 import { NotFoundPage } from "./not-found";
 import { SettingsPage } from "./dao/settings";
 import { Layout } from "../layouts";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { createTheme, ThemeProvider } from "@mui/material";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#6666FF",
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -100,7 +111,13 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider theme={theme}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <RouterProvider router={router} />
+      </LocalizationProvider>
+    </ThemeProvider>
+  );
 }
 
 export default App;

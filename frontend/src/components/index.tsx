@@ -32,3 +32,6 @@ export { ConfigureVoting } from "./create-proposal/configure-voting";
 export { DeployProposal } from "./create-proposal/deploy-proposal";
 export { DescribeProposal } from "./create-proposal/describe-proposal";
 export { SetActions } from "./create-proposal/set-actions";
+export { VotingOptionsSelector } from "./create-proposal/components/voting-options-selector";
+export { VotingDurationPicker } from "./create-proposal/components/voting-duration-picker";
+export { DateTimePickerWithTimezone } from "./create-proposal/components/date-time-picker-with-timezone";
