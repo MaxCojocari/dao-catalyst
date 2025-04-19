@@ -94,6 +94,8 @@ export const DropdownContainer = styled.div`
   border: 1px solid #e6e6ff;
   border-radius: 6px;
   cursor: pointer;
+  height: 50.4px;
+  box-sizing: border-box;
 `;
 
 export const SelectedOption = styled.div`
