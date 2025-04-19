@@ -20,23 +20,12 @@ import { ProposalSettings, TxStatus } from "../../types";
 import { $proposalInfo } from "../../store/proposal";
 
 const isNextEnabled = (step: number, proposal: ProposalSettings): boolean => {
-  // if (step === 1) {
-  //   return dao.name.trim() !== "" && dao.summary.trim() !== "";
-  // }
+  if (step === 1) {
+    return proposal.title.trim() !== "" && proposal.summary.trim() !== "";
+  }
 
-  // if (step === 2) {
-  //   const hasAtLeastOneMember = dao.members.some(
-  //     (member) => member.address?.trim() !== ""
-  //   );
-
-  //   if (dao.type === DaoType.MultisigVote && hasAtLeastOneMember) return true;
-
-  //   if (dao.token.isDeployed) {
-  //     return dao.token.tokenAddress.trim() !== "";
-  //   } else {
-  //     return dao.token.name.trim() !== "" && dao.token.symbol.trim() !== "";
-  //   }
-  // }
+  if (step === 3) {
+  }
 
   console.log("step", step);
   console.log("proposal", proposal);
@@ -97,7 +86,11 @@ export const CreateProposalPage = () => {
           {step === 2 && <ConfigureVoting />}
           {step === 3 && <SetActions />}
           {step === 4 && (
-            <DeployProposal confirmed={confirmed} setConfirmed={setConfirmed} />
+            <DeployProposal
+              confirmed={confirmed}
+              setConfirmed={setConfirmed}
+              setStep={setStep}
+            />
           )}
           {step >= 1 && step < 4 && (
             <NextStepButton

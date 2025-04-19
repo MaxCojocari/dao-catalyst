@@ -1,5 +1,4 @@
 import styled from "styled-components";
-// import { OptionalInputMetadata } from "../../optional-input-metadata";
 import plusSign from "../../../assets/images/plus-sign.svg";
 import deleteIcon from "../../../assets/images/delete-icon.svg";
 import { AddButton } from "../../create-dao/components/distribution-table";
@@ -10,20 +9,34 @@ import {
   updateSelectedActionType,
 } from "../../../store";
 import { useUnit } from "effector-react";
-import { ActionType, Token } from "../../../types";
+import { ActionType, ProposalAction, Token } from "../../../types";
 import { AddressInput } from "../../address-input";
 import { ActionsDropdown } from "./actions-dropdown";
 import { Fragment, useEffect, useState } from "react";
 import { TokensDropdown } from "../..";
 import { useParams } from "react-router-dom";
-import { parseUnits } from "viem";
 import { TOKENS } from "../../../constants";
 import { nanoid } from "nanoid";
 
-const TransferAction = ({ index }: { index: number }) => {
-  const [recipient, setRecipient] = useState("");
-  const [token, setToken] = useState<Token>(TOKENS[0]);
-  const [amount, setAmount] = useState("");
+const TransferAction = ({
+  index,
+  action,
+}: {
+  index: number;
+  action: ProposalAction;
+}) => {
+  const { daoAddress } = useParams();
+  const [recipient, setRecipient] = useState(action.inputs[1] || "");
+  const [token, setToken] = useState<Token>(() => {
+    if (action.inputs.length > 0) {
+      return TOKENS.find(
+        (token) =>
+          token.address.toLowerCase() === action.inputs[0].toLowerCase()
+      )!;
+    }
+    return TOKENS[0];
+  });
+  const [amount, setAmount] = useState(action.inputs[2]);
 
   useEffect(() => {
     if (recipient && token && amount) {
@@ -31,11 +44,8 @@ const TransferAction = ({ index }: { index: number }) => {
         index,
         updatedAction: {
           functionFragment: "transfer(address,address,uint256)",
-          inputs: [
-            token.address,
-            recipient,
-            parseUnits(amount, token.decimals),
-          ],
+          target: daoAddress,
+          inputs: [token.address, recipient, amount],
         },
       });
     }
@@ -93,18 +103,27 @@ const TransferAction = ({ index }: { index: number }) => {
   );
 };
 
-export const CustomAction = ({ index }: { index: number }) => {
-  const [signature, setSignature] = useState("");
+export const CustomAction = ({
+  index,
+  action,
+}: {
+  index: number;
+  action: ProposalAction;
+}) => {
+  const [signature, setSignature] = useState(action.functionFragment);
   const [params, setParams] = useState<string[]>([]);
-  const [values, setValues] = useState<string[]>([]);
-  const [target, setTarget] = useState("");
+  const [values, setValues] = useState<string[]>(action.inputs);
+  const [target, setTarget] = useState(action.target);
 
   useEffect(() => {
     const match = signature.match(/^\w+\((.*)\)$/);
+
     if (match) {
       const paramTypes = match[1].split(",").map((p) => p.trim());
       setParams(paramTypes);
-      setValues(Array(paramTypes.length).fill(""));
+      if (values.length === 0) {
+        setValues(Array(paramTypes.length).fill(""));
+      }
     } else {
       setParams([]);
       setValues([]);
@@ -112,17 +131,15 @@ export const CustomAction = ({ index }: { index: number }) => {
   }, [signature]);
 
   useEffect(() => {
-    if (params.length && values.every((v) => v)) {
-      updateProposalAction({
-        index,
-        updatedAction: {
-          target,
-          functionFragment: signature,
-          inputs: values,
-        },
-      });
-    }
-  }, [params, values, target]);
+    updateProposalAction({
+      index,
+      updatedAction: {
+        target,
+        functionFragment: signature,
+        inputs: values,
+      },
+    });
+  }, [params, values, target, signature]);
 
   const handleValueChange = (idx: number, newVal: string) => {
     setValues((prev) => {
@@ -155,20 +172,27 @@ export const CustomAction = ({ index }: { index: number }) => {
           placeholder="e.g. transfer(address,uint256)"
           onChange={(e) => setSignature(e.target.value)}
         />
-        {params.map((type, i) => (
-          <div
-            key={i}
-            style={{ display: "flex", flexDirection: "column", marginTop: 12 }}
-          >
-            <p>Enter {type} value</p>
-            <Input
-              type="text"
-              value={values[i]}
-              placeholder={`Type: ${type}`}
-              onChange={(e) => handleValueChange(i, e.target.value)}
-            />
-          </div>
-        ))}
+        {params.map((type, i) => {
+          if (!type) return null;
+          return (
+            <div
+              key={i}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: 12,
+              }}
+            >
+              <p>Enter {type} value</p>
+              <Input
+                type="text"
+                value={values[i]}
+                placeholder={`Type: ${type}`}
+                onChange={(e) => handleValueChange(i, e.target.value)}
+              />
+            </div>
+          );
+        })}
       </div>
     </>
   );
@@ -176,7 +200,6 @@ export const CustomAction = ({ index }: { index: number }) => {
 
 export const Actions = () => {
   const proposalInfo = useUnit($proposalInfo);
-  const { daoAddress } = useParams();
 
   const addRow = () => {
     updateProposalInfo({
@@ -184,7 +207,7 @@ export const Actions = () => {
         ...proposalInfo.actions,
         {
           id: nanoid(),
-          target: daoAddress!,
+          target: "",
           value: "0x0",
           type: ActionType.TransferTokens,
           functionFragment: "",
@@ -198,13 +221,6 @@ export const Actions = () => {
     const updated = proposalInfo.actions.filter((_, i) => i !== index);
     updateProposalInfo({ actions: updated });
   };
-
-  useEffect(() => {
-    updateProposalAction({
-      index: 0,
-      updatedAction: { target: daoAddress },
-    });
-  }, []);
 
   return (
     <Container>
@@ -234,10 +250,10 @@ export const Actions = () => {
                   }
                 />
                 {action.type === ActionType.TransferTokens && (
-                  <TransferAction index={index} />
+                  <TransferAction index={index} action={action} />
                 )}
                 {action.type === ActionType.Other && (
-                  <CustomAction index={index} />
+                  <CustomAction index={index} action={action} />
                 )}
                 {index < proposalInfo.actions.length - 1 && <Line />}
               </Fragment>
