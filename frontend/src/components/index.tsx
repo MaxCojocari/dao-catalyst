@@ -38,3 +38,4 @@ export { DateTimePickerWithTimezone } from "./create-proposal/components/date-ti
 export { ActionsDropdown } from "./create-proposal/components/actions-dropdown";
 export { Actions } from "./create-proposal/components/actions";
 export { TokensDropdown } from "./create-proposal/components/tokens-dropdown";
+export { Resources } from "./create-proposal/components/resources";

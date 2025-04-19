@@ -85,6 +85,43 @@ export const DeployProposal = ({
         </Content>
       </InfoBox>
 
+      <InfoBox>
+        <InfoBoxHeader>
+          <h2>Voting parameters</h2>
+          <EditButton step={2} setStep={setStep} />
+        </InfoBoxHeader>
+        <Content>
+          <ContentRow>
+            <h3>Options</h3>
+            <p>Yes, no, or abstain</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Strategy</h3>
+            <p>1 token → 1 vote</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Minimum support</h3>
+            <p>&gt; 66%</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Minimum participation (Quorum)</h3>
+            <p>&ge; 1950 of 13k PIK (15%)</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>Start</h3>
+            <p>Now</p>
+          </ContentRow>
+          <ContentRow>
+            <h3>End</h3>
+            <p>In 1 day</p>
+          </ContentRow>
+          <ContentRow>
+            <h3></h3>
+            <p>~2025/02/06 10:17 PM UTC+2</p>
+          </ContentRow>
+        </Content>
+      </InfoBox>
+
       <CheckBox>
         {confirmed ? (
           <CheckBoxRoundedIcon
