@@ -3,6 +3,7 @@ export * from "./tx-status";
 export * from "./generic-props";
 export * from "./create-proposal";
 export * from "./voting-options";
+export * from "./token";
 
 export type Fraction = {
   numerator: number;

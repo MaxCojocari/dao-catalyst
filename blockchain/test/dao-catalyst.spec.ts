@@ -9,11 +9,12 @@ import {
   DaoSimpleVote__factory,
   DaoToken,
   DaoToken__factory,
+  ERC20__factory,
   IDao,
   MockFundToken,
   TargetContract,
 } from '../typechain-types';
-import { formatUnits, parseUnits, ZeroAddress } from 'ethers';
+import { formatUnits, Interface, parseUnits, ZeroAddress } from 'ethers';
 import { ONE_DAY_SECONDS, ONE_HOUR_SECONDS, ONE_MINUTE_SECONDS } from '../utils/timeUnits';
 import { expect } from 'chai';
 import { getCurrentTimestamp } from '../utils/getCurrentTimestamp';
