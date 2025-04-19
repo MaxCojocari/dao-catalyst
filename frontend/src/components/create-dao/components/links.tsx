@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { OptionalInputMetadata } from "../../optional-input-metadata";
 import plusSign from "../../../assets/images/plus-sign.svg";
 import deleteIcon from "../../../assets/images/delete-icon.svg";
-import { AddWalletButton } from "./distribution-table";
+import { AddButton } from "./distribution-table";
 import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
 
@@ -72,10 +72,10 @@ export const Links = ({ inputName, inputDescription }: LinksMetadataProps) => {
           </>
         )}
       </Grid>
-      <AddWalletButton onClick={addRow} style={{ margin: "0" }}>
+      <AddButton onClick={addRow} style={{ margin: "0" }}>
         <img src={plusSign} width="10px" />
         Add link
-      </AddWalletButton>
+      </AddButton>
     </Container>
   );
 };

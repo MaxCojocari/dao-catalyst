@@ -35,3 +35,6 @@ export { SetActions } from "./create-proposal/set-actions";
 export { VotingOptionsSelector } from "./create-proposal/components/voting-options-selector";
 export { VotingDurationPicker } from "./create-proposal/components/voting-duration-picker";
 export { DateTimePickerWithTimezone } from "./create-proposal/components/date-time-picker-with-timezone";
+export { ActionsDropdown } from "./create-proposal/components/actions-dropdown";
+export { Actions } from "./create-proposal/components/actions";
+export { TokensDropdown } from "./create-proposal/components/tokens-dropdown";

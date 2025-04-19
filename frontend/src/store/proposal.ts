@@ -1,21 +1,35 @@
 import { createEvent, createStore } from "effector";
 import {
+  ActionType,
   EndDurationOptions,
+  ProposalAction,
   ProposalSettings,
   VoteStartOptions,
 } from "../types/create-proposal";
 import { VotingOption } from "../types";
 import dayjs from "dayjs";
+import { nanoid } from "nanoid";
 
 export const updateProposalInfo = createEvent<Partial<ProposalSettings>>();
 export const resetProposalInfo = createEvent();
 
 export const setVoteStartOption = createEvent<VoteStartOptions>();
 export const setEndDurationOption = createEvent<EndDurationOptions>();
+
 export const updateVoteStart =
   createEvent<Partial<ProposalSettings["voteStart"]>>();
 export const updateEndDuration =
   createEvent<Partial<ProposalSettings["endDuration"]>>();
+
+export const updateProposalAction = createEvent<{
+  index: number;
+  updatedAction: Partial<ProposalAction>;
+}>();
+
+export const updateSelectedActionType = createEvent<{
+  index: number;
+  type: ActionType;
+}>();
 
 const defaultProposalInfo: ProposalSettings = {
   author: "",
@@ -23,7 +37,16 @@ const defaultProposalInfo: ProposalSettings = {
   summary: "",
   votingOption: VotingOption.SimpleVoting,
   resources: [{ label: "", url: "" }],
-  actions: [],
+  actions: [
+    {
+      id: nanoid(),
+      target: "",
+      value: "0x0",
+      type: ActionType.TransferTokens,
+      functionFragment: "",
+      inputs: [],
+    },
+  ],
   descriptionURI: "",
   voteStart: {
     optionSelected: false,
@@ -73,4 +96,30 @@ export const $proposalInfo = createStore<ProposalSettings>(defaultProposalInfo)
       ...payload,
     },
   }))
+  .on(updateProposalAction, (state, { index, updatedAction }) => {
+    const updatedActions = [...state.actions];
+    const existing = updatedActions[index];
+
+    if (!existing) return state;
+
+    updatedActions[index] = { ...existing, ...updatedAction };
+
+    return {
+      ...state,
+      actions: updatedActions,
+    };
+  })
+  .on(updateSelectedActionType, (state, { index, type }) => {
+    const updatedActions = [...state.actions];
+    const existing = updatedActions[index];
+
+    if (!existing) return state;
+
+    updatedActions[index] = { ...existing, type };
+
+    return {
+      ...state,
+      actions: updatedActions,
+    };
+  })
   .reset(resetProposalInfo);

@@ -1,10 +1,19 @@
 import { Dayjs } from "dayjs";
 import { Duration, Link, VotingOption } from ".";
 
+export enum ActionType {
+  TransferTokens = "Transfer Funds",
+  MintDaoToken = "Mint DAO Tokens",
+  Other = "Other",
+}
+
 export type ProposalAction = {
+  id: string;
   target: string;
   value: string;
-  calldatas: string;
+  type: ActionType;
+  functionFragment: string;
+  inputs: any[];
 };
 
 export enum VoteStartOptions {

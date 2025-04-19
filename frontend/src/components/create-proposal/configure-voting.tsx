@@ -1,4 +1,4 @@
-import { Error, Header, Input, StepInfo, Warning } from "../common-styles";
+import { Error, Header, Input, StepInfo } from "../common-styles";
 import stepIcon from "../../assets/images/step2_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
 import failureIcon from "../../assets/images/failure.svg";
@@ -17,7 +17,6 @@ import {
   setVoteStartOption,
 } from "../../store";
 import { DURATION, SPECIFIC_DATE_TIME } from "../../constants";
-import warningIcon from "../../assets/images/warning.svg";
 import dayjs from "dayjs";
 import {
   isMinimumDurationRespected,

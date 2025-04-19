@@ -97,10 +97,10 @@ export const OwnershipTable = () => {
           <p></p>
         </>
       </Table>
-      <AddWalletButton onClick={handleAddWallet}>
+      <AddButton onClick={handleAddWallet}>
         <img src={plusSign} width="10px" />
         Add wallet
-      </AddWalletButton>
+      </AddButton>
     </>
   );
 };
@@ -130,7 +130,7 @@ export const Total = styled.a`
   padding-left: 17px;
 `;
 
-export const AddWalletButton = styled.button`
+export const AddButton = styled.button`
   box-sizing: border-box;
   cursor: pointer;
 
