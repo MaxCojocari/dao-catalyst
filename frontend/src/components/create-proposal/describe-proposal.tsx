@@ -1,10 +1,10 @@
 import { useUnit } from "effector-react";
 import { Header, Input, StepInfo } from "../common-styles";
-import { Links } from "../create-dao/components/links";
 import { InputMetadata } from "../input-metadata";
 import stepIcon from "../../assets/images/step2_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
 import { $proposalInfo, updateProposalInfo } from "../../store";
+import { Resources } from "..";
 
 export const DescribeProposal = () => {
   const proposalInfo = useUnit($proposalInfo);
@@ -44,7 +44,7 @@ export const DescribeProposal = () => {
           value={proposalInfo.summary}
         ></textarea>
       </Input>
-      <Links
+      <Resources
         inputName="Resources"
         inputDescription="Share external resources you consider relevant."
       />
