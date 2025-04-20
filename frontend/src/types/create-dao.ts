@@ -7,14 +7,8 @@ export enum DaoType {
 }
 
 export type Recipient = {
-  id: number;
   address: string | undefined;
   tokens: string;
-};
-
-export type Member = {
-  id: number;
-  address: string | undefined;
 };
 
 export interface DaoTokenSettings {
@@ -32,7 +26,7 @@ export interface DaoSettings {
   summary: string;
   links: Link[];
   daoURI: string;
-  members: Member[];
+  members: (string | undefined)[];
   minimumDuration: Duration;
   token: DaoTokenSettings;
   quorum: Fraction; // support threshold

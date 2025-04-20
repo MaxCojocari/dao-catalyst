@@ -88,20 +88,31 @@ export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
             <h3>Support threshold</h3>
             <p>
               {"> "}
-              {(dao.quorum.numerator / dao.quorum.denominator) * 100}%
+              {((dao.quorum.numerator / dao.quorum.denominator) * 100)
+                .toFixed(2)
+                .replace(/\.00$/, "")}
+              %
             </p>
           </ContentRow>
           <ContentRow>
             <h3>Minimum participation</h3>
             <p>
               {"≥ "}
-              {(dao.minimumParticipation.numerator /
-                dao.minimumParticipation.denominator) *
-                100}
+              {(
+                (dao.minimumParticipation.numerator /
+                  dao.minimumParticipation.denominator) *
+                100
+              )
+                .toFixed(2)
+                .replace(/\.00$/, "")}
               % ({"≥ "}
-              {(dao.minimumParticipation.numerator /
-                dao.minimumParticipation.denominator) *
-                amount}{" "}
+              {(
+                (dao.minimumParticipation.numerator /
+                  dao.minimumParticipation.denominator) *
+                amount
+              )
+                .toFixed(2)
+                .replace(/\.00$/, "")}{" "}
               {dao.token.symbol})
             </p>
           </ContentRow>

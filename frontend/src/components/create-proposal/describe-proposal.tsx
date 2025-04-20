@@ -5,9 +5,16 @@ import stepIcon from "../../assets/images/step2_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
 import { $proposalInfo, updateProposalInfo } from "../../store";
 import { Resources } from "..";
+import { useEffect } from "react";
+import { useAccount } from "wagmi";
 
 export const DescribeProposal = () => {
   const proposalInfo = useUnit($proposalInfo);
+  const { address } = useAccount();
+
+  useEffect(() => {
+    updateProposalInfo({ author: address });
+  }, []);
 
   return (
     <>

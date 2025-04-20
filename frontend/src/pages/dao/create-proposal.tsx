@@ -27,7 +27,6 @@ const isNextEnabled = (step: number, proposal: ProposalSettings): boolean => {
   if (step === 3) {
   }
 
-  console.log("step", step);
   console.log("proposal", proposal);
 
   return true;

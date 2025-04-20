@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BinarySelector, ImportDaoToken, MintDaoToken } from "../..";
 import { InputMetadata } from "../../input-metadata";
 import { Input } from "../../common-styles";
-import { $daoInfo } from "../../../store";
+import { $daoInfo, updateDaoInfo } from "../../../store";
 import { useUnit } from "effector-react";
 
 export const DaoTokenInfo = () => {
@@ -10,6 +10,10 @@ export const DaoTokenInfo = () => {
   const [selectedOption, setSelectedOption] = useState(
     daoInfo.token.isDeployed
   );
+
+  useEffect(() => {
+    updateDaoInfo({ token: { ...daoInfo.token, isDeployed: selectedOption } });
+  }, [selectedOption]);
 
   return (
     <>
@@ -19,7 +23,7 @@ export const DaoTokenInfo = () => {
         <BinarySelector
           value={selectedOption}
           onChange={setSelectedOption}
-          headerText={["Yes", "No"]}
+          headerText={["No", "Yes"]}
         />
       </Input>
       {selectedOption ? <ImportDaoToken /> : <MintDaoToken />}
