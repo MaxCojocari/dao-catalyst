@@ -69,7 +69,7 @@ export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
           <ContentRow>
             <h3>Proposal creation</h3>
             <p>
-              Members with ≥{" "}
+              Members with &ge;{" "}
               {!dao.proposalCreationMinVotingPower
                 ? 0
                 : dao.proposalCreationMinVotingPower}{" "}
@@ -87,7 +87,7 @@ export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
           <ContentRow>
             <h3>Support threshold</h3>
             <p>
-              {"> "}
+              &gt;{" "}
               {((dao.quorum.numerator / dao.quorum.denominator) * 100)
                 .toFixed(2)
                 .replace(/\.00$/, "")}
@@ -97,7 +97,7 @@ export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
           <ContentRow>
             <h3>Minimum participation</h3>
             <p>
-              {"≥ "}
+              &ge;{" "}
               {(
                 (dao.minimumParticipation.numerator /
                   dao.minimumParticipation.denominator) *
@@ -105,7 +105,7 @@ export const TokenVoting = ({ setStep }: { setStep: (v: any) => void }) => {
               )
                 .toFixed(2)
                 .replace(/\.00$/, "")}
-              % ({"≥ "}
+              % (&ge;{" "}
               {(
                 (dao.minimumParticipation.numerator /
                   dao.minimumParticipation.denominator) *

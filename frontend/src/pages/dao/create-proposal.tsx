@@ -18,6 +18,11 @@ import backIcon from "../../assets/images/back-icon.svg";
 import { ProgressBarPosition } from "../../components/progress-bar";
 import { ProposalSettings, TxStatus } from "../../types";
 import { $proposalInfo } from "../../store/proposal";
+import { useWriteContract } from "wagmi";
+import { ERC20__factory } from "../../typechain-types";
+import { parseUnits } from "viem";
+import { waitForTransactionReceipt } from "@wagmi/core";
+import { wagmiConfig } from "../../utils/provider";
 
 const isNextEnabled = (step: number, proposal: ProposalSettings): boolean => {
   if (step === 1) {
@@ -25,9 +30,22 @@ const isNextEnabled = (step: number, proposal: ProposalSettings): boolean => {
   }
 
   if (step === 3) {
-  }
+    if (proposal.actions.length === 0) return false;
 
-  console.log("proposal", proposal);
+    for (const action of proposal.actions) {
+      const hasTarget = action.target?.trim() !== "";
+      const hasFunction = action.functionFragment?.trim() !== "";
+      const allInputsFilled =
+        Array.isArray(action.inputs) &&
+        action.inputs.length > 0 &&
+        action.inputs.every((input) => input !== "" && input !== undefined);
+
+      if (!hasTarget || !hasFunction || !allInputsFilled) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   return true;
 };
@@ -38,16 +56,29 @@ export const CreateProposalPage = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.Idle);
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
-  // const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useWriteContract();
 
   const handleDeploy = async () => {
     try {
-      // Simulate contract deployment
-      const tx = await new Promise<{ hash: string }>((resolve) =>
-        setTimeout(() => resolve({ hash: "0xabc123fakehash" }), 3000)
-      );
-      setTxHash(tx.hash as `0x${string}`);
-      setTxStatus(TxStatus.Submitted);
+      setTxStatus(TxStatus.Waiting);
+      const hash = await writeContractAsync({
+        address: "0x34f2c50DBA5e998690C1b5047A74405c2FF2C54F" as `0x${string}`,
+        abi: ERC20__factory.abi,
+        functionName: "transfer",
+        args: [
+          "0x03C25c5Dd860B021165A127A6553c67C371551b0",
+          parseUnits("0.01", 6),
+        ],
+      });
+      setTxHash(hash);
+
+      const receipt = await waitForTransactionReceipt(wagmiConfig, { hash });
+
+      if (receipt.status === "success") {
+        setTxStatus(TxStatus.Submitted);
+      } else {
+        setTxStatus(TxStatus.Failed);
+      }
     } catch (err: any) {
       console.error("Transaction failed:", err);
       setTxStatus(TxStatus.Failed);

@@ -6,7 +6,7 @@ import { ProposalSettings } from "../types";
 dayjs.extend(utc);
 dayjs.extend(timezonePlugin);
 
-function resolveTimezone(tz: string): string {
+export function resolveTimezone(tz: string): string {
   if (tz === "UTC" || tz === "UTC+0") return "Etc/UTC";
 
   const match = tz.match(/^UTC([+-])(\d{1,2})$/);
