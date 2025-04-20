@@ -17,23 +17,24 @@ export const DistributionTable = () => {
 
   const handleTokenChange = (id: number, tokens: string) => {
     setInitialRecipients(
-      wallets.map((entry) => (entry.id === id ? { ...entry, tokens } : entry))
+      wallets.map((entry, index) =>
+        index === id ? { ...entry, tokens } : entry
+      )
     );
   };
 
   const handleRemove = (id: number) => {
-    setInitialRecipients(wallets.filter((entry) => entry.id !== id));
+    setInitialRecipients(wallets.filter((_, index) => index !== id));
   };
 
   const handleAddWallet = () => {
-    const newId = wallets.length ? wallets[wallets.length - 1].id + 1 : 1;
-    setInitialRecipients([...wallets, { id: newId, address: "", tokens: "" }]);
+    setInitialRecipients([...wallets, { address: "", tokens: "" }]);
   };
 
   const handleAddressChange = (id: number, newAddress: string) => {
     setInitialRecipients(
-      wallets.map((entry) =>
-        entry.id === id ? { ...entry, address: newAddress } : entry
+      wallets.map((entry, index) =>
+        index === id ? { ...entry, address: newAddress } : entry
       )
     );
   };
@@ -48,23 +49,23 @@ export const DistributionTable = () => {
           <p></p>
         </>
 
-        {wallets.map((entry) => {
+        {wallets.map((entry, id) => {
           const allocation =
             totalTokens > 0
               ? ((Number(entry.tokens) / totalTokens) * 100).toFixed(0)
               : 0;
           return (
-            <Fragment key={`wallet-entry-${entry.id}`}>
+            <Fragment key={`wallet-entry-${id}`}>
               <AddressInput
                 address={entry.address ?? ""}
-                onChange={(val) => handleAddressChange(entry.id, val)}
+                onChange={(val) => handleAddressChange(id, val)}
               />
               <Input
                 type="number"
                 step={100}
                 value={entry.tokens}
                 placeholder="0"
-                onChange={(e) => handleTokenChange(entry.id, e.target.value)}
+                onChange={(e) => handleTokenChange(id, e.target.value)}
               />
 
               <Input
@@ -78,10 +79,8 @@ export const DistributionTable = () => {
                   if (percent > 100) return;
                   const newTokens = Math.round((percent / 100) * totalTokens);
                   setInitialRecipients(
-                    wallets.map((w) =>
-                      w.id === entry.id
-                        ? { ...w, tokens: newTokens.toString() }
-                        : w
+                    wallets.map((w, wId) =>
+                      wId === id ? { ...w, tokens: newTokens.toString() } : w
                     )
                   );
                 }}
@@ -102,7 +101,7 @@ export const DistributionTable = () => {
                 <img
                   src={deleteIcon}
                   alt="Delete"
-                  onClick={() => handleRemove(entry.id)}
+                  onClick={() => handleRemove(id)}
                   style={{ width: "20px" }}
                 />
               </div>

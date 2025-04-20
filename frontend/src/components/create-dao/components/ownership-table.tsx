@@ -3,62 +3,30 @@ import styled from "styled-components";
 import deleteIcon from "../../../assets/images/delete-icon.svg";
 import { AddressInput } from "../..";
 import plusSign from "../../../assets/images/plus-sign.svg";
-import {
-  $members,
-  addMember,
-  removeMember,
-  updateMemberAddress,
-} from "../../../store";
+import { $daoInfo, updateDaoInfo, updateMemberAddress } from "../../../store";
 import { useUnit } from "effector-react";
 
 export const OwnershipTable = () => {
-  const wallets = useUnit($members);
+  const daoInfo = useUnit($daoInfo);
 
-  const handleAddWallet = () => addMember();
-  const handleRemove = (id: number) => removeMember(id);
-  const handleAddressChange = (id: number, newAddress: string) =>
+  const handleAddWallet = () => {
+    updateDaoInfo({ members: [...daoInfo.members, ""] });
+  };
+
+  const handleRemove = (id: number) => {
+    updateDaoInfo({
+      members: daoInfo.members.filter((_, index) => index !== id),
+    });
+  };
+
+  const handleAddressChange = (id: number, newAddress: string) => {
     updateMemberAddress({ id, address: newAddress });
-
-  // const handleAddWallet = () => {
-  //   const newId = wallets.length ? wallets[wallets.length - 1].id + 1 : 1;
-  //   const fraction = {
-  //     numerator: Math.floor(((wallets.length + 1) * 2) / 3),
-  //     denominator: wallets.length + 1,
-  //   };
-  //   updateDaoInfo({
-  //     members: [...wallets, { id: newId, address: "" }],
-  //     quorum: fraction,
-  //     minimumParticipation: fraction,
-  //   });
-  // };
-
-  // const handleRemove = (id: number) => {
-  //   const fraction = {
-  //     numerator: Math.floor(((wallets.length - 1) * 2) / 3),
-  //     denominator: wallets.length - 1,
-  //   };
-  //   updateDaoInfo({
-  //     members: wallets.filter((entry) => entry.id !== id),
-  //     quorum: fraction,
-  //     minimumParticipation: fraction,
-  //   });
-  // };
-
-  // const handleAddressChange = (id: number, newAddress: string) => {
-  //   updateDaoInfo({
-  //     members: wallets.map((entry) =>
-  //       entry.id === id ? { ...entry, address: newAddress } : entry
-  //     ),
-  //   });
-  //   const fraction = {
-  //     numerator: Math.floor((daoInfo.members.length * 2) / 3),
-  //     denominator: daoInfo.members.length,
-  //   };
-  //   updateDaoInfo({
-  //     quorum: fraction,
-  //     minimumParticipation: fraction,
-  //   });
-  // };
+    updateDaoInfo({
+      members: daoInfo.members.map((member, index) =>
+        index === id ? newAddress : member
+      ),
+    });
+  };
 
   return (
     <>
@@ -68,12 +36,12 @@ export const OwnershipTable = () => {
           <p></p>
         </>
 
-        {wallets.map((entry) => {
+        {daoInfo.members.map((entry, id) => {
           return (
-            <Fragment key={`wallet-entry-${entry.id}`}>
+            <Fragment key={`wallet-entry-${id}`}>
               <AddressInput
-                address={entry.address!}
-                onChange={(val) => handleAddressChange(entry.id, val)}
+                address={entry!}
+                onChange={(val) => handleAddressChange(id, val)}
               />
               <div
                 style={{
@@ -85,7 +53,7 @@ export const OwnershipTable = () => {
                 <img
                   src={deleteIcon}
                   alt="Delete"
-                  onClick={() => handleRemove(entry.id)}
+                  onClick={() => handleRemove(id)}
                   style={{ width: "20px" }}
                 />
               </div>
@@ -93,7 +61,7 @@ export const OwnershipTable = () => {
           );
         })}
         <>
-          <Total>{wallets.length} addresses</Total>
+          <Total>{daoInfo.members.length} addresses</Total>
           <p></p>
         </>
       </Table>

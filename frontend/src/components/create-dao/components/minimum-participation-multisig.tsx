@@ -6,8 +6,13 @@ import { Container, Controls } from "./minimum-participation";
 import { ConfirmationSuccess, Warning } from "../../common-styles";
 import successIcon from "../../../assets/images/done.svg";
 import warningIcon from "../../../assets/images/warning.svg";
-import { $daoInfo, setMinimumParticipationNumerator } from "../../../store";
+import {
+  $daoInfo,
+  setMinimumParticipationNumerator,
+  updateDaoInfo,
+} from "../../../store";
 import { useUnit } from "effector-react";
+import { useEffect } from "react";
 
 export const MinimumParticipationMultisig = () => {
   const daoInfo = useUnit($daoInfo);
@@ -26,6 +31,18 @@ export const MinimumParticipationMultisig = () => {
     );
   const decrement = () =>
     setMinimumParticipationNumerator(Math.max(threshold - 1, 0));
+
+  useEffect(() => {
+    const denominator = daoInfo.members.length || 1;
+    const quorum = {
+      numerator: minParticipation,
+      denominator,
+    };
+    updateDaoInfo({
+      quorum,
+      minimumParticipation: quorum,
+    });
+  }, [minParticipation]);
 
   return (
     <Container>

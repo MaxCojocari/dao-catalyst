@@ -27,12 +27,8 @@ const isNextEnabled = (step: number, dao: DaoSettings): boolean => {
 
   if (step === 2) {
     const hasAtLeastOneMember = dao.members.some(
-      (member) => member.address?.trim() !== ""
+      (member) => member?.trim() !== ""
     );
-    console.log("isNextEnabled");
-    console.log("dao.type", dao.type);
-    console.log("dao.members", dao.members);
-    console.log("hasAtLeastOneMember", hasAtLeastOneMember);
 
     if (dao.type === DaoType.MultisigVote && hasAtLeastOneMember) return true;
 
@@ -42,6 +38,8 @@ const isNextEnabled = (step: number, dao: DaoSettings): boolean => {
       return dao.token.name.trim() !== "" && dao.token.symbol.trim() !== "";
     }
   }
+
+  console.log("dao", dao);
 
   return true;
 };
@@ -124,7 +122,6 @@ export const CreateDaoPage = () => {
               onClick={() => {
                 if (!isNextEnabled(step, dao)) return;
                 setStep((prev) => Math.min(4, prev + 1));
-                console.log(dao);
               }}
             >
               Next Step
