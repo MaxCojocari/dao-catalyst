@@ -26,7 +26,7 @@ const TransferAction = ({
   action: ProposalAction;
 }) => {
   const { daoAddress } = useParams();
-  const [recipient, setRecipient] = useState(action.inputs[1] || "");
+  const [recipient, setRecipient] = useState(action.inputs[1] ?? "");
   const [token, setToken] = useState<Token>(() => {
     if (action.inputs.length > 0) {
       return TOKENS.find(
@@ -36,7 +36,7 @@ const TransferAction = ({
     }
     return TOKENS[0];
   });
-  const [amount, setAmount] = useState(action.inputs[2]);
+  const [amount, setAmount] = useState(action.inputs[2] ?? "");
 
   useEffect(() => {
     if (recipient && token && amount) {
