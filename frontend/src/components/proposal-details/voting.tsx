@@ -47,7 +47,33 @@ export const Voting = () => {
           }}
         />
       )}
-      {activeTab === VotingTab.Voters && <VotersSection />}
+      {activeTab === VotingTab.Voters && (
+        <VotersSection
+          voters={[
+            {
+              address: "0x3D08CC653eC3DF0c039C3a1da15eD0CEeA3b0aCC",
+              power: "10k",
+              vote: "Yes",
+            },
+            {
+              address: "0xD3d6aEc7e2AA97F174622d36c5865533Ab69504b",
+              power: "2000",
+              vote: "Yes",
+            },
+            {
+              address: "0xcc6a02a51b7d1a9f46da946d9b8d6dd358b36b01",
+              power: "1000",
+              vote: "No",
+            },
+            {
+              address: "0x5D471d9455D8Ed1cf36e1C94fbC977cD32E5aBD2",
+              power: "1500",
+              vote: "Yes",
+            },
+          ]}
+          tokenSymbol="PIK"
+        />
+      )}
       <VoteButton disabled={false}>Vote Now</VoteButton>
     </Container>
   );
