@@ -47,3 +47,4 @@ export { StatusTimeline } from "./proposal-details/status-timeline";
 export { Voting } from "./proposal-details/voting";
 export { ToggleTabs } from "./proposal-details/toggle-tabs";
 export { InfoSection } from "./proposal-details/info-section";
+export { VoteButton } from "./proposal-details/vote-button";

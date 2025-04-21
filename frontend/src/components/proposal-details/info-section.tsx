@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { DaoType } from "../../types";
-import { Button, Content, InfoBox, InfoBoxHeader } from "../preview-styles";
+import { Content, InfoBox, InfoBoxHeader } from "../preview-styles";
 import { Line } from "../create-proposal/components/actions";
 
 interface InfoSectionProps {
@@ -111,8 +111,6 @@ export const InfoSection = ({
           </Row>
         </SectionContent>
       </Box>
-
-      {/* <Button disabled>Vote over</Button> */}
     </Container>
   );
 };
@@ -121,6 +119,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 20px;
 `;
 
 export const Box = styled(InfoBox)`
