@@ -238,3 +238,24 @@ export const CheckBox = styled.div`
     color: #555566;
   }
 `;
+
+export const Container = styled.div`
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+
+  background: #ffffff;
+  border: 1px solid #e6e6ff;
+  border-radius: 8px;
+
+  h1 {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    color: #292933;
+  }
+`;
