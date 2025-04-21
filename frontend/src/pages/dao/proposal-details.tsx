@@ -1,7 +1,13 @@
+import styled from "styled-components";
+import { ProposalDetailsHeader } from "../../components";
+
 export const ProposalDetailsPage = () => {
   return (
     <>
-      <div>Proposal Details Page</div>
+      <ProposalDetailsHeader />
+      <Container></Container>
     </>
   );
 };
+
+export const Container = styled.div``;
