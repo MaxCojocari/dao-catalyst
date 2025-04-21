@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import { VotingTab } from "./voting";
 
 export interface ToggleTabsProps {
   activeTab: string;
   setActiveTab: (v: any) => void;
 }
 
-const tabs = ["Breakdown", "Voters", "Info"];
+const tabs = [VotingTab.Breakdown, VotingTab.Voters, VotingTab.Info];
 
 export const ToggleTabs = ({ activeTab, setActiveTab }: ToggleTabsProps) => {
   return (

@@ -48,3 +48,5 @@ export { Voting } from "./proposal-details/voting";
 export { ToggleTabs } from "./proposal-details/toggle-tabs";
 export { InfoSection } from "./proposal-details/info-section";
 export { VoteButton } from "./proposal-details/vote-button";
+export { BreakdownSection } from "./proposal-details/breakdown-section";
+export { VotersSection } from "./proposal-details/voters-section";
