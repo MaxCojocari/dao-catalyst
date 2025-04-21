@@ -39,3 +39,5 @@ export { ActionsDropdown } from "./create-proposal/components/actions-dropdown";
 export { Actions } from "./create-proposal/components/actions";
 export { TokensDropdown } from "./create-proposal/components/tokens-dropdown";
 export { Resources } from "./create-proposal/components/resources";
+export { StatusTag } from "./proposal-details/status-tag";
+export { ProposalDetailsHeader } from "./proposal-details/header";

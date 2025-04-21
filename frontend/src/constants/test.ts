@@ -58,3 +58,10 @@ export const TEST_DAO_INFO = {
   },
   proposalCreationMinVotingPower: 0.1,
 };
+
+export const TEST_PROPOSAL = {
+  author: "0x03C25c5Dd860B021165A127A6553c67C371551b0",
+  title: "Launch Community Grants Program",
+  summary:
+    "This proposal aims to launch the Taiko DAO Community Grants Program to support developers, researchers, and contributors building within the Taiko ecosystem. The program will allocate a portion of the DAO treasury to fund innovative projects, tools, and educational content that align with Taiko’s mission of building scalable, secure, and decentralized rollup infrastructure. By approving this proposal, Taiko DAO takes a strategic step toward fostering long-term community engagement and ecosystem growth.",
+};
