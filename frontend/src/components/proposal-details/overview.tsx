@@ -4,7 +4,7 @@ import { TEST_PROPOSAL as proposal } from "../../constants";
 import { useAccount } from "wagmi";
 import { shortenAddress } from "../../utils";
 
-export const ProposalDetailsHeader = () => {
+export const ProposalOverview = () => {
   const { address } = useAccount();
 
   return (
