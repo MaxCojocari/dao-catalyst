@@ -6,9 +6,13 @@ interface BreakdownSectionProps {
     no: { amount: string; percentage: number };
     abstain: { amount: string; percentage: number };
   };
+  tokenSymbol: string;
 }
 
-export const BreakdownSection = ({ votes }: BreakdownSectionProps) => {
+export const BreakdownSection = ({
+  votes,
+  tokenSymbol,
+}: BreakdownSectionProps) => {
   const renderOption = (label: string, amount: string, percent: number) => (
     <VoteRow key={label}>
       <RowTop>
@@ -26,9 +30,21 @@ export const BreakdownSection = ({ votes }: BreakdownSectionProps) => {
 
   return (
     <Container>
-      {renderOption("Yes", votes.yes.amount, votes.yes.percentage)}
-      {renderOption("No", votes.no.amount, votes.no.percentage)}
-      {renderOption("Abstain", votes.abstain.amount, votes.abstain.percentage)}
+      {renderOption(
+        "Yes",
+        `${votes.yes.amount} ${tokenSymbol}`,
+        votes.yes.percentage
+      )}
+      {renderOption(
+        "No",
+        `${votes.no.amount} ${tokenSymbol}`,
+        votes.no.percentage
+      )}
+      {renderOption(
+        "Abstain",
+        `${votes.abstain.amount} ${tokenSymbol}`,
+        votes.abstain.percentage
+      )}
     </Container>
   );
 };
@@ -37,7 +53,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 30px;
-  margin: 12px 0 28px 0;
+  margin: 12px 0 40px 0;
   width: 100%;
 `;
 

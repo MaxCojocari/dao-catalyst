@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { GenericProps, VotingOption } from "../../../types";
+import { GenericProps, VoteCounting } from "../../../types";
 import { updateProposalInfo } from "../../../store";
 
 export const VotingOptionsSelector = ({ value, onChange }: GenericProps) => {
@@ -8,7 +8,7 @@ export const VotingOptionsSelector = ({ value, onChange }: GenericProps) => {
       <div
         className={`radio-card ${value === "simple" ? "active" : ""}`}
         onClick={() => {
-          updateProposalInfo({ votingOption: VotingOption.SimpleVoting });
+          updateProposalInfo({ votingOption: VoteCounting.SimpleVoting });
           onChange("simple");
         }}
       >
@@ -28,7 +28,7 @@ export const VotingOptionsSelector = ({ value, onChange }: GenericProps) => {
       <div
         className={`radio-card ${value === "fractional" ? "active" : ""}`}
         onClick={() => {
-          updateProposalInfo({ votingOption: VotingOption.FractionalVoting });
+          updateProposalInfo({ votingOption: VoteCounting.FractionalVoting });
           onChange("fractional");
         }}
       >

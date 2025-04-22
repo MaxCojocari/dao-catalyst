@@ -14,7 +14,7 @@ export const ToggleTabs = ({ activeTab, setActiveTab }: ToggleTabsProps) => {
       {tabs.map((tab) => (
         <TabButton
           key={tab}
-          isActive={activeTab === tab}
+          $isActive={activeTab === tab}
           onClick={() => setActiveTab(tab)}
         >
           {tab}
@@ -32,13 +32,13 @@ const TabContainer = styled.div`
   border-radius: 8px;
 `;
 
-const TabButton = styled.button<{ isActive: boolean }>`
+const TabButton = styled.button<{ $isActive: boolean }>`
   padding: 8px 16px;
   border: none;
-  background: ${({ isActive }) => (isActive ? "#ffffff" : "transparent")};
-  color: ${({ isActive }) => (isActive ? "#6666FF" : "#3a3a3a")};
+  background: ${({ $isActive }) => ($isActive ? "#ffffff" : "transparent")};
+  color: ${({ $isActive }) => ($isActive ? "#6666FF" : "#3a3a3a")};
   font-weight: 500;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 16px;
   letter-spacing: -0.02em;
   border-radius: 8px;

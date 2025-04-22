@@ -1,7 +1,7 @@
 // export const TEST_DAO_IMGAGE_URL =
 //   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreibvu277rizhevfpe6bxa46a4tdlyzle3kjtjkuqknd55kieccdyom";
 
-import { DaoType } from "../types";
+import { DaoType, VotingOption } from "../types";
 
 export const TEST_DAO_IMGAGE_URL =
   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib6rurdcxtxil5crchbjpnc76tiuvcifjezzef3cdc57awmk4mhti";
@@ -64,4 +64,33 @@ export const TEST_PROPOSAL = {
   title: "Launch Community Grants Program",
   summary:
     "This proposal aims to launch the Taiko DAO Community Grants Program to support developers, researchers, and contributors building within the Taiko ecosystem. The program will allocate a portion of the DAO treasury to fund innovative projects, tools, and educational content that align with Taiko’s mission of building scalable, secure, and decentralized rollup infrastructure. By approving this proposal, Taiko DAO takes a strategic step toward fostering long-term community engagement and ecosystem growth.",
+};
+
+export const voters = [
+  {
+    address: "0x3D08CC653eC3DF0c039C3a1da15eD0CEeA3b0aCC",
+    power: "10k",
+    vote: VotingOption.Yes,
+  },
+  {
+    address: "0xD3d6aEc7e2AA97F174622d36c5865533Ab69504b",
+    power: "2000",
+    vote: VotingOption.Yes,
+  },
+  {
+    address: "0xcc6a02a51b7d1a9f46da946d9b8d6dd358b36b01",
+    power: "1000",
+    vote: VotingOption.No,
+  },
+  {
+    address: "0x5D471d9455D8Ed1cf36e1C94fbC977cD32E5aBD2",
+    power: "1500",
+    vote: VotingOption.Yes,
+  },
+];
+
+export const votes = {
+  yes: { amount: "12k", percentage: 52.31 },
+  no: { amount: "1000", percentage: 7.69 },
+  abstain: { amount: "0", percentage: 40 },
 };
