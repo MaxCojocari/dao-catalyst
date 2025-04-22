@@ -80,7 +80,8 @@ export const InfoSection = ({
                   style={{
                     color: "#8f8fb2",
                     fontSize: "12px",
-                    fontWeight: "300",
+                    lineHeight: "19px",
+                    letterSpacing: "-0.02em",
                   }}
                 >
                   {participationReached ? "No votes missing" : "Votes missing"}
@@ -154,10 +155,6 @@ export const Value = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 8px;
-
-  font-size: 14px;
-  color: #292933;
-  font-weight: 500;
 `;
 
 export const Pill = styled.span<{ color: string }>`
