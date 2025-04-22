@@ -6,6 +6,7 @@ import {
   StatusTimeline,
   Voting,
 } from "../../components";
+import { TEST_PROPOSAL as proposal } from "../../constants";
 
 export const ProposalDetailsPage = () => {
   return (
@@ -17,7 +18,7 @@ export const ProposalDetailsPage = () => {
           <ActionsSection />
         </LeftColumn>
         <RightColumn>
-          <ResourcesSection />
+          <ResourcesSection resources={proposal.resources} />
           <StatusTimeline />
         </RightColumn>
       </Container>
@@ -28,7 +29,7 @@ export const ProposalDetailsPage = () => {
 export const Container = styled.div`
   display: grid;
   grid-template-columns: 4fr 3fr;
-  padding: 10px 150px;
+  padding: 16px 150px;
   column-gap: 16px;
   row-gap: 16px;
 

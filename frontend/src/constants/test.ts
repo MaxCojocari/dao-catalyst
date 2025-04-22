@@ -64,6 +64,16 @@ export const TEST_PROPOSAL = {
   title: "Launch Community Grants Program",
   summary:
     "This proposal aims to launch the Taiko DAO Community Grants Program to support developers, researchers, and contributors building within the Taiko ecosystem. The program will allocate a portion of the DAO treasury to fund innovative projects, tools, and educational content that align with Taiko’s mission of building scalable, secure, and decentralized rollup infrastructure. By approving this proposal, Taiko DAO takes a strategic step toward fostering long-term community engagement and ecosystem growth.",
+  resources: [
+    {
+      label: "Pikachu X",
+      url: "https://twitter.com/Pikachu_",
+    },
+    {
+      label: "⚡ Pikachu Nation ⚡",
+      url: "https://discord.com/invite/8JPUrN6GRy",
+    },
+  ],
 };
 
 export const voters = [
