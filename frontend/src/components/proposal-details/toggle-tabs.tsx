@@ -47,6 +47,6 @@ const TabButton = styled.button<{ $isActive: boolean }>`
   width: 100px;
 
   &:hover {
-    background: #ffffff;
+    color: #6666ff;
   }
 `;

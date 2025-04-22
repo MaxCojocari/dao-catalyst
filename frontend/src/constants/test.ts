@@ -1,6 +1,7 @@
 // export const TEST_DAO_IMGAGE_URL =
 //   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreibvu277rizhevfpe6bxa46a4tdlyzle3kjtjkuqknd55kieccdyom";
 
+import { StatusItem } from "../components/proposal-details/status-timeline";
 import { DaoType, VotingOption } from "../types";
 
 export const TEST_DAO_IMGAGE_URL =
@@ -104,3 +105,39 @@ export const votes = {
   no: { amount: "1000", percentage: 7.69 },
   abstain: { amount: "0", percentage: 40 },
 };
+
+export const statuses = [
+  {
+    label: "Published",
+    timestamp: "2025/02/05 10:20 PM UTC+2",
+    blockNumber: "7647095",
+    isCompleted: true,
+    isCurrent: false,
+  },
+  {
+    label: "Running",
+    timestamp: "2025/02/05 10:20 PM UTC+2",
+    isCompleted: true,
+    isCurrent: false,
+  },
+  {
+    label: "Succeeded",
+    timestamp: "2025/02/05 10:59 PM UTC+2",
+    isCompleted: true,
+    isCurrent: false,
+  },
+  // {
+  //   label: "Executed",
+  //   timestamp: "2025/02/05 11:12 PM UTC+2",
+  //   blockNumber: "7647338",
+  //   isCompleted: false,
+  //   isCurrent: true,
+  // },
+  {
+    label: "Rejected",
+    // timestamp: "2025/02/05 11:12 PM UTC+2",
+    // blockNumber: "7647338",
+    isCompleted: true,
+    isCurrent: true,
+  },
+] as StatusItem[];

@@ -6,7 +6,7 @@ import {
   StatusTimeline,
   Voting,
 } from "../../components";
-import { TEST_PROPOSAL as proposal } from "../../constants";
+import { TEST_PROPOSAL as proposal, statuses } from "../../constants";
 
 export const ProposalDetailsPage = () => {
   return (
@@ -19,7 +19,7 @@ export const ProposalDetailsPage = () => {
         </LeftColumn>
         <RightColumn>
           <ResourcesSection resources={proposal.resources} />
-          <StatusTimeline />
+          <StatusTimeline statuses={statuses} />
         </RightColumn>
       </Container>
     </>
