@@ -1,9 +1,22 @@
 import styled from "styled-components";
-import { Container, NextStepButton } from "../common-styles";
+import { Container, VoteButton } from "../common-styles";
 import { useState } from "react";
-import { BreakdownSection, InfoSection, ToggleTabs, VotersSection } from "..";
-import { DaoType } from "../../types";
-import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
+import {
+  BreakdownSection,
+  InfoSection,
+  ToggleTabs,
+  TransactionModal,
+  VotePanel,
+  VotersSection,
+  VotingStatus,
+} from "..";
+import { DaoType, TxStatus } from "../../types";
+import { ERC20__factory } from "../../typechain-types";
+import { parseUnits } from "viem";
+import { useWriteContract } from "wagmi";
+import { wagmiConfig } from "../../utils/provider";
+import { waitForTransactionReceipt } from "@wagmi/core";
+import { votes, voters } from "../../constants";
 
 export enum VotingTab {
   Breakdown = "Breakdown",
@@ -13,6 +26,42 @@ export enum VotingTab {
 
 export const Voting = () => {
   const [activeTab, setActiveTab] = useState(VotingTab.Info);
+  const [votePanelActive, setVotePanelActive] = useState(false);
+  const [voted, setVoted] = useState(false);
+  const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.Idle);
+  const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
+  const { writeContractAsync } = useWriteContract();
+
+  const handleVoteSubmission = async () => {
+    try {
+      setTxStatus(TxStatus.Waiting);
+      const hash = await writeContractAsync({
+        address: "0x34f2c50DBA5e998690C1b5047A74405c2FF2C54F" as `0x${string}`,
+        abi: ERC20__factory.abi,
+        functionName: "transfer",
+        args: [
+          "0x03C25c5Dd860B021165A127A6553c67C371551b0",
+          parseUnits("0.01", 6),
+        ],
+      });
+      setTxHash(hash);
+
+      const receipt = await waitForTransactionReceipt(wagmiConfig, { hash });
+
+      if (receipt.status === "success") {
+        setTxStatus(TxStatus.Submitted);
+      } else {
+        setTxStatus(TxStatus.Failed);
+      }
+    } catch (err: any) {
+      console.error("Transaction failed:", err);
+      setTxStatus(TxStatus.Failed);
+    }
+  };
+
+  const handleClose = () => {
+    setTxStatus(TxStatus.Idle);
+  };
 
   return (
     <Container>
@@ -20,12 +69,9 @@ export const Voting = () => {
         <h1>Voting</h1>
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </Row>
-      <VotingStatus>
-        <InfoOutlineIcon
-          sx={{ color: "#6666FF", width: "18px", marginRight: "4px" }}
-        />
-        <p>Voting ends in 59 minutes</p>
-      </VotingStatus>
+      <VotingStatus type={"active"} />
+      <br />
+      <br />
       {activeTab === VotingTab.Info && (
         <InfoSection
           daoType={DaoType.SimpleVote}
@@ -39,42 +85,39 @@ export const Voting = () => {
         />
       )}
       {activeTab === VotingTab.Breakdown && (
-        <BreakdownSection
-          votes={{
-            yes: { amount: "12k PIK", percentage: 52.31 },
-            no: { amount: "1000 PIK", percentage: 7.69 },
-            abstain: { amount: "0 PIK", percentage: 40 },
-          }}
-        />
+        <BreakdownSection votes={votes} tokenSymbol="PIK" />
       )}
       {activeTab === VotingTab.Voters && (
-        <VotersSection
-          voters={[
-            {
-              address: "0x3D08CC653eC3DF0c039C3a1da15eD0CEeA3b0aCC",
-              power: "10k",
-              vote: "Yes",
-            },
-            {
-              address: "0xD3d6aEc7e2AA97F174622d36c5865533Ab69504b",
-              power: "2000",
-              vote: "Yes",
-            },
-            {
-              address: "0xcc6a02a51b7d1a9f46da946d9b8d6dd358b36b01",
-              power: "1000",
-              vote: "No",
-            },
-            {
-              address: "0x5D471d9455D8Ed1cf36e1C94fbC977cD32E5aBD2",
-              power: "1500",
-              vote: "Yes",
-            },
-          ]}
-          tokenSymbol="PIK"
-        />
+        <VotersSection voters={voters} tokenSymbol="PIK" />
       )}
-      <VoteButton disabled={false}>Vote Now</VoteButton>
+      {!votePanelActive && (
+        <VoteButton disabled={voted} onClick={() => setVotePanelActive(true)}>
+          {!voted ? "Vote now" : "Vote submitted"}
+        </VoteButton>
+      )}
+      {votePanelActive && !voted && (
+        <>
+          <br />
+          <VotePanel
+            onSubmit={async (option) => {
+              await handleVoteSubmission();
+              setVoted(true);
+              setVotePanelActive(false);
+            }}
+            onCancel={() => setVotePanelActive(false)}
+          />
+          <TransactionModal
+            status={txStatus}
+            txHash={txHash}
+            onClose={handleClose}
+            titleWaiting="Waiting for Signature"
+            descriptionWaiting="Sign vote and confirm transaction in your wallet"
+            titleSubmitted="Vote Submitted Successfully!"
+            successLabel="Continue to Proposal"
+            explorerUrl="https://sepolia.etherscan.io/tx/"
+          />
+        </>
+      )}
     </Container>
   );
 };
@@ -85,41 +128,4 @@ export const Row = styled.div`
   justify-content: space-between;
   width: 100%;
   margin-bottom: 6px;
-`;
-
-export const VotingStatus = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 12px;
-
-  p {
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 22px;
-    letter-spacing: -0.02em;
-    color: #6666ff;
-  }
-`;
-
-export const VoteButton = styled(NextStepButton)`
-  box-sizing: border-box;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 12px 32px;
-  gap: 8px;
-
-  width: auto;
-  height: 47px;
-
-  border-radius: 6px;
-
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 16px;
-  letter-spacing: -0.02em;
-  color: #ffffff;
 `;

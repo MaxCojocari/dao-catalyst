@@ -6,7 +6,7 @@ import {
   ProposalSettings,
   VoteStartOptions,
 } from "../types/create-proposal";
-import { VotingOption } from "../types";
+import { VoteCounting } from "../types";
 import dayjs from "dayjs";
 import { nanoid } from "nanoid";
 
@@ -35,7 +35,7 @@ const defaultProposalInfo: ProposalSettings = {
   author: "",
   title: "",
   summary: "",
-  votingOption: VotingOption.SimpleVoting,
+  votingOption: VoteCounting.SimpleVoting,
   resources: [{ label: "", url: "" }],
   actions: [
     {

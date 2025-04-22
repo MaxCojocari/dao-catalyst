@@ -1,5 +1,5 @@
 import { Dayjs } from "dayjs";
-import { Duration, Link, VotingOption } from ".";
+import { Duration, Link, VoteCounting } from ".";
 
 export enum ActionType {
   TransferTokens = "Transfer Funds",
@@ -30,7 +30,7 @@ export interface ProposalSettings {
   author: string;
   title: string;
   summary: string;
-  votingOption: VotingOption;
+  votingOption: VoteCounting;
   resources: Link[];
   actions: ProposalAction[];
   descriptionURI: string;

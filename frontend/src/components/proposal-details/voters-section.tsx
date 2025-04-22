@@ -4,11 +4,12 @@ import searchIcon from "../../assets/images/search-icon.svg";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { blo } from "blo";
 import { shortenAddress } from "../../utils";
+import { VotingOption } from "../../types";
 
 interface Voter {
   address: string;
   power: string;
-  vote: "Yes" | "No" | "Abstain";
+  vote: VotingOption;
 }
 
 interface VotersSectionProps {
@@ -18,14 +19,23 @@ interface VotersSectionProps {
 
 export const VotersSection = ({ voters, tokenSymbol }: VotersSectionProps) => {
   const [showAll, setShowAll] = useState(false);
-  const visibleVoters = showAll ? voters : voters.slice(0, 3);
-  const canToggle = voters.length > 3;
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredVoters = voters.filter((voter) =>
+    voter.address.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const visibleVoters = showAll ? filteredVoters : filteredVoters.slice(0, 3);
+  const canToggle = filteredVoters.length > 3;
 
   return (
     <Container>
       <SearchBar>
-        <img src={searchIcon} alt="search" width={16} />
-        <input placeholder="Wallet, ENS, or email" />
+        <img src={searchIcon} alt="search" width={18} />
+        <input
+          placeholder="Wallet, ENS, or email"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </SearchBar>
 
       <VoterList>
@@ -90,7 +100,7 @@ const SearchBar = styled.div`
     width: 100%;
 
     font-weight: 500;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 17px;
     letter-spacing: -0.03em;
     color: rgba(41, 41, 51, 0.9);
@@ -98,7 +108,7 @@ const SearchBar = styled.div`
 
   input::placeholder {
     font-weight: 500;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 48px;
     letter-spacing: -0.02em;
     color: #8f8fb2;
@@ -137,7 +147,7 @@ const VoterData = styled.div`
 
 const Address = styled.span`
   font-weight: 500;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 17px;
   letter-spacing: -0.03em;
   color: rgba(41, 41, 51, 0.9);
@@ -145,7 +155,7 @@ const Address = styled.span`
 
 const Power = styled.span`
   font-weight: 400;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 17px;
   letter-spacing: -0.01em;
   color: #8f8fb2;
@@ -158,7 +168,7 @@ const RightSide = styled.div`
 `;
 
 const VoteTag = styled.span<{ type: "Yes" | "No" | "Abstain" }>`
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   padding: 4px 8px;
   border-radius: 4px;

@@ -60,15 +60,8 @@ export const InfoSection = ({
         <SectionContent>
           <Row>
             <h3>Current participation</h3>
-            <Value
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              {participation}
+            <Value>
+              <p>{participation}</p>
               <div
                 style={{
                   display: "flex",
@@ -83,7 +76,13 @@ export const InfoSection = ({
                 ) : (
                   <Pill color="#FFE9A3">Missing</Pill>
                 )}
-                <span style={{ color: "#8f8fb2", fontSize: "12px" }}>
+                <span
+                  style={{
+                    color: "#8f8fb2",
+                    fontSize: "12px",
+                    fontWeight: "300",
+                  }}
+                >
                   {participationReached ? "No votes missing" : "Votes missing"}
                 </span>
               </div>
@@ -139,23 +138,33 @@ export const Row = styled.div`
 
 export const SectionContent = styled(Content)`
   margin-top: 20px;
+
+  h3,
+  p {
+    font-size: 15px;
+  }
 `;
 
 export const SectionLine = styled(Line)`
   margin: 20px 0;
 `;
 
-export const Value = styled.p`
+export const Value = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
   font-size: 14px;
   color: #292933;
   font-weight: 500;
 `;
 
 export const Pill = styled.span<{ color: string }>`
-  padding: 2px 8px;
+  padding: 4px 8px;
   background-color: ${({ color }) => color};
   color: #292933;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   border-radius: 8px;
   margin-right: 4px;
