@@ -245,7 +245,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 20px;
+  padding: 21px;
 
   background: #ffffff;
   border: 1px solid #e6e6ff;

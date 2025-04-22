@@ -71,7 +71,7 @@ const RowTop = styled.div`
 
 const Label = styled.p`
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   color: #6666ff;
   margin: 0;
 `;
@@ -82,14 +82,14 @@ const Right = styled.div`
 `;
 
 const Votes = styled.p`
-  font-size: 14px;
+  font-size: 15px;
   color: #6b7280;
   margin: 0;
 `;
 
 const Percentage = styled.p`
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   color: #6666ff;
   margin: 0;
 `;
