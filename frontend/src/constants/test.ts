@@ -2,7 +2,7 @@
 //   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreibvu277rizhevfpe6bxa46a4tdlyzle3kjtjkuqknd55kieccdyom";
 
 import { StatusItem } from "../components/proposal-details/status-timeline";
-import { DaoType, VotingOption } from "../types";
+import { ActionType, DaoType, ProposalAction, VotingOption } from "../types";
 
 export const TEST_DAO_IMGAGE_URL =
   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib6rurdcxtxil5crchbjpnc76tiuvcifjezzef3cdc57awmk4mhti";
@@ -126,18 +126,38 @@ export const statuses = [
     isCompleted: true,
     isCurrent: false,
   },
-  // {
-  //   label: "Executed",
-  //   timestamp: "2025/02/05 11:12 PM UTC+2",
-  //   blockNumber: "7647338",
-  //   isCompleted: false,
-  //   isCurrent: true,
-  // },
   {
-    label: "Rejected",
-    // timestamp: "2025/02/05 11:12 PM UTC+2",
-    // blockNumber: "7647338",
+    label: "Executed",
+    timestamp: "2025/02/05 11:12 PM UTC+2",
+    blockNumber: "7647338",
     isCompleted: true,
     isCurrent: true,
   },
+  // {
+  //   label: "Rejected",
+  //   isCompleted: true,
+  //   isCurrent: true,
+  // },
 ] as StatusItem[];
+
+export const customAction: ProposalAction = {
+  id: "action-1",
+  target: "0xD3d6aEc7e2AA97F174622d36c5865533Ab69504b",
+  value: "0x0",
+  type: ActionType.Other,
+  functionFragment: "setValue(uint256,address)",
+  inputs: [1000, "0x3D08CC653eC3DF0c039C3a1da15eD0CEeA3b0aCC"],
+};
+
+export const transferAction: ProposalAction = {
+  id: "action-2",
+  target: "0x5D471d9455D8Ed1cf36e1C94fbC977cD32E5aBD2",
+  value: "0",
+  type: ActionType.TransferTokens,
+  functionFragment: "transfer(address,address,uint256)",
+  inputs: [
+    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "0x3D08CC653eC3DF0c039C3a1da15eD0CEeA3b0aCC",
+    "5000000",
+  ],
+};

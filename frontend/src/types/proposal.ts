@@ -7,3 +7,12 @@ export enum StatusTimelineType {
   Executed = "Executed",
   Rejected = "Rejected",
 }
+
+export enum ProposalState {
+  Pending,
+  Active,
+  Canceled,
+  Defeated,
+  Succeeded,
+  Executed,
+}

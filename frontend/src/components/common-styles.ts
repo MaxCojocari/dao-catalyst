@@ -202,6 +202,8 @@ export const ConfirmationSuccess = styled(Confirmation)`
   }
 `;
 
+export const Success = styled(ConfirmationSuccess)``;
+
 export const Warning = styled(Confirmation)`
   display: flex;
   align-items: flex-start;
@@ -281,3 +283,5 @@ export const VoteButton = styled(NextStepButton)`
   letter-spacing: -0.02em;
   color: #ffffff;
 `;
+
+export const FilledButton = styled(VoteButton)``;
