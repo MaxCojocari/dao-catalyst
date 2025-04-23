@@ -92,7 +92,7 @@ export const Header = styled.div`
   h2 {
     font-weight: 400;
     font-size: 16px;
-    line-height: 170%;
+    line-height: 26px;
     letter-spacing: -0.02em;
     color: #666680;
   }
