@@ -17,7 +17,7 @@ const Logo = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 
   font-family: "Inter";
   font-style: normal;
@@ -29,7 +29,7 @@ const Logo = styled.div`
   color: #292933;
 
   img {
-    width: 50px;
+    width: 40px;
     border-radius: 50%;
     object-fit: cover;
     object-position: center;
