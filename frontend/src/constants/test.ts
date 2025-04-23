@@ -1,28 +1,30 @@
 // export const TEST_DAO_IMGAGE_URL =
 //   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreibvu277rizhevfpe6bxa46a4tdlyzle3kjtjkuqknd55kieccdyom";
+// export const TEST_DAO_IMGAGE_URL =
+//   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib6rurdcxtxil5crchbjpnc76tiuvcifjezzef3cdc57awmk4mhti";
 
 import { StatusItem } from "../components/proposal-details/status-timeline";
 import { ActionType, DaoType, ProposalAction, VotingOption } from "../types";
 
 export const TEST_DAO_IMGAGE_URL =
-  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib6rurdcxtxil5crchbjpnc76tiuvcifjezzef3cdc57awmk4mhti";
+  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib2su7oqwqlmibinhhxc4yfaotq6boltij4dnk6namtcf7zomcpim";
 export const TEST_DAO_NAME = "Taiko DAO";
 export const TEST_DAO_CONTRACT_ADDRESS =
   "0xF079A5c205B622349A648965c4E5F05969eB0542";
 
 export const TEST_DAO_INFO = {
   type: DaoType.MultisigVote,
-  name: "PikaDAO",
-  logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreihbik6lvzagahquz52qcyxqhuiaafumepejtsfof56gkmglojkjie",
+  name: "TaikoDAO",
+  logo: TEST_DAO_IMGAGE_URL,
   summary:
-    "PikaDAO ⚡ is a decentralized autonomous organization that fosters collaborative decision-making within a vibrant community, using transparent governance to shape initiatives, fund projects, and drive collective actions. With its Pikachu-inspired emblem, PikaDAO empowers members to propose, debate, and vote on key decisions, ensuring a truly democratic and community-led ecosystem.",
+    "Taiko DAO is a decentralized autonomous organization that fosters collaborative decision-making within a vibrant community, using transparent governance to shape initiatives, fund projects, and drive collective actions. TaikoDAO empowers members to propose, debate, and vote on key decisions, with a truly democratic and community-led ecosystem.",
   links: [
     {
-      label: "Pikachu X",
+      label: "Taiko X",
       url: "https://twitter.com/Pikachu_",
     },
     {
-      label: "⚡ Pikachu Nation ⚡",
+      label: "⚡ Taiko Nation ⚡",
       url: "https://discord.com/invite/8JPUrN6GRy",
     },
   ],
@@ -61,21 +63,56 @@ export const TEST_DAO_INFO = {
 };
 
 export const TEST_PROPOSAL = {
+  id: 0,
   author: "0x03C25c5Dd860B021165A127A6553c67C371551b0",
   title: "Launch Community Grants Program",
   summary:
     "This proposal aims to launch the Taiko DAO Community Grants Program to support developers, researchers, and contributors building within the Taiko ecosystem. The program will allocate a portion of the DAO treasury to fund innovative projects, tools, and educational content that align with Taiko’s mission of building scalable, secure, and decentralized rollup infrastructure. By approving this proposal, Taiko DAO takes a strategic step toward fostering long-term community engagement and ecosystem growth.",
   resources: [
     {
-      label: "Pikachu X",
+      label: "Taiko X",
       url: "https://twitter.com/Pikachu_",
     },
     {
-      label: "⚡ Pikachu Nation ⚡",
+      label: "⚡ Taiko Nation ⚡",
       url: "https://discord.com/invite/8JPUrN6GRy",
     },
   ],
+  createdAt: 1742738693,
+  voteStart: 1742825093,
+  voteEnd: 1743465599,
 };
+
+export const proposals = [
+  TEST_PROPOSAL,
+  {
+    id: 1,
+    author: "0x329103cB5CdaAA54219C2B85EDdC40843F42a2bf",
+    title: "Fund ZK Research & Development",
+    summary:
+      "This proposal suggests allocating 150,000 USDC from the Taiko DAO treasury to support research and development efforts in zero-knowledge (ZK) proof technology. The goal is to accelerate innovation in zkRollups, enhance security models, and improve scalability for future Taiko deployments. By funding academic groups, independent researchers, and protocol engineers, the DAO will strategically strengthen its technical foundation.",
+    resources: [],
+    createdAt: 1742843200,
+    voteStart: 1742929600,
+    voteEnd: 1743570000,
+  },
+  {
+    id: 2,
+    author: "0xe35A48Bd210B5aDF43cA53D3c4E3123bba01F1f1",
+    title: "Onboard Strategic Advisors",
+    summary:
+      "This proposal recommends onboarding a panel of strategic advisors to support the Taiko DAO in governance, protocol evolution, and ecosystem development. Advisors will include experts in L2 scaling, token economics, and regulatory strategy. Their involvement will provide valuable insight and help guide high-impact decisions as Taiko continues to grow.",
+    resources: [
+      {
+        label: "L2Beat",
+        url: "https://l2beat.com/",
+      },
+    ],
+    createdAt: 1742950100,
+    voteStart: 1743036500,
+    voteEnd: 1743676900,
+  },
+];
 
 export const voters = [
   {

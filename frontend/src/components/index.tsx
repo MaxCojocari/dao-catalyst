@@ -51,3 +51,4 @@ export { BreakdownSection } from "./proposal-details/breakdown-section";
 export { VotersSection } from "./proposal-details/voters-section";
 export { VotePanel } from "./proposal-details/vote-panel";
 export { VotingStatus } from "./proposal-details/voting-status";
+export { DaoOverview } from "./dashboard/overview";

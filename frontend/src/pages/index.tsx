@@ -43,7 +43,7 @@ const router = createBrowserRouter([
     path: "/daos/:daoAddress",
     children: [
       {
-        path: "dashboard",
+        path: "",
         element: (
           <Layout>
             <DashboardPage />
