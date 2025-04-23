@@ -9,6 +9,7 @@ import {
   DaoType,
   ProposalAction,
   ProposalState,
+  TransferType,
   VotingOption,
 } from "../types";
 
@@ -211,21 +212,21 @@ export const transferAction: ProposalAction = {
 export const transfers = [
   {
     id: "tx1",
-    type: "Deposit",
+    type: TransferType.Deposit,
     amount: "1000",
     token: "USDC",
     timestamp: 1743964200, // 2025-02-04T10:30:00Z
   },
   {
     id: "tx2",
-    type: "Withdrawal",
+    type: TransferType.Withdrawal,
     amount: "533.5",
     token: "USDC",
     timestamp: 1744050900, // 2025-02-05T12:15:00Z
   },
   {
     id: "tx3",
-    type: "Deposit",
+    type: TransferType.Deposit,
     amount: "2500.12",
     token: "USDT",
     timestamp: 1744142700, // 2025-02-06T14:45:00Z

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Button } from "./preview-styles";
 
 export const Box = styled.div`
   position: relative;
@@ -286,12 +287,23 @@ export const VoteButton = styled(NextStepButton)`
 
 export const FilledButton = styled(VoteButton)``;
 
+export const FilledButtonOverview = styled(VoteButton)`
+  height: 40px;
+  padding: 12px 24px;
+`;
+
+export const SeeAllButton = styled(Button)`
+  height: 40px;
+  font-size: 14px;
+  padding: 12px 20px 12px 24px;
+`;
+
 export const Badge = styled.div<{ color: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   background-color: ${({ color }) => `${color}20`};
   border-radius: 8px;
 

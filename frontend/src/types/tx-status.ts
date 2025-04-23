@@ -4,3 +4,8 @@ export enum TxStatus {
   Submitted,
   Failed,
 }
+
+export enum TransferType {
+  Deposit,
+  Withdrawal,
+}

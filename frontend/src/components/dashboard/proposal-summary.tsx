@@ -1,18 +1,21 @@
-import { Badge, Container, FilledButton } from "../common-styles";
+import {
+  Badge,
+  Container,
+  FilledButtonOverview,
+  SeeAllButton,
+} from "../common-styles";
 import voteIcon from "../../assets/images/vote.svg";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProposalOverviewCard } from "./proposal-overview-card";
-import { Button } from "../preview-styles";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
 export const ProposalSummary = ({ proposals }: { proposals: any[] }) => {
   const navigate = useNavigate();
   const { daoAddress } = useParams();
 
-  const handleClick = () => {
-    navigate(`/daos/${daoAddress}/create-proposal`);
-  };
+  const displayProposals = proposals.slice(0, 2);
+  const hasMoreThanTwo = proposals.length > 2;
 
   return (
     <>
@@ -38,25 +41,29 @@ export const ProposalSummary = ({ proposals }: { proposals: any[] }) => {
             <p>Proposals created</p>
           </div>
         </Box>
-        <FilledButton
+        <FilledButtonOverview
           onClick={() => {
             navigate(`/daos/${daoAddress}/create-proposal`);
           }}
         >
           New proposal
-        </FilledButton>
+        </FilledButtonOverview>
       </Container>
-      {proposals.map((proposal, idx) => (
+
+      {displayProposals.map((proposal, idx) => (
         <ProposalOverviewCard key={idx} proposal={proposal} />
       ))}
-      <Button
-        style={{ height: "47px", padding: "12px 20px 12px 28px" }}
-        onClick={() => {
-          navigate(`/daos/${daoAddress}/governance`);
-        }}
-      >
-        See all <KeyboardArrowRightIcon width={10} sx={{ color: "#6666FF" }} />{" "}
-      </Button>
+
+      {hasMoreThanTwo && (
+        <SeeAllButton
+          onClick={() => {
+            navigate(`/daos/${daoAddress}/governance`);
+          }}
+        >
+          See all{" "}
+          <KeyboardArrowRightIcon width={10} sx={{ color: "#6666FF" }} />
+        </SeeAllButton>
+      )}
     </>
   );
 };
