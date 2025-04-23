@@ -59,3 +59,4 @@ export { ProposalSummary } from "./dashboard/proposal-summary";
 export { TreasuryPanel } from "./dashboard/treasury-pannel";
 export { ProposalOverviewCard } from "./dashboard/proposal-overview-card";
 export { TreasuryActivityCard } from "./dashboard/treasury-activity-card";
+export { MembersList } from "./dashboard/members-list";

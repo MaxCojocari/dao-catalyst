@@ -232,3 +232,26 @@ export const transfers = [
     timestamp: 1744142700, // 2025-02-06T14:45:00Z
   },
 ];
+
+export const members = [
+  {
+    address: "0x03C25c5Dd860B021165A127A6553c67C371551b0",
+    votingPower: 10000,
+    percentage: 76.92,
+  },
+  {
+    address: "0xe35Fa1aDf92F9C948f849e69D5b8eD61Bd3401f1",
+    votingPower: 2630,
+    percentage: 15.38,
+  },
+  {
+    address: "0x329D5B5CcC46cD933918eF66c8b2F88411C542bf",
+    votingPower: 1500,
+    percentage: 7.69,
+  },
+  {
+    address: "0xD3d6aEc7e2AA97F174622d36c5865533Ab69504b",
+    votingPower: 233,
+    percentage: 1.1,
+  },
+];

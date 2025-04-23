@@ -7,7 +7,7 @@ import {
   ProposalSummary,
   TreasuryPanel,
 } from "../../components";
-import { proposals, transfers } from "../../constants";
+import { members, proposals, transfers } from "../../constants";
 
 export const DashboardPage = () => {
   const hasProposals = proposals.length > 0;
@@ -31,7 +31,7 @@ export const DashboardPage = () => {
           ) : (
             <EmptyTreasuryCard />
           )}
-          <MembersPanel members={[]} />
+          <MembersPanel members={members} />
         </RightColumn>
       </Container>
     </>

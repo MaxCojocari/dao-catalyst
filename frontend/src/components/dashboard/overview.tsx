@@ -43,8 +43,8 @@ export const DaoOverview = () => {
           </Fragment>
           <Fragment>
             <img src={peopleIcon} width="16px" />
-            {dao.type === DaoType.SimpleVote && <p>Token Based</p>}
-            {dao.type === DaoType.MultisigVote && <p>Signature Based</p>}
+            {dao.type === DaoType.SimpleVote && <p>Token-based</p>}
+            {dao.type === DaoType.MultisigVote && <p>Wallet-based</p>}
           </Fragment>
         </div>
         <div
