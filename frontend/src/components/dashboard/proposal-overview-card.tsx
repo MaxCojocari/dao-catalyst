@@ -109,7 +109,7 @@ export const Footer = styled.div`
   margin-top: 12px;
 
   p {
-    font-weight: 400;
+    font-weight: 300;
     font-size: 13px;
     line-height: 20px;
     letter-spacing: -0.02em;

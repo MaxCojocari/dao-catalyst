@@ -99,8 +99,8 @@ export const Header = styled.div`
 
   a {
     font-weight: 500;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 16px;
+    line-height: 16px;
     letter-spacing: -0.02em;
     color: #6666ff;
     text-decoration: none;
