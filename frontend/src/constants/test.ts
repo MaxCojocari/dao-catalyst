@@ -4,7 +4,13 @@
 //   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib6rurdcxtxil5crchbjpnc76tiuvcifjezzef3cdc57awmk4mhti";
 
 import { StatusItem } from "../components/proposal-details/status-timeline";
-import { ActionType, DaoType, ProposalAction, VotingOption } from "../types";
+import {
+  ActionType,
+  DaoType,
+  ProposalAction,
+  ProposalState,
+  VotingOption,
+} from "../types";
 
 export const TEST_DAO_IMGAGE_URL =
   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib2su7oqwqlmibinhhxc4yfaotq6boltij4dnk6namtcf7zomcpim";
@@ -13,7 +19,7 @@ export const TEST_DAO_CONTRACT_ADDRESS =
   "0xF079A5c205B622349A648965c4E5F05969eB0542";
 
 export const TEST_DAO_INFO = {
-  type: DaoType.MultisigVote,
+  type: DaoType.SimpleVote,
   name: "TaikoDAO",
   logo: TEST_DAO_IMGAGE_URL,
   summary:
@@ -81,6 +87,7 @@ export const TEST_PROPOSAL = {
   createdAt: 1742738693,
   voteStart: 1742825093,
   voteEnd: 1743465599,
+  state: ProposalState.Succeeded,
 };
 
 export const proposals = [
@@ -95,6 +102,7 @@ export const proposals = [
     createdAt: 1742843200,
     voteStart: 1742929600,
     voteEnd: 1743570000,
+    state: ProposalState.Defeated,
   },
   {
     id: 2,
@@ -111,6 +119,7 @@ export const proposals = [
     createdAt: 1742950100,
     voteStart: 1743036500,
     voteEnd: 1743676900,
+    state: ProposalState.Active,
   },
 ];
 
@@ -198,3 +207,27 @@ export const transferAction: ProposalAction = {
     "5000000",
   ],
 };
+
+export const transfers = [
+  {
+    id: "tx1",
+    type: "Deposit",
+    amount: "1000",
+    token: "USDC",
+    timestamp: 1743964200, // 2025-02-04T10:30:00Z
+  },
+  {
+    id: "tx2",
+    type: "Withdrawal",
+    amount: "533.5",
+    token: "USDC",
+    timestamp: 1744050900, // 2025-02-05T12:15:00Z
+  },
+  {
+    id: "tx3",
+    type: "Deposit",
+    amount: "2500.12",
+    token: "USDT",
+    timestamp: 1744142700, // 2025-02-06T14:45:00Z
+  },
+];

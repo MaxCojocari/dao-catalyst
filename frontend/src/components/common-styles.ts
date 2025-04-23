@@ -285,3 +285,19 @@ export const VoteButton = styled(NextStepButton)`
 `;
 
 export const FilledButton = styled(VoteButton)``;
+
+export const Badge = styled.div<{ color: string }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: ${({ color }) => `${color}20`};
+  border-radius: 8px;
+
+  margin-right: 16px;
+
+  img {
+    width: 16px;
+  }
+`;
