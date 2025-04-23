@@ -6,7 +6,13 @@ import {
   StatusTimeline,
   Voting,
 } from "../../components";
-import { TEST_PROPOSAL as proposal, statuses } from "../../constants";
+import {
+  customAction,
+  TEST_PROPOSAL as proposal,
+  statuses,
+  transferAction,
+} from "../../constants";
+import { ProposalState } from "../../types";
 
 export const ProposalDetailsPage = () => {
   return (
@@ -15,7 +21,11 @@ export const ProposalDetailsPage = () => {
       <Container>
         <LeftColumn>
           <Voting />
-          <ActionsSection />
+          <ActionsSection
+            txHash="0x0"
+            state={ProposalState.Executed}
+            actions={[transferAction]}
+          />
         </LeftColumn>
         <RightColumn>
           <ResourcesSection resources={proposal.resources} />
