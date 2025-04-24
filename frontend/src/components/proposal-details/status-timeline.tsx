@@ -25,7 +25,7 @@ export const StatusTimeline = ({ statuses }: StatusTimelineProps) => {
       <h1>Status</h1>
       <br /> <br />
       {statuses.map((status, idx) => (
-        <Row key={idx} current={status.isCurrent}>
+        <Row key={idx}>
           <Left>
             {status.isCompleted &&
               status.label !== StatusTimelineType.Rejected && (
@@ -67,7 +67,7 @@ export const StatusTimeline = ({ statuses }: StatusTimelineProps) => {
             <div
               style={{ display: "flex", flexDirection: "column", gap: "10px" }}
             >
-              <Label highlight={status.isCurrent} status={status}>
+              <Label $highlight={status.isCurrent} status={status}>
                 {status.label}
               </Label>
               <Timestamp>{status.timestamp}</Timestamp>
@@ -89,7 +89,7 @@ export const StatusTimeline = ({ statuses }: StatusTimelineProps) => {
   );
 };
 
-const Row = styled.div<{ current?: boolean; rejected?: boolean }>`
+const Row = styled.div<{ rejected?: boolean }>`
   display: flex;
   flex-direction: row;
   margin-bottom: 20px;
@@ -103,13 +103,13 @@ const Left = styled.div`
   margin-top: -4px;
 `;
 
-const Label = styled.span<{ highlight?: boolean; status?: StatusItem }>`
+const Label = styled.span<{ $highlight?: boolean; status?: StatusItem }>`
   font-weight: 600;
-  color: ${({ status, highlight }) => {
+  color: ${({ status, $highlight }) => {
     if (status?.label === StatusTimelineType.Executed && status.isCompleted)
       return "#1FBA66";
     if (status?.label === StatusTimelineType.Rejected) return "#de3c48";
-    if (highlight) return "#6666ff";
+    if ($highlight) return "#6666ff";
     return "#292933";
   }};
   font-size: 16px;

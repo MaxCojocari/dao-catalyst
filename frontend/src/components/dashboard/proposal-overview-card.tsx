@@ -84,7 +84,7 @@ export const Title = styled.h2`
   font-weight: 700;
   font-size: 20px;
   line-height: 24px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: #292933;
   margin-bottom: 12px;
 `;
@@ -98,7 +98,7 @@ export const SummaryText = styled.p`
 
   font-weight: 400;
   font-size: 16px;
-  line-height: 26px;
+  line-height: 150%;
   letter-spacing: -0.02em;
   color: #666680;
 `;

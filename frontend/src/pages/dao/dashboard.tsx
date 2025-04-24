@@ -3,7 +3,6 @@ import {
   DaoOverview,
   EmptyProposalCard,
   EmptyTreasuryCard,
-  MembersListExtended,
   MembersPanel,
   ProposalSummary,
   TreasuryPanel,
