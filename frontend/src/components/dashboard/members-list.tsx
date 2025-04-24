@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { useAccount } from "wagmi";
 import { shortenAddress } from "../../utils";
@@ -15,10 +14,7 @@ interface MembersListProps {
   tokenSymbol: string;
 }
 
-export const MembersList: React.FC<MembersListProps> = ({
-  members,
-  tokenSymbol,
-}) => {
+export const MembersList = ({ members, tokenSymbol }: MembersListProps) => {
   const { address: connectedAddress } = useAccount();
   const displayMembers = members.slice(0, 3);
 
@@ -35,6 +31,7 @@ export const MembersList: React.FC<MembersListProps> = ({
                 borderRadius: "50%",
                 objectFit: "cover",
                 objectPosition: "center",
+                marginRight: "11px",
               }}
             />
             <Info>
@@ -96,7 +93,7 @@ export const Avatar = styled.img`
 export const Info = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 `;
 
 export const Row = styled.div`
@@ -122,14 +119,17 @@ export const YouBadge = styled.span`
   border-radius: 12px;
 `;
 
-export const Power = styled.span`
+export const Power = styled.div`
   font-size: 14px;
   color: #666680;
-  font-weight: 400;
+  font-weight: 500;
+  letter-spacing: -0.03em;
 `;
 
 export const Percentage = styled.span`
   font-size: 13px;
   margin-left: 4px;
   color: #8f8fb2;
+  letter-spacing: -0.03em;
+  font-weight: 400;
 `;
