@@ -130,6 +130,14 @@ const router = createBrowserRouter([
       </Layout>
     ),
   },
+  {
+    path: "404-page",
+    element: (
+      <Layout>
+        <NotFoundPage />
+      </Layout>
+    ),
+  },
 ]);
 
 function App() {
