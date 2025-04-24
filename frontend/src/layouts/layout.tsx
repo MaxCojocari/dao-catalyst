@@ -19,9 +19,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
   }, [pathname]);
 
   useEffect(() => {
-    if (isConnected) {
-      navigate("/daos");
-    } else {
+    if (!isConnected) {
       navigate("/auth");
     }
     setChecked(true);

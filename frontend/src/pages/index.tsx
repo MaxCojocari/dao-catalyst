@@ -12,13 +12,30 @@ import { Layout } from "../layouts";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { WalletAuthPage } from "./wallet-auth";
+import { WalletConnectPage } from "./wallet-connect";
 import { DaoExplorerPage } from "./dao-explorer";
 
 const theme = createTheme({
   palette: {
     primary: {
       main: "#6666FF",
+    },
+  },
+  components: {
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+          fontFamily: "Inter",
+          fontStyle: "normal",
+          fontWeight: 500,
+          fontSize: "14px",
+          lineHeight: "17px",
+          letterSpacing: "-0.03em",
+          color: "rgba(41, 41, 51, 0.9)",
+          padding: "31px 24px",
+        },
+      },
     },
   },
 });
@@ -28,7 +45,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <Layout>
-        <WalletAuthPage />
+        <WalletConnectPage />
       </Layout>
     ),
   },
@@ -44,7 +61,7 @@ const router = createBrowserRouter([
     path: "/auth",
     element: (
       <Layout>
-        <WalletAuthPage />
+        <WalletConnectPage />
       </Layout>
     ),
   },
