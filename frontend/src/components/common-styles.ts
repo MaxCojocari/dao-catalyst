@@ -313,3 +313,33 @@ export const Badge = styled.div<{ color: string }>`
     width: 16px;
   }
 `;
+
+export const EmptyContainer = styled(Container)`
+  justify-content: center;
+  align-items: center;
+  height: 465px;
+
+  img {
+    width: 260px;
+    margin: 40px 0;
+  }
+
+  h2 {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 140%;
+    letter-spacing: -0.03em;
+    color: #292933;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    color: #666680;
+    margin: 0 12px 20px 12px;
+    text-align: center;
+  }
+`;

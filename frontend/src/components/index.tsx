@@ -60,3 +60,5 @@ export { TreasuryPanel } from "./dashboard/treasury-pannel";
 export { ProposalOverviewCard } from "./dashboard/proposal-overview-card";
 export { TreasuryActivityCard } from "./dashboard/treasury-activity-card";
 export { MembersList } from "./dashboard/members-list";
+export { MembersListExtended } from "./dashboard/members-list-extended";
+export { MembersSummary } from "./dashboard/members-summary";

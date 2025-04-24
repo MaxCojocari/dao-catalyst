@@ -43,7 +43,7 @@ export const TreasuryActivityCard = ({ transfer }: { transfer: any }) => {
         <Top>
           <p className="top">{TransferType[transfer.type]}</p>
           <p className="top">
-            {sign} {formatWithCommas(Number(transfer.amount))}
+            {sign} {formatWithCommas(Number(transfer.amount))} {transfer.token}
           </p>
         </Top>
         <Bottom>
