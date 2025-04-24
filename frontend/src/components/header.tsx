@@ -1,9 +1,7 @@
 import styled from "styled-components";
 import logo from "../assets/images/app-logo.svg";
 import { CustomWalletButton } from "./custom-wallet-button";
-import { CreateDaoButton } from "./create-dao-button";
 import { DaoLogo } from "./dao-logo";
-import { useAccount } from "wagmi";
 import { NavLink, useParams } from "react-router-dom";
 
 interface HeaderProps {
@@ -13,7 +11,6 @@ interface HeaderProps {
 
 export const Header = ({ props }: { props: HeaderProps }) => {
   const { imageUri, daoName } = props;
-  const { isConnected } = useAccount();
   const { daoAddress } = useParams();
 
   const links = [
@@ -41,7 +38,6 @@ export const Header = ({ props }: { props: HeaderProps }) => {
         </LeftSection>
       )}
       <RightSection>
-        {isConnected && <CreateDaoButton />}
         <CustomWalletButton />
       </RightSection>
     </Container>

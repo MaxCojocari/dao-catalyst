@@ -35,14 +35,14 @@ export const VotingStatus = ({ type, label }: VotingStatusProps) => {
   };
 
   return (
-    <Container isError={isError}>
+    <Container $isError={isError}>
       {getIcon()}
       <p>{getLabel()}</p>
     </Container>
   );
 };
 
-const Container = styled.div<{ isError?: boolean }>`
+const Container = styled.div<{ $isError?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -52,6 +52,6 @@ const Container = styled.div<{ isError?: boolean }>`
     font-size: 14px;
     line-height: 22px;
     letter-spacing: -0.02em;
-    color: ${({ isError }) => (isError ? "#CC1F1A" : "#6666FF")};
+    color: ${({ $isError }) => ($isError ? "#CC1F1A" : "#6666FF")};
   }
 `;
