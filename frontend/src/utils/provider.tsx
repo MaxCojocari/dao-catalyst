@@ -39,7 +39,6 @@ export const Provider = ({ children }: PropsWithChildren) => {
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           modalSize="compact"
-          coolMode
           theme={lightTheme({
             accentColor: "#7064F0",
             accentColorForeground: "white",

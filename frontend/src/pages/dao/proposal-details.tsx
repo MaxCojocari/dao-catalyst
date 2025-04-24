@@ -13,8 +13,23 @@ import {
   transferAction,
 } from "../../constants";
 import { ProposalState } from "../../types";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 export const ProposalDetailsPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!id) {
+      navigate("/404-page", { replace: true });
+    }
+    const isStrictInteger = /^([1-9]\d*|0)$/.test(id!);
+    if (!isStrictInteger) {
+      navigate("/404-page", { replace: true });
+    }
+  }, [id]);
+
   return (
     <>
       <ProposalOverview />

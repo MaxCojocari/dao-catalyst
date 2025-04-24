@@ -1,33 +1,33 @@
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { Header, Footer, Loader } from "../components";
 import { useUnit } from "effector-react";
 import { $isLoading } from "../store";
 import { TEST_DAO_INFO as dao } from "../constants";
-
-const SESSION_DURATION_MS = Number(import.meta.env.VITE_SESSION_DURATION_MS);
+import { useAccount } from "wagmi";
 
 export const Layout = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const isLoading = useUnit($isLoading);
+  const { isConnected } = useAccount();
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pathname]);
 
   useEffect(() => {
-    const sessionTimestamp = localStorage.getItem("sessionTimestamp");
+    if (isConnected) {
+      navigate("/daos");
+    } else {
+      navigate("/auth");
+    }
+    setChecked(true);
+  }, [isConnected]);
 
-    // if (
-    //   !sessionTimestamp ||
-    //   Date.now() - Number(sessionTimestamp) > SESSION_DURATION_MS
-    // ) {
-    //   localStorage.removeItem("sessionTimestamp");
-    //   navigate("/auth");
-    // }
-  }, []);
+  if (!checked) return null;
 
   return (
     <>
