@@ -90,8 +90,4 @@ export const LeftColumn = styled.div`
   gap: 16px;
 `;
 
-export const RightColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
+export const RightColumn = styled(LeftColumn)``;

@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import createIcon from "../assets/images/create-icon.svg";
+import { useNavigate } from "react-router-dom";
 
 export const CreateDaoButton = () => {
+  const navigate = useNavigate();
   return (
-    <Button>
+    <Button onClick={() => navigate("/create-dao")}>
       <img src={createIcon} alt="create-icon" width="20px" />
       Create DAO
     </Button>

@@ -2,7 +2,8 @@ import styled from "styled-components";
 import logo from "../assets/images/app-logo.svg";
 import { CustomWalletButton } from "./custom-wallet-button";
 import { DaoLogo } from "./dao-logo";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useLocation, useParams } from "react-router-dom";
+import { CreateDaoButton } from ".";
 
 interface HeaderProps {
   imageUri: string;
@@ -12,6 +13,7 @@ interface HeaderProps {
 export const Header = ({ props }: { props: HeaderProps }) => {
   const { imageUri, daoName } = props;
   const { daoAddress } = useParams();
+  const { pathname } = useLocation();
 
   const links = [
     { label: "Dashboard", path: "dashboard" },
@@ -38,6 +40,7 @@ export const Header = ({ props }: { props: HeaderProps }) => {
         </LeftSection>
       )}
       <RightSection>
+        {pathname === "/daos" && <CreateDaoButton />}
         <CustomWalletButton />
       </RightSection>
     </Container>
