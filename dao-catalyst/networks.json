@@ -1,0 +1,8 @@
+{
+  "arbitrum-sepolia": {
+    "DaoFactory": {
+      "address": "0x74EF17208A595aB8c9375F416984cf0D8A2e260E",
+      "startBlock": 146454976
+    }
+  }
+}
