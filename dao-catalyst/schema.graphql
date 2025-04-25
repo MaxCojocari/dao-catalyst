@@ -1,0 +1,25 @@
+type DaoCreated @entity(immutable: true) {
+  id: Bytes!
+  daoAddress: Bytes! # address
+  daoType: Int! # uint8
+  owner: Bytes! # address
+  daoURI: String! # string
+  daoToken: Bytes! # address
+  minimalDuration: BigInt! # uint256
+  quorumFraction_numerator: Int! # uint16
+  quorumFraction_denominator: Int! # uint16
+  minimumParticipationFraction_numerator: Int! # uint16
+  minimumParticipationFraction_denominator: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
