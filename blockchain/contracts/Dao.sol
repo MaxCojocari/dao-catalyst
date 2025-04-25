@@ -167,6 +167,15 @@ abstract contract Dao is IDao, AccessControl, Multicall {
         emit Deposited(msg.sender, token, amount);
     }
 
+    function transfer(address token, address recipient, uint256 amount) external validUint256(amount) {
+        if (token == address(0)) revert InvalidAddress(address(0));
+        if (recipient == address(0)) revert InvalidAddress(address(0));
+
+        IERC20(token).safeTransfer(recipient, amount);
+
+        emit DaoTransfer(token, recipient, amount);
+    }
+
     function getVotes(address account, uint256 timepoint) external view returns (uint256) {
         return _getVotes(account, timepoint, "");
     }

@@ -6,6 +6,8 @@ contract TargetContract {
 
     event ValueChanged(uint256 newValue);
 
+    event CandidateOnboarded(address candidate);
+
     function getValue() external view returns (uint256) {
         return value;
     }
@@ -14,5 +16,9 @@ contract TargetContract {
         require(_value > 0, "Non-zero value");
         value = _value;
         emit ValueChanged(_value);
+    }
+
+    function onboard(address candidate) external {
+        emit CandidateOnboarded(candidate);
     }
 }

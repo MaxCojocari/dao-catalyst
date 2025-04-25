@@ -92,7 +92,8 @@ contract DaoFactory is Context, Ownable {
                     tokenSettings.name,
                     tokenSettings.symbol,
                     tokenSettings.recipients,
-                    tokenSettings.amounts
+                    tokenSettings.amounts,
+                    _msgSender()
                 );
             } else {
                 daoToken = IERC5805(tokenSettings.tokenAddress);
@@ -105,6 +106,7 @@ contract DaoFactory is Context, Ownable {
                 _msgSender(),
                 param.daoURI,
                 param.minimalDuration,
+                param.proposalCreationMinVotingPower,
                 param.quorumFraction,
                 param.minimumParticipationFraction,
                 daoToken
@@ -115,6 +117,7 @@ contract DaoFactory is Context, Ownable {
                 _msgSender(),
                 param.daoURI,
                 param.minimalDuration,
+                param.proposalCreationMinVotingPower,
                 param.quorumFraction,
                 param.minimumParticipationFraction,
                 daoToken
