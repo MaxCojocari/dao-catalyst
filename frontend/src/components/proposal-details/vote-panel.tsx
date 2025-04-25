@@ -78,7 +78,7 @@ const Container = styled.div`
     font-size: 14px;
     line-height: 22px;
     letter-spacing: -0.03em;
-    color: #8f8fb2;
+    color: #666680;
     margin: 8px 0;
   }
 
@@ -114,7 +114,7 @@ const Label = styled.div<{ $isSelected: boolean }>`
   gap: 4px;
 
   h3 {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 15px;
     line-height: 17px;
     letter-spacing: -0.02em;
@@ -123,6 +123,11 @@ const Label = styled.div<{ $isSelected: boolean }>`
 
   p {
     margin: 0;
+
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.03em;
+    color: #666680;
   }
 `;
 

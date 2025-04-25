@@ -106,18 +106,18 @@ export const Voting = () => {
             }}
             onCancel={() => setVotePanelActive(false)}
           />
-          <TransactionModal
-            status={txStatus}
-            txHash={txHash}
-            onClose={handleClose}
-            titleWaiting="Waiting for Signature"
-            descriptionWaiting="Sign vote and confirm transaction in your wallet"
-            titleSubmitted="Vote Submitted Successfully!"
-            successLabel="Continue to Proposal"
-            explorerUrl="https://sepolia.etherscan.io/tx/"
-          />
         </>
       )}
+      <TransactionModal
+        status={txStatus}
+        txHash={txHash}
+        onClose={handleClose}
+        titleWaiting="Waiting for Signature"
+        descriptionWaiting="Sign vote and confirm transaction in your wallet"
+        titleSubmitted="Vote Submitted Successfully!"
+        successLabel="Continue to Proposal"
+        explorerUrl="https://sepolia.etherscan.io/tx/"
+      />
     </Container>
   );
 };

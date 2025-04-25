@@ -15,7 +15,7 @@ import { formatUnits, parseUnits } from "viem";
 import successIcon from "../../assets/images/done.svg";
 import { Button } from "../preview-styles";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useWriteContract } from "wagmi";
 import { ERC20__factory } from "../../typechain-types";
 import { waitForTransactionReceipt } from "@wagmi/core";
@@ -253,19 +253,10 @@ export const ActionsSection = ({
   return (
     <Container>
       <h1>Actions</h1>
-      <p
-        style={{
-          fontWeight: "400",
-          fontSize: "14px",
-          lineHeight: "22px",
-          letterSpacing: "-0.03em",
-          color: "#8f8fb2",
-          margin: "8px 0",
-        }}
-      >
+      <Summary>
         These actions can be executed only once the governance parameters are
         met.
-      </p>
+      </Summary>
       {actions.map((action, _) => {
         if (action.type === ActionType.TransferTokens)
           return <TransferTokenAction key={action.id} action={action} />;
@@ -276,6 +267,15 @@ export const ActionsSection = ({
     </Container>
   );
 };
+
+export const Summary = styled.p`
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: #666680;
+  margin: 8px 0;
+`;
 
 export const Box = styled.div`
   box-sizing: border-box;

@@ -46,7 +46,7 @@ export const ProposalOverviewCard = ({ proposal }: { proposal: any }) => {
 
   return (
     <Container style={{ cursor: "pointer" }} onClick={handleClick}>
-      <Pill bg={bg} color={color}>
+      <Pill $bg={bg} $color={color}>
         {label}
       </Pill>
       <div
@@ -68,15 +68,15 @@ export const ProposalOverviewCard = ({ proposal }: { proposal: any }) => {
   );
 };
 
-const Pill = styled.span<{ bg: string; color: string }>`
+const Pill = styled.span<{ $bg: string; $color: string }>`
   padding: 4px 8px;
   border-radius: 4px;
   font-weight: 400;
   font-size: 13px;
   line-height: 13px;
   letter-spacing: -0.02em;
-  background-color: ${({ bg }) => bg};
-  color: ${({ color }) => color};
+  background-color: ${({ $bg }) => $bg};
+  color: ${({ $color }) => $color};
   display: inline-block;
 `;
 

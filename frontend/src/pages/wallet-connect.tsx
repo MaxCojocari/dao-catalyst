@@ -1,8 +1,21 @@
+import { CircularProgress } from "@mui/material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { injected, useConnect } from "wagmi";
 
 export const WalletConnectPage = () => {
-  const { connect } = useConnect();
+  const { connectAsync } = useConnect();
+  const [disabled, setDisabled] = useState(false);
+  const navigate = useNavigate();
+
+  const handleConnection = async () => {
+    setDisabled(true);
+    await connectAsync({ connector: injected() });
+    setDisabled(false);
+
+    navigate("/daos");
+  };
 
   return (
     <Container>
@@ -11,8 +24,23 @@ export const WalletConnectPage = () => {
           <p>Welcome to DAO Catalyst</p>
           <h1>Please connect your wallet to use DAO Catalyst</h1>
         </Text>
-        <ConnectButton onClick={() => connect({ connector: injected() })}>
-          Connect wallet
+        <ConnectButton onClick={handleConnection} $disabled={disabled}>
+          {disabled ? (
+            <div style={{ display: "flex", flexDirection: "row", gap: "12px" }}>
+              <CircularProgress
+                size={14}
+                thickness={5}
+                sx={{
+                  color: "white",
+                  marginTop: "5px",
+                  marginRight: "2px",
+                }}
+              />
+              <p>Connecting</p>
+            </div>
+          ) : (
+            "Connect wallet"
+          )}
         </ConnectButton>
       </Box>
     </Container>
@@ -23,12 +51,13 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 100px;
+  margin-top: 75px;
 `;
 
 export const Box = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   padding: 130px 215px;
   gap: 20px;
@@ -69,7 +98,7 @@ export const Text = styled.div`
   }
 `;
 
-export const ConnectButton = styled.button`
+export const ConnectButton = styled.button<{ $disabled: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -91,17 +120,17 @@ export const ConnectButton = styled.button`
   letter-spacing: -0.02em;
   color: #ffffff;
 
-  cursor: pointer;
+  cursor: ${({ $disabled }) => ($disabled ? "default" : "pointer")};
 
-  background: #6666ff;
-  opacity: 1;
+  background: ${({ $disabled }) => ($disabled ? "#b8b8cc" : "#6666ff")};
+  opacity: ${({ $disabled }) => ($disabled ? 1 : 1)};
   transition: opacity 0.15s;
 
   &:hover {
-    opacity: 0.8;
+    opacity: ${({ $disabled }) => ($disabled ? 1 : 0.8)};
   }
 
   &:active {
-    opacity: 0.7;
+    opacity: ${({ $disabled }) => ($disabled ? 1 : 0.7)};
   }
 `;
