@@ -1,7 +1,7 @@
 import { Modal, CircularProgress } from "@mui/material";
 import styled from "styled-components";
 import { TxStatus } from "../types";
-import modalSuccess from "../assets/images/modal-success.svg";
+import modalSuccess from "../assets/images/modal-success-green.svg";
 import modalFailure from "../assets/images/modal-failure.svg";
 import closeIcon from "../assets/images/close-icon.svg";
 

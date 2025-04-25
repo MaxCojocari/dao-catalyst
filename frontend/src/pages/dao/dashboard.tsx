@@ -3,11 +3,13 @@ import {
   DaoOverview,
   EmptyProposalCard,
   EmptyTreasuryCard,
+  ErrorModal,
   MembersPanel,
   ProposalSummary,
   TreasuryPanel,
 } from "../../components";
 import { members, proposals, transfers } from "../../constants";
+import { useState } from "react";
 
 export const BodyEmpty = () => {
   return (
@@ -45,12 +47,20 @@ export const DashboardPage = () => {
   const hasProposals = proposals.length > 0;
   const hasTransfers = transfers.length > 0;
   const isNotEmpty = hasProposals || hasTransfers;
-  // const isNotEmpty = false;
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
 
   return (
     <>
       <DaoOverview />
       {isNotEmpty ? <Body /> : <BodyEmpty />}
+      <ErrorModal
+        open={errorModalOpen}
+        setOpen={setErrorModalOpen}
+        name={"You can't vote"}
+        summary={
+          "You didn't delegate your voting power before this proposal's snapshot. To vote on future proposals, make sure to delegate your tokens in advance."
+        }
+      />
     </>
   );
 };

@@ -3,7 +3,7 @@ import logo from "../assets/images/app-logo.svg";
 import { CustomWalletButton } from "./custom-wallet-button";
 import { DaoLogo } from "./dao-logo";
 import { NavLink, useLocation, useParams } from "react-router-dom";
-import { CreateDaoButton } from ".";
+import { CreateDaoButton, DelegateButton } from ".";
 
 interface HeaderProps {
   imageUri: string;
@@ -23,6 +23,8 @@ export const Header = ({ props }: { props: HeaderProps }) => {
     { label: "Settings", path: "settings" },
   ];
 
+  const isDaoSubPage = /^\/daos\/0x[a-fA-F0-9]{40}(\/[^/]*)?$/.test(pathname);
+
   return (
     <Container>
       {daoAddress ? (
@@ -41,6 +43,7 @@ export const Header = ({ props }: { props: HeaderProps }) => {
       )}
       <RightSection>
         {pathname === "/daos" && <CreateDaoButton />}
+        {isDaoSubPage && <DelegateButton />}
         <CustomWalletButton />
       </RightSection>
     </Container>
