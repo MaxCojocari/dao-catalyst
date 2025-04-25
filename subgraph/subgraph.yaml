@@ -17,13 +17,10 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - DaoCreated
-        - OwnershipTransferred
       abis:
         - name: DaoFactory
           file: ./abis/DaoFactory.json
       eventHandlers:
         - event: DaoCreated(indexed address,indexed uint8,indexed address,string,address,uint256,(uint16,uint16),(uint16,uint16))
           handler: handleDaoCreated
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
       file: ./src/dao-factory.ts
