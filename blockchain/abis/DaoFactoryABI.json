@@ -1,0 +1,413 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "daoSimpleVoteImplementation_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "daoFractionalVoteImplementation_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "daoMultisigVoteImplementation_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "FailedDeployment",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "balance",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "needed",
+        "type": "uint256"
+      }
+    ],
+    "name": "InsufficientBalance",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "InvalidAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidFraction",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "str",
+        "type": "string"
+      }
+    ],
+    "name": "InvalidString",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "InvalidUint256",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnableInvalidOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "OwnableUnauthorizedAccount",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "daoAddress",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum DaoFactory.DaoType",
+        "name": "daoType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "daoURI",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "daoToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "minimalDuration",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "numerator",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "denominator",
+            "type": "uint16"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct Fraction",
+        "name": "quorumFraction",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "numerator",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "denominator",
+            "type": "uint16"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct Fraction",
+        "name": "minimumParticipationFraction",
+        "type": "tuple"
+      }
+    ],
+    "name": "DaoCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum DaoFactory.DaoType",
+            "name": "daoType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "daoURI",
+            "type": "string"
+          },
+          {
+            "internalType": "address[]",
+            "name": "members",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minimalDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "proposalCreationMinVotingPower",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bool",
+                "name": "isDeployed",
+                "type": "bool"
+              },
+              {
+                "internalType": "address",
+                "name": "tokenAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+              },
+              {
+                "internalType": "address[]",
+                "name": "recipients",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "amounts",
+                "type": "uint256[]"
+              }
+            ],
+            "internalType": "struct DaoFactory.DaoTokenSettings",
+            "name": "daoToken",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint16",
+                "name": "numerator",
+                "type": "uint16"
+              },
+              {
+                "internalType": "uint16",
+                "name": "denominator",
+                "type": "uint16"
+              }
+            ],
+            "internalType": "struct Fraction",
+            "name": "quorumFraction",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint16",
+                "name": "numerator",
+                "type": "uint16"
+              },
+              {
+                "internalType": "uint16",
+                "name": "denominator",
+                "type": "uint16"
+              }
+            ],
+            "internalType": "struct Fraction",
+            "name": "minimumParticipationFraction",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "salt",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct DaoFactory.DaoSettings",
+        "name": "param",
+        "type": "tuple"
+      }
+    ],
+    "name": "createDao",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "daoFractionalVoteImplementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "daoMultisigVoteImplementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "daoSimpleVoteImplementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "daoSimpleVoteImplementation_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "daoFractionalVoteImplementation_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "daoMultisigVoteImplementation_",
+        "type": "address"
+      }
+    ],
+    "name": "setImplementations",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

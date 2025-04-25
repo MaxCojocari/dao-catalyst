@@ -13,6 +13,7 @@ contract DaoSimpleVote is IDaoSimpleVote, Dao, SimpleCountingStrategy, TokenVoti
         address owner,
         string memory daoURI_,
         uint256 minimalDuration_,
+        uint256 proposalCreationMinVotingPower_,
         Fraction memory quorumFraction_,
         Fraction memory minimumParticipationFraction_,
         IERC5805 token_
@@ -21,6 +22,7 @@ contract DaoSimpleVote is IDaoSimpleVote, Dao, SimpleCountingStrategy, TokenVoti
 
         daoURI = daoURI_;
         minimalDuration = minimalDuration_;
+        proposalCreationMinVotingPower = proposalCreationMinVotingPower_;
         quorumFraction = quorumFraction_;
         minimumParticipationFraction = minimumParticipationFraction_;
         token = token_;

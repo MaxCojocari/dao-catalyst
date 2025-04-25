@@ -1,0 +1,15 @@
+{
+  "name": "TaikoDAO",
+  "logo": "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib2su7oqwqlmibinhhxc4yfaotq6boltij4dnk6namtcf7zomcpim",
+  "summary": "Taiko DAO is a decentralized autonomous organization that fosters collaborative decision-making within a vibrant community, using transparent governance to shape initiatives, fund projects, and drive collective actions. TaikoDAO empowers members to propose, debate, and vote on key decisions, with a truly democratic and community-led ecosystem.",
+  "links": [
+    {
+      "label": "Taiko Blog",
+      "url": "https://taiko.xyz/blog"
+    },
+    {
+      "label": "Taiko Forum",
+      "url": "https://community.taiko.xyz/"
+    }
+  ]
+}

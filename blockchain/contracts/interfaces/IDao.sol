@@ -80,6 +80,8 @@ interface IDao is IDaoErrors {
 
     event Deposited(address sender, address token, uint256 amount);
 
+    event DaoTransfer(address token, address recipient, uint256 amount);
+
     /// @dev Create a new proposal.
     function propose(
         ProposalAction[] calldata actions,

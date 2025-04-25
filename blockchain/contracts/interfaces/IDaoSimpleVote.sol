@@ -9,6 +9,7 @@ interface IDaoSimpleVote {
         address owner,
         string memory daoURI,
         uint256 minimalDuration,
+        uint256 proposalCreationMinVotingPower,
         Fraction memory quorumFraction,
         Fraction memory minimumParticipationFraction,
         IERC5805 token
