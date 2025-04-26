@@ -5,7 +5,7 @@ import {
   ProposalAction,
   ProposalSettings,
   VoteStartOptions,
-} from "../types/create-proposal";
+} from "../types/proposal";
 import { VoteCounting } from "../types";
 import dayjs from "dayjs";
 import { nanoid } from "nanoid";

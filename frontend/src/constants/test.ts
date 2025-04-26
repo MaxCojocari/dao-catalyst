@@ -20,6 +20,7 @@ export const TEST_DAO_CONTRACT_ADDRESS =
   "0xF079A5c205B622349A648965c4E5F05969eB0542";
 
 export const TEST_DAO_INFO = {
+  owner: "0x329a8a9e8c4d69a288db0f831da9acd9518142bf",
   type: DaoType.SimpleVote,
   name: "TaikoDAO",
   logo: TEST_DAO_IMGAGE_URL,
@@ -73,6 +74,7 @@ export const TEST_DAO_INFO = {
 export const TEST_DAOS = [
   TEST_DAO_INFO,
   {
+    owner: "0x9876543210fedcba9876543210fedcba98765432",
     type: DaoType.FractionalVote,
     name: "NovaSphereDAO",
     logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreifb6tvmvcus44ahrh6olcklyckdu7fqt2rnq7ihqdv7kmfosb4kvy",
@@ -122,6 +124,7 @@ export const TEST_DAOS = [
     proposalCreationMinVotingPower: 0.05,
   },
   {
+    owner: "0x03c25c5dd860b021165a127a6553c67c371551b0",
     type: DaoType.SimpleVote,
     name: "MetaForgeDAO",
     logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreia6uwf5qgtv3ouw4tnamnou4mognvlrxsis53xtpmm73rjnjrmkmm",
@@ -167,6 +170,7 @@ export const TEST_DAOS = [
     proposalCreationMinVotingPower: 0.2,
   },
   {
+    owner: "0x99887766554433221100ffeeddccbbaa99887766",
     type: DaoType.SimpleVote,
     name: "EthoraDAO",
     logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreih7jp4ha4ut5iz4y77zny6ivekunyxe3jus5qiy3d73glckfgzicm",
@@ -207,6 +211,7 @@ export const TEST_DAOS = [
     proposalCreationMinVotingPower: 0.15,
   },
   {
+    owner: "0x88ae23a2BC3a4061B5321Fe86BCf3F15A72Fd8CE",
     type: DaoType.MultisigVote,
     name: "ZentauriSyndicate",
     logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib2su7oqwqlmibinhhxc4yfaotq6boltij4dnk6namtcf7zomcpim",

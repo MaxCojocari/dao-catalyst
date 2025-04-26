@@ -22,6 +22,7 @@
     "effector": "^23.3.0",
     "effector-react": "^23.3.0",
     "ethers": "^6.13.5",
+    "graphql-request": "^7.1.2",
     "motion": "^12.6.2",
     "nanoid": "^5.1.5",
     "react": "^19.0.0",

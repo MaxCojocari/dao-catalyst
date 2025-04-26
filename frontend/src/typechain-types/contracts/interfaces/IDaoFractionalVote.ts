@@ -40,6 +40,7 @@ export interface IDaoFractionalVoteInterface extends Interface {
       AddressLike,
       string,
       BigNumberish,
+      BigNumberish,
       FractionStruct,
       FractionStruct,
       AddressLike
@@ -97,6 +98,7 @@ export interface IDaoFractionalVote extends BaseContract {
       owner: AddressLike,
       daoURI: string,
       minimalDuration: BigNumberish,
+      proposalCreationMinVotingPower: BigNumberish,
       quorumFraction: FractionStruct,
       minimumParticipationFraction: FractionStruct,
       token: AddressLike
@@ -116,6 +118,7 @@ export interface IDaoFractionalVote extends BaseContract {
       owner: AddressLike,
       daoURI: string,
       minimalDuration: BigNumberish,
+      proposalCreationMinVotingPower: BigNumberish,
       quorumFraction: FractionStruct,
       minimumParticipationFraction: FractionStruct,
       token: AddressLike

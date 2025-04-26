@@ -88,11 +88,13 @@ export interface DaoFractionalVoteInterface extends Interface {
       | "state"
       | "supportsInterface"
       | "token"
+      | "transfer"
       | "usedVotes"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
+      | "DaoTransfer"
       | "Deposited"
       | "ProposalCanceled"
       | "ProposalCreated"
@@ -166,6 +168,7 @@ export interface DaoFractionalVoteInterface extends Interface {
     values: [
       AddressLike,
       string,
+      BigNumberish,
       BigNumberish,
       FractionStruct,
       FractionStruct,
@@ -252,6 +255,10 @@ export interface DaoFractionalVoteInterface extends Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "transfer",
+    values: [AddressLike, AddressLike, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "usedVotes",
     values: [BigNumberish, AddressLike]
@@ -355,7 +362,26 @@ export interface DaoFractionalVoteInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "usedVotes", data: BytesLike): Result;
+}
+
+export namespace DaoTransferEvent {
+  export type InputTuple = [
+    token: AddressLike,
+    recipient: AddressLike,
+    amount: BigNumberish
+  ];
+  export type OutputTuple = [token: string, recipient: string, amount: bigint];
+  export interface OutputObject {
+    token: string;
+    recipient: string;
+    amount: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace DepositedEvent {
@@ -707,6 +733,7 @@ export interface DaoFractionalVote extends BaseContract {
       owner: AddressLike,
       daoURI_: string,
       minimalDuration_: BigNumberish,
+      proposalCreationMinVotingPower_: BigNumberish,
       quorumFraction_: FractionStruct,
       minimumParticipationFraction_: FractionStruct,
       token_: AddressLike
@@ -837,6 +864,12 @@ export interface DaoFractionalVote extends BaseContract {
 
   token: TypedContractMethod<[], [string], "view">;
 
+  transfer: TypedContractMethod<
+    [token: AddressLike, recipient: AddressLike, amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   usedVotes: TypedContractMethod<
     [proposalId: BigNumberish, account: AddressLike],
     [bigint],
@@ -924,6 +957,7 @@ export interface DaoFractionalVote extends BaseContract {
       owner: AddressLike,
       daoURI_: string,
       minimalDuration_: BigNumberish,
+      proposalCreationMinVotingPower_: BigNumberish,
       quorumFraction_: FractionStruct,
       minimumParticipationFraction_: FractionStruct,
       token_: AddressLike
@@ -1061,6 +1095,13 @@ export interface DaoFractionalVote extends BaseContract {
     nameOrSignature: "token"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "transfer"
+  ): TypedContractMethod<
+    [token: AddressLike, recipient: AddressLike, amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "usedVotes"
   ): TypedContractMethod<
     [proposalId: BigNumberish, account: AddressLike],
@@ -1068,6 +1109,13 @@ export interface DaoFractionalVote extends BaseContract {
     "view"
   >;
 
+  getEvent(
+    key: "DaoTransfer"
+  ): TypedContractEvent<
+    DaoTransferEvent.InputTuple,
+    DaoTransferEvent.OutputTuple,
+    DaoTransferEvent.OutputObject
+  >;
   getEvent(
     key: "Deposited"
   ): TypedContractEvent<
@@ -1161,6 +1209,17 @@ export interface DaoFractionalVote extends BaseContract {
   >;
 
   filters: {
+    "DaoTransfer(address,address,uint256)": TypedContractEvent<
+      DaoTransferEvent.InputTuple,
+      DaoTransferEvent.OutputTuple,
+      DaoTransferEvent.OutputObject
+    >;
+    DaoTransfer: TypedContractEvent<
+      DaoTransferEvent.InputTuple,
+      DaoTransferEvent.OutputTuple,
+      DaoTransferEvent.OutputObject
+    >;
+
     "Deposited(address,address,uint256)": TypedContractEvent<
       DepositedEvent.InputTuple,
       DepositedEvent.OutputTuple,

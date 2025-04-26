@@ -40,3 +40,14 @@ export enum EligibleVoters {
   TokenHolders = "Token holders",
   MultisigMembers = "Multisig members",
 }
+
+export interface DaoSummary {
+  daoType: string;
+  name: string;
+  logo: string;
+  summary: string;
+  owner: string;
+  contractAddress: string;
+  daoToken: string;
+  isCallerMember: boolean;
+}

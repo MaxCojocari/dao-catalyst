@@ -1,19 +1,32 @@
 import styled from "styled-components";
 import cubes from "../assets/images/cubes.svg";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, Tab, Tabs } from "@mui/material";
-import { TEST_DAOS as daos } from "../constants";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
+import { shortenAddress } from "../utils";
+import { fetchDaoSummaries } from "../services";
+import { setIsLoading } from "../store";
+import { DaoSummary } from "../types";
 
 export const DaoExplorerPage = () => {
   const [value, setValue] = useState(0);
   const navigate = useNavigate();
   const { address } = useAccount();
+  const [daos, setDaos] = useState<DaoSummary[]>([]);
 
-  const handleChange = (_: any, newValue: number) => {
-    setValue(newValue);
-  };
+  const fetchDaos = useCallback(async () => {
+    try {
+      setIsLoading({ fetchDaos: true });
+      const summaries = await fetchDaoSummaries(address!);
+      setDaos(summaries);
+      console.log(summaries);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading({ fetchDaos: false });
+    }
+  }, []);
 
   const filteredDaos = daos.filter((dao) => {
     switch (value) {
@@ -22,13 +35,15 @@ export const DaoExplorerPage = () => {
       case 1: // All DAOs
         return true;
       case 2: // Member - if current address is among dao members
-        return dao.members
-          .map((m) => m?.toLowerCase())
-          .includes(address!.toLowerCase());
+        return dao.isCallerMember;
       default:
         return true;
     }
   });
+
+  useEffect(() => {
+    fetchDaos();
+  }, []);
 
   return (
     <Container>
@@ -47,7 +62,12 @@ export const DaoExplorerPage = () => {
           </CreateDaoButton>
         </Row>
         <Box sx={{ borderBottom: "1px solid #E5E5FF" }}>
-          <Tabs value={value} onChange={handleChange}>
+          <Tabs
+            value={value}
+            onChange={(_: any, newValue: number) => {
+              setValue(newValue);
+            }}
+          >
             <Tab label="Featured" disableRipple />
             <Tab label="All DAOs" disableRipple />
             <Tab label="Member" disableRipple />
@@ -64,6 +84,15 @@ export const DaoExplorerPage = () => {
                 <h3>{dao.name}</h3>
               </Name>
               <Description>{dao.summary}</Description>
+              <Footer>
+                <p style={{ marginRight: "3px" }}>Created by</p>
+                <p style={{ color: "#6666FF", fontWeight: "500" }}>
+                  {" "}
+                  {address?.toLowerCase() === dao.owner.toLowerCase()
+                    ? "You"
+                    : shortenAddress(dao.owner)}
+                </p>
+              </Footer>
             </DaoOverviewCard>
           ))}
         </Cards>
@@ -259,4 +288,18 @@ export const DaoOverviewCard = styled.div`
   background: #ffffff;
   border: 1px solid #e6e6ff;
   border-radius: 8px;
+`;
+
+export const Footer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 12px;
+
+  p {
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: -0.02em;
+    color: #666680;
+  }
 `;

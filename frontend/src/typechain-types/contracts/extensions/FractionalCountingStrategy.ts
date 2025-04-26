@@ -84,11 +84,13 @@ export interface FractionalCountingStrategyInterface extends Interface {
       | "setQuorumFraction"
       | "state"
       | "supportsInterface"
+      | "transfer"
       | "usedVotes"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
+      | "DaoTransfer"
       | "Deposited"
       | "ProposalCanceled"
       | "ProposalCreated"
@@ -229,6 +231,10 @@ export interface FractionalCountingStrategyInterface extends Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "transfer",
+    values: [AddressLike, AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "usedVotes",
     values: [BigNumberish, AddressLike]
   ): string;
@@ -321,7 +327,26 @@ export interface FractionalCountingStrategyInterface extends Interface {
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "usedVotes", data: BytesLike): Result;
+}
+
+export namespace DaoTransferEvent {
+  export type InputTuple = [
+    token: AddressLike,
+    recipient: AddressLike,
+    amount: BigNumberish
+  ];
+  export type OutputTuple = [token: string, recipient: string, amount: bigint];
+  export interface OutputObject {
+    token: string;
+    recipient: string;
+    amount: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace DepositedEvent {
@@ -780,6 +805,12 @@ export interface FractionalCountingStrategy extends BaseContract {
     "view"
   >;
 
+  transfer: TypedContractMethod<
+    [token: AddressLike, recipient: AddressLike, amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   usedVotes: TypedContractMethod<
     [proposalId: BigNumberish, account: AddressLike],
     [bigint],
@@ -981,6 +1012,13 @@ export interface FractionalCountingStrategy extends BaseContract {
     nameOrSignature: "supportsInterface"
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
   getFunction(
+    nameOrSignature: "transfer"
+  ): TypedContractMethod<
+    [token: AddressLike, recipient: AddressLike, amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "usedVotes"
   ): TypedContractMethod<
     [proposalId: BigNumberish, account: AddressLike],
@@ -988,6 +1026,13 @@ export interface FractionalCountingStrategy extends BaseContract {
     "view"
   >;
 
+  getEvent(
+    key: "DaoTransfer"
+  ): TypedContractEvent<
+    DaoTransferEvent.InputTuple,
+    DaoTransferEvent.OutputTuple,
+    DaoTransferEvent.OutputObject
+  >;
   getEvent(
     key: "Deposited"
   ): TypedContractEvent<
@@ -1081,6 +1126,17 @@ export interface FractionalCountingStrategy extends BaseContract {
   >;
 
   filters: {
+    "DaoTransfer(address,address,uint256)": TypedContractEvent<
+      DaoTransferEvent.InputTuple,
+      DaoTransferEvent.OutputTuple,
+      DaoTransferEvent.OutputObject
+    >;
+    DaoTransfer: TypedContractEvent<
+      DaoTransferEvent.InputTuple,
+      DaoTransferEvent.OutputTuple,
+      DaoTransferEvent.OutputObject
+    >;
+
     "Deposited(address,address,uint256)": TypedContractEvent<
       DepositedEvent.InputTuple,
       DepositedEvent.OutputTuple,

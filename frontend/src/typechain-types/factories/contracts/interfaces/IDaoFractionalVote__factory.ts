@@ -27,6 +27,11 @@ const _abi = [
         type: "uint256",
       },
       {
+        internalType: "uint256",
+        name: "proposalCreationMinVotingPower",
+        type: "uint256",
+      },
+      {
         components: [
           {
             internalType: "uint16",

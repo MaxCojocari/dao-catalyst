@@ -63,6 +63,7 @@ export interface IDaoInterface extends Interface {
 
   getEvent(
     nameOrSignatureOrTopic:
+      | "DaoTransfer"
       | "Deposited"
       | "ProposalCanceled"
       | "ProposalCreated"
@@ -118,6 +119,24 @@ export interface IDaoInterface extends Interface {
   decodeFunctionResult(functionFragment: "propose", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "quorum", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "state", data: BytesLike): Result;
+}
+
+export namespace DaoTransferEvent {
+  export type InputTuple = [
+    token: AddressLike,
+    recipient: AddressLike,
+    amount: BigNumberish
+  ];
+  export type OutputTuple = [token: string, recipient: string, amount: bigint];
+  export interface OutputObject {
+    token: string;
+    recipient: string;
+    amount: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace DepositedEvent {
@@ -443,6 +462,13 @@ export interface IDao extends BaseContract {
   ): TypedContractMethod<[proposalId: BigNumberish], [bigint], "view">;
 
   getEvent(
+    key: "DaoTransfer"
+  ): TypedContractEvent<
+    DaoTransferEvent.InputTuple,
+    DaoTransferEvent.OutputTuple,
+    DaoTransferEvent.OutputObject
+  >;
+  getEvent(
     key: "Deposited"
   ): TypedContractEvent<
     DepositedEvent.InputTuple,
@@ -514,6 +540,17 @@ export interface IDao extends BaseContract {
   >;
 
   filters: {
+    "DaoTransfer(address,address,uint256)": TypedContractEvent<
+      DaoTransferEvent.InputTuple,
+      DaoTransferEvent.OutputTuple,
+      DaoTransferEvent.OutputObject
+    >;
+    DaoTransfer: TypedContractEvent<
+      DaoTransferEvent.InputTuple,
+      DaoTransferEvent.OutputTuple,
+      DaoTransferEvent.OutputObject
+    >;
+
     "Deposited(address,address,uint256)": TypedContractEvent<
       DepositedEvent.InputTuple,
       DepositedEvent.OutputTuple,

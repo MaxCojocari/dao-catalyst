@@ -84,10 +84,12 @@ export interface SimpleCountingStrategyInterface extends Interface {
       | "setQuorumFraction"
       | "state"
       | "supportsInterface"
+      | "transfer"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
+      | "DaoTransfer"
       | "Deposited"
       | "ProposalCanceled"
       | "ProposalCreated"
@@ -227,6 +229,10 @@ export interface SimpleCountingStrategyInterface extends Interface {
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "transfer",
+    values: [AddressLike, AddressLike, BigNumberish]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
@@ -316,6 +322,25 @@ export interface SimpleCountingStrategyInterface extends Interface {
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
+}
+
+export namespace DaoTransferEvent {
+  export type InputTuple = [
+    token: AddressLike,
+    recipient: AddressLike,
+    amount: BigNumberish
+  ];
+  export type OutputTuple = [token: string, recipient: string, amount: bigint];
+  export interface OutputObject {
+    token: string;
+    recipient: string;
+    amount: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace DepositedEvent {
@@ -774,6 +799,12 @@ export interface SimpleCountingStrategy extends BaseContract {
     "view"
   >;
 
+  transfer: TypedContractMethod<
+    [token: AddressLike, recipient: AddressLike, amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
@@ -968,7 +999,21 @@ export interface SimpleCountingStrategy extends BaseContract {
   getFunction(
     nameOrSignature: "supportsInterface"
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "transfer"
+  ): TypedContractMethod<
+    [token: AddressLike, recipient: AddressLike, amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
 
+  getEvent(
+    key: "DaoTransfer"
+  ): TypedContractEvent<
+    DaoTransferEvent.InputTuple,
+    DaoTransferEvent.OutputTuple,
+    DaoTransferEvent.OutputObject
+  >;
   getEvent(
     key: "Deposited"
   ): TypedContractEvent<
@@ -1062,6 +1107,17 @@ export interface SimpleCountingStrategy extends BaseContract {
   >;
 
   filters: {
+    "DaoTransfer(address,address,uint256)": TypedContractEvent<
+      DaoTransferEvent.InputTuple,
+      DaoTransferEvent.OutputTuple,
+      DaoTransferEvent.OutputObject
+    >;
+    DaoTransfer: TypedContractEvent<
+      DaoTransferEvent.InputTuple,
+      DaoTransferEvent.OutputTuple,
+      DaoTransferEvent.OutputObject
+    >;
+
     "Deposited(address,address,uint256)": TypedContractEvent<
       DepositedEvent.InputTuple,
       DepositedEvent.OutputTuple,

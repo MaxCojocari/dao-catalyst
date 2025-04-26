@@ -100,6 +100,8 @@ export type { IDaoMultisigVote } from "./contracts/interfaces/IDaoMultisigVote";
 export { IDaoMultisigVote__factory } from "./factories/contracts/interfaces/IDaoMultisigVote__factory";
 export type { IDaoSimpleVote } from "./contracts/interfaces/IDaoSimpleVote";
 export { IDaoSimpleVote__factory } from "./factories/contracts/interfaces/IDaoSimpleVote__factory";
+export type { ERC20Mock } from "./contracts/test/ERC20Mock";
+export { ERC20Mock__factory } from "./factories/contracts/test/ERC20Mock__factory";
 export type { MockFundToken } from "./contracts/test/MockFundToken";
 export { MockFundToken__factory } from "./factories/contracts/test/MockFundToken__factory";
 export type { TargetContract } from "./contracts/test/TargetContract";

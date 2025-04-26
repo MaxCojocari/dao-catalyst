@@ -9,6 +9,7 @@ import type {
   Result,
   Interface,
   EventFragment,
+  AddressLike,
   ContractRunner,
   ContractMethod,
   Listener,
@@ -24,12 +25,18 @@ import type {
 
 export interface TargetContractInterface extends Interface {
   getFunction(
-    nameOrSignature: "getValue" | "setValue" | "value"
+    nameOrSignature: "getValue" | "onboard" | "setValue" | "value"
   ): FunctionFragment;
 
-  getEvent(nameOrSignatureOrTopic: "ValueChanged"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "CandidateOnboarded" | "ValueChanged"
+  ): EventFragment;
 
   encodeFunctionData(functionFragment: "getValue", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "onboard",
+    values: [AddressLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "setValue",
     values: [BigNumberish]
@@ -37,8 +44,21 @@ export interface TargetContractInterface extends Interface {
   encodeFunctionData(functionFragment: "value", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "getValue", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "onboard", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setValue", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "value", data: BytesLike): Result;
+}
+
+export namespace CandidateOnboardedEvent {
+  export type InputTuple = [candidate: AddressLike];
+  export type OutputTuple = [candidate: string];
+  export interface OutputObject {
+    candidate: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace ValueChangedEvent {
@@ -98,6 +118,8 @@ export interface TargetContract extends BaseContract {
 
   getValue: TypedContractMethod<[], [bigint], "view">;
 
+  onboard: TypedContractMethod<[candidate: AddressLike], [void], "nonpayable">;
+
   setValue: TypedContractMethod<[_value: BigNumberish], [void], "nonpayable">;
 
   value: TypedContractMethod<[], [bigint], "view">;
@@ -110,12 +132,22 @@ export interface TargetContract extends BaseContract {
     nameOrSignature: "getValue"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
+    nameOrSignature: "onboard"
+  ): TypedContractMethod<[candidate: AddressLike], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "setValue"
   ): TypedContractMethod<[_value: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "value"
   ): TypedContractMethod<[], [bigint], "view">;
 
+  getEvent(
+    key: "CandidateOnboarded"
+  ): TypedContractEvent<
+    CandidateOnboardedEvent.InputTuple,
+    CandidateOnboardedEvent.OutputTuple,
+    CandidateOnboardedEvent.OutputObject
+  >;
   getEvent(
     key: "ValueChanged"
   ): TypedContractEvent<
@@ -125,6 +157,17 @@ export interface TargetContract extends BaseContract {
   >;
 
   filters: {
+    "CandidateOnboarded(address)": TypedContractEvent<
+      CandidateOnboardedEvent.InputTuple,
+      CandidateOnboardedEvent.OutputTuple,
+      CandidateOnboardedEvent.OutputObject
+    >;
+    CandidateOnboarded: TypedContractEvent<
+      CandidateOnboardedEvent.InputTuple,
+      CandidateOnboardedEvent.OutputTuple,
+      CandidateOnboardedEvent.OutputObject
+    >;
+
     "ValueChanged(uint256)": TypedContractEvent<
       ValueChangedEvent.InputTuple,
       ValueChangedEvent.OutputTuple,

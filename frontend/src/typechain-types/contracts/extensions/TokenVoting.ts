@@ -86,10 +86,12 @@ export interface TokenVotingInterface extends Interface {
       | "state"
       | "supportsInterface"
       | "token"
+      | "transfer"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
+      | "DaoTransfer"
       | "Deposited"
       | "ProposalCanceled"
       | "ProposalCreated"
@@ -234,6 +236,10 @@ export interface TokenVotingInterface extends Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "transfer",
+    values: [AddressLike, AddressLike, BigNumberish]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
@@ -328,6 +334,25 @@ export interface TokenVotingInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
+}
+
+export namespace DaoTransferEvent {
+  export type InputTuple = [
+    token: AddressLike,
+    recipient: AddressLike,
+    amount: BigNumberish
+  ];
+  export type OutputTuple = [token: string, recipient: string, amount: bigint];
+  export interface OutputObject {
+    token: string;
+    recipient: string;
+    amount: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace DepositedEvent {
@@ -784,6 +809,12 @@ export interface TokenVoting extends BaseContract {
 
   token: TypedContractMethod<[], [string], "view">;
 
+  transfer: TypedContractMethod<
+    [token: AddressLike, recipient: AddressLike, amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
@@ -974,7 +1005,21 @@ export interface TokenVoting extends BaseContract {
   getFunction(
     nameOrSignature: "token"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "transfer"
+  ): TypedContractMethod<
+    [token: AddressLike, recipient: AddressLike, amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
 
+  getEvent(
+    key: "DaoTransfer"
+  ): TypedContractEvent<
+    DaoTransferEvent.InputTuple,
+    DaoTransferEvent.OutputTuple,
+    DaoTransferEvent.OutputObject
+  >;
   getEvent(
     key: "Deposited"
   ): TypedContractEvent<
@@ -1068,6 +1113,17 @@ export interface TokenVoting extends BaseContract {
   >;
 
   filters: {
+    "DaoTransfer(address,address,uint256)": TypedContractEvent<
+      DaoTransferEvent.InputTuple,
+      DaoTransferEvent.OutputTuple,
+      DaoTransferEvent.OutputObject
+    >;
+    DaoTransfer: TypedContractEvent<
+      DaoTransferEvent.InputTuple,
+      DaoTransferEvent.OutputTuple,
+      DaoTransferEvent.OutputObject
+    >;
+
     "Deposited(address,address,uint256)": TypedContractEvent<
       DepositedEvent.InputTuple,
       DepositedEvent.OutputTuple,
