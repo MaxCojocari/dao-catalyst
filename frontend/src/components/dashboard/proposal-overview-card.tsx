@@ -38,7 +38,7 @@ export const ProposalOverviewCard = ({ proposal }: { proposal: any }) => {
   const { address } = useAccount();
 
   const handleClick = () => {
-    navigate(`/daos/${daoAddress}/proposals/${proposal.id}`);
+    navigate(`/daos/${daoAddress}/proposals/${proposal.proposalId}`);
   };
 
   const { bg, color } = stateStyles[proposal.state as ProposalState];

@@ -55,12 +55,14 @@ export const BodyEmpty = ({
 
 export const Body = ({
   proposals,
+  proposalLength,
   transfers,
   balance,
   members,
   tokenSymbol,
 }: {
   proposals: ProposalSummaryType[];
+  proposalLength: number;
   transfers: DaoTransfer[];
   balance: number;
   members: DaoMember[];
@@ -70,7 +72,10 @@ export const Body = ({
     <Container>
       <LeftColumn>
         {proposals.length > 0 ? (
-          <ProposalSummary proposals={proposals} />
+          <ProposalSummary
+            proposals={proposals}
+            proposalLength={proposalLength}
+          />
         ) : (
           <EmptyProposalCard />
         )}
@@ -94,9 +99,10 @@ export const DashboardPage = () => {
   const { daoAddress } = useParams();
   const [proposals, setProposals] = useState<ProposalSummaryType[]>([]);
   const [dao, setDao] = useState({} as DaoSummary);
+  const [proposalLength, setProposalLength] = useState(3);
   const [treasuryInfo, setTreasuryInfo] = useState({} as any);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
-  const tokenSymbol = dao.daoType === DaoType.SimpleVote ? "PIK" : undefined;
+  const tokenSymbol = dao?.daoType === DaoType.SimpleVote ? "PIK" : undefined;
 
   const fetchDashboardInfo = useCallback(async () => {
     try {
@@ -109,7 +115,9 @@ export const DashboardPage = () => {
         fetchDaoSummary(daoAddress!),
         fetchTreasuryInfo(daoAddress!),
       ]);
-      setProposals(_proposals);
+
+      setProposals(_proposals?.enrichedLogs);
+      setProposalLength(_proposals?.totalProposals || 3);
       setDao(_dao as DaoSummary);
       setTreasuryInfo(_treasuryInfo);
     } catch (e) {
@@ -129,6 +137,7 @@ export const DashboardPage = () => {
       {proposals?.length > 0 || transfers?.length > 0 ? (
         <Body
           proposals={proposals}
+          proposalLength={proposalLength}
           transfers={treasuryInfo.transfers}
           members={members}
           tokenSymbol={tokenSymbol}

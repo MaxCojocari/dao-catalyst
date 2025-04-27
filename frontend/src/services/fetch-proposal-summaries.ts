@@ -35,10 +35,13 @@ export async function fetchProposalSummaries(daoAddress: string) {
 
   const enrichedLogs: ProposalSummary[] = [];
 
+  const metadatas = await Promise.all(
+    logs.map((log) => fetchMetadata(log.descriptionURI))
+  );
+
   for (let i = 0; i < logs?.length!; ++i) {
-    const { proposalId, proposer, descriptionURI } = logs[i];
-    const metadata = await fetchMetadata(descriptionURI);
-    const { title, summary } = metadata;
+    const { proposalId, proposer } = logs[i];
+    const { title, summary } = metadatas[i];
     enrichedLogs.push({
       proposalId: Number(proposalId),
       author: proposer,
@@ -50,5 +53,5 @@ export async function fetchProposalSummaries(daoAddress: string) {
 
   console.log(enrichedLogs);
 
-  return enrichedLogs;
+  return { totalProposals: allLogs?.length, enrichedLogs };
 }

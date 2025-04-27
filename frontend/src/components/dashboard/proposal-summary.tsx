@@ -13,8 +13,10 @@ import { ProposalSummary as ProposalSummaryType } from "../../types";
 
 export const ProposalSummary = ({
   proposals,
+  proposalLength,
 }: {
   proposals: ProposalSummaryType[];
+  proposalLength: number;
 }) => {
   const navigate = useNavigate();
   const { daoAddress } = useParams();
@@ -42,7 +44,7 @@ export const ProposalSummary = ({
               gap: "12px",
             }}
           >
-            <Number>{proposals?.length}</Number>
+            <Number>{proposalLength}</Number>
             <p>Proposals created</p>
           </div>
         </Box>
