@@ -1,24 +1,36 @@
-import Moralis from 'moralis';
-import { EvmChain } from '@moralisweb3/common-evm-utils';
 import 'dotenv/config';
-import { ethers } from 'hardhat';
-import { Dao__factory } from '../typechain-types';
+import { ethers, network } from 'hardhat';
+import { Dao__factory, ERC20__factory } from '../typechain-types';
+import { DEPLOY_CONSTANTS } from '../constants';
+import { parseUnits } from 'ethers';
 
 async function main() {
   const [signer] = await ethers.getSigners();
+  const {
+    daos,
+    tokens: { usdt, usdc },
+  } = DEPLOY_CONSTANTS[network.name];
 
-  const daoAddresses = [
-    '0xa74b04e54bcd514050d6e637bab8cd629714996b',
-    '0xb1e4498fd67fa4f445e068d104ed563eca8b5650',
-  ];
-  const MEMBER_ROLE = '0x829b824e2329e205435d941c9f13baf578548505283d29261236d8e6596d4636';
+  const amountUsdt = parseUnits('13244.22', 6);
+  const amountUsdc = parseUnits('15000', 6);
+  const takeAmount = parseUnits('8991.1', 6);
+  const usdtContract = ERC20__factory.connect(usdt.address, signer);
+  const usdcContract = ERC20__factory.connect(usdc.address, signer);
 
-  for (const addr of daoAddresses) {
-    const dao = Dao__factory.connect(addr, signer);
+  for (const dao of daos) {
+    const daoContract = Dao__factory.connect(dao, signer);
 
-    const tx = await dao.revokeRole(MEMBER_ROLE, signer);
+    let tx = await usdcContract.transfer(dao, amountUsdc);
     await tx.wait();
-    console.log(tx.hash);
+    console.log('Transfer 1', tx.hash);
+
+    tx = await daoContract.transfer(usdc.address, signer, takeAmount);
+    await tx.wait();
+    console.log('Withdraw', tx.hash);
+
+    tx = await usdtContract.transfer(dao, amountUsdt);
+    await tx.wait();
+    console.log('Transfer 2', tx.hash);
   }
 }
 

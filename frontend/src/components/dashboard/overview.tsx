@@ -1,32 +1,28 @@
 import styled from "styled-components";
-import { TEST_DAO_INFO as dao } from "../../constants";
 import { shortenAddress } from "../../utils";
-import { useParams } from "react-router-dom";
 import startIcon from "../../assets/images/flag.svg";
 import peopleIcon from "../../assets/images/people.svg";
-import { DaoType } from "../../types";
+import { DaoSummary, DaoType } from "../../types";
 
-export const DaoOverview = () => {
-  const { daoAddress } = useParams();
-
+export const DaoOverview = ({ dao }: { dao: DaoSummary }) => {
   return (
     <Container>
       <Header>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <h1>{dao.name}</h1>
+          <h1>{dao?.name}</h1>
           <a
-            href={`https://sepolia.etherscan.io/address/${daoAddress}`}
+            href={`https://sepolia.arbiscan.io/address/${dao?.contractAddress}`}
             target="_blank"
             rel="noreferrer"
           >
-            {shortenAddress(daoAddress!)}
+            {shortenAddress(dao?.contractAddress!)}
           </a>
-          <h2>{dao.summary}</h2>
+          <h2>{dao?.summary}</h2>
         </div>
         <div
           style={{ display: "flex", alignItems: "center", marginLeft: "124px" }}
         >
-          <img className="logo" src={dao.logo} />
+          <img className="logo" src={dao?.logo} />
         </div>
       </Header>
       <Metadata>
@@ -39,12 +35,12 @@ export const DaoOverview = () => {
         >
           <Fragment>
             <img src={startIcon} width="16px" />
-            <p>February 2025</p>
+            <p>{dao?.creationDate}</p>
           </Fragment>
           <Fragment>
             <img src={peopleIcon} width="16px" />
-            {dao.type === DaoType.SimpleVote && <p>Token-based</p>}
-            {dao.type === DaoType.MultisigVote && <p>Wallet-based</p>}
+            {dao?.daoType === DaoType.SimpleVote && <p>Token-based</p>}
+            {dao?.daoType === DaoType.MultisigVote && <p>Wallet-based</p>}
           </Fragment>
         </div>
         <div
@@ -53,7 +49,7 @@ export const DaoOverview = () => {
             gap: "20px",
           }}
         >
-          {dao.links.map((link, id) => (
+          {dao?.links?.map((link, id) => (
             <a href={link.url} key={id} target="_blank" rel="noreferrer">
               {link.label}
             </a>

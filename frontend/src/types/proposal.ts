@@ -67,3 +67,17 @@ export enum ProposalState {
   Succeeded,
   Executed,
 }
+
+export interface ProposalSummary {
+  proposalId: number;
+  author: string;
+  title: string;
+  summary: string;
+  state: ProposalState;
+}
+
+export type ProposalMetadata = {
+  title: string;
+  summary: string;
+  resources: Link[];
+};

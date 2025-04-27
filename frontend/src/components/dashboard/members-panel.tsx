@@ -10,17 +10,17 @@ export const MembersPanel = ({
   isExtended,
 }: {
   members: any[];
-  tokenSymbol: string;
+  tokenSymbol?: string;
   isExtended: boolean;
 }) => {
   const navigate = useNavigate();
   const { daoAddress } = useParams();
 
-  const hasMoreThanTwo = members.length > 3;
+  const hasMoreThanTwo = members?.length > 3;
 
   return (
     <>
-      <MembersSummary membersLength={members.length} />
+      <MembersSummary membersLength={members?.length} />
       {isExtended ? (
         <MembersListExtended members={members} tokenSymbol={tokenSymbol} />
       ) : (

@@ -8,10 +8,30 @@ import {
   ProposalSummary,
   TreasuryPanel,
 } from "../../components";
-import { members, proposals, transfers } from "../../constants";
-import { useState } from "react";
+import { members, transfers } from "../../constants";
+import { useCallback, useEffect, useState } from "react";
+import {
+  DaoMember,
+  DaoSummary,
+  DaoTransfer,
+  DaoType,
+  ProposalSummary as ProposalSummaryType,
+} from "../../types";
+import { setIsLoading } from "../../store";
+import {
+  fetchDaoSummary,
+  fetchProposalSummaries,
+  fetchTreasuryInfo,
+} from "../../services";
+import { useParams } from "react-router-dom";
 
-export const BodyEmpty = () => {
+export const BodyEmpty = ({
+  members,
+  tokenSymbol,
+}: {
+  members: DaoMember[];
+  tokenSymbol?: string;
+}) => {
   return (
     <>
       <ContainerEmpty>
@@ -23,36 +43,100 @@ export const BodyEmpty = () => {
         </RightColumn>
       </ContainerEmpty>
       <Bottom>
-        <MembersPanel members={members} tokenSymbol="PIK" isExtended={true} />
+        <MembersPanel
+          members={members}
+          tokenSymbol={tokenSymbol}
+          isExtended={true}
+        />
       </Bottom>
     </>
   );
 };
 
-export const Body = () => {
+export const Body = ({
+  proposals,
+  transfers,
+  balance,
+  members,
+  tokenSymbol,
+}: {
+  proposals: ProposalSummaryType[];
+  transfers: DaoTransfer[];
+  balance: number;
+  members: DaoMember[];
+  tokenSymbol?: string;
+}) => {
   return (
     <Container>
       <LeftColumn>
-        <ProposalSummary proposals={proposals} />
+        {proposals.length > 0 ? (
+          <ProposalSummary proposals={proposals} />
+        ) : (
+          <EmptyProposalCard />
+        )}
       </LeftColumn>
       <RightColumn>
-        <TreasuryPanel transfers={transfers} balance={"123.321"} />
-        <MembersPanel members={members} tokenSymbol="PIK" isExtended={false} />
+        <TreasuryPanel
+          transfers={transfers}
+          balance={balance?.toLocaleString()}
+        />
+        <MembersPanel
+          members={members}
+          tokenSymbol={tokenSymbol}
+          isExtended={false}
+        />
       </RightColumn>
     </Container>
   );
 };
 
 export const DashboardPage = () => {
-  const hasProposals = proposals.length > 0;
-  const hasTransfers = transfers.length > 0;
-  const isNotEmpty = hasProposals || hasTransfers;
+  const { daoAddress } = useParams();
+  const [proposals, setProposals] = useState<ProposalSummaryType[]>([]);
+  const [dao, setDao] = useState({} as DaoSummary);
+  const [treasuryInfo, setTreasuryInfo] = useState({} as any);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const tokenSymbol = dao.daoType === DaoType.SimpleVote ? "PIK" : undefined;
+
+  const fetchDashboardInfo = useCallback(async () => {
+    try {
+      if (!daoAddress) return;
+
+      setIsLoading({ fetchDashboardInfo: true });
+
+      const [_proposals, _dao, _treasuryInfo] = await Promise.all([
+        fetchProposalSummaries(daoAddress!),
+        fetchDaoSummary(daoAddress!),
+        fetchTreasuryInfo(daoAddress!),
+      ]);
+      setProposals(_proposals);
+      setDao(_dao as DaoSummary);
+      setTreasuryInfo(_treasuryInfo);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading({ fetchDashboardInfo: false });
+    }
+  }, [daoAddress]);
+
+  useEffect(() => {
+    fetchDashboardInfo();
+  }, []);
 
   return (
     <>
-      <DaoOverview />
-      {isNotEmpty ? <Body /> : <BodyEmpty />}
+      <DaoOverview dao={dao} />
+      {proposals?.length > 0 || transfers?.length > 0 ? (
+        <Body
+          proposals={proposals}
+          transfers={treasuryInfo.transfers}
+          members={members}
+          tokenSymbol={tokenSymbol}
+          balance={treasuryInfo.totalNetWorth}
+        />
+      ) : (
+        <BodyEmpty members={members} tokenSymbol={tokenSymbol} />
+      )}
       <ErrorModal
         open={errorModalOpen}
         setOpen={setErrorModalOpen}

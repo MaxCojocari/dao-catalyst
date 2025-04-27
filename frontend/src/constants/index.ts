@@ -2,6 +2,8 @@ export * from "./test";
 export * from "./timezones";
 export * from "./actions";
 export * from "./tokens";
+export * from "./proposal-creation-event";
+export * from "./blockchain";
 
 export const ANY_WALLET = "any-wallet";
 export const TOKEN_HOLDERS = "token-holders";

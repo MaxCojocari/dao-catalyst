@@ -11,7 +11,7 @@ interface Member {
 
 interface MembersListProps {
   members: Member[];
-  tokenSymbol: string;
+  tokenSymbol?: string;
 }
 
 export const MembersList = ({ members, tokenSymbol }: MembersListProps) => {
@@ -20,12 +20,12 @@ export const MembersList = ({ members, tokenSymbol }: MembersListProps) => {
 
   return (
     <ListContainer>
-      {displayMembers.map((member, index) => (
+      {displayMembers?.map((member, index) => (
         <MemberCard key={index}>
           <Left>
             <img
-              alt={member.address}
-              src={blo(member.address as `0x{string}`)}
+              alt={member?.address}
+              src={blo(member?.address as `0x{string}`)}
               style={{
                 width: "30px",
                 borderRadius: "50%",
@@ -36,14 +36,16 @@ export const MembersList = ({ members, tokenSymbol }: MembersListProps) => {
             />
             <Info>
               <Row>
-                <Address>{shortenAddress(member.address)}</Address>
+                <Address>{shortenAddress(member?.address)}</Address>
                 {connectedAddress?.toLowerCase() ===
-                  member.address.toLowerCase() && <YouBadge>You</YouBadge>}
+                  member?.address.toLowerCase() && <YouBadge>You</YouBadge>}
               </Row>
-              <Power>
-                {member.votingPower.toLocaleString()} {tokenSymbol}
-                <Percentage>({member.percentage.toFixed(2)}%)</Percentage>
-              </Power>
+              {tokenSymbol && (
+                <Power>
+                  {member?.votingPower.toLocaleString()} {tokenSymbol}
+                  <Percentage>({member?.percentage.toFixed(2)}%)</Percentage>
+                </Power>
+              )}
             </Info>
           </Left>
         </MemberCard>

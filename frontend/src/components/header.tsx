@@ -4,16 +4,15 @@ import { CustomWalletButton } from "./custom-wallet-button";
 import { DaoLogo } from "./dao-logo";
 import { NavLink, useLocation, useParams } from "react-router-dom";
 import { CreateDaoButton, DelegateButton } from ".";
+import { fetchDaoMetadata } from "../services";
+import { setIsLoading } from "../store";
+import { useCallback, useEffect, useState } from "react";
+import { DaoMetadata } from "../types";
 
-interface HeaderProps {
-  imageUri: string;
-  daoName: string;
-}
-
-export const Header = ({ props }: { props: HeaderProps }) => {
-  const { imageUri, daoName } = props;
+export const Header = () => {
   const { daoAddress } = useParams();
   const { pathname } = useLocation();
+  const [daoMetadata, setDaoMetadata] = useState({} as DaoMetadata);
 
   const links = [
     { label: "Dashboard", path: "dashboard" },
@@ -25,11 +24,26 @@ export const Header = ({ props }: { props: HeaderProps }) => {
 
   const isDaoSubPage = /^\/daos\/0x[a-fA-F0-9]{40}(\/[^/]*)?$/.test(pathname);
 
+  const fetchMetadata = useCallback(async () => {
+    try {
+      setIsLoading({ fetchMetadata: true });
+      setDaoMetadata((await fetchDaoMetadata(daoAddress!)) as DaoMetadata);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading({ fetchMetadata: false });
+    }
+  }, [daoMetadata]);
+
+  useEffect(() => {
+    fetchMetadata();
+  }, []);
+
   return (
     <Container>
       {daoAddress ? (
         <LeftSection>
-          <DaoLogo imageUri={imageUri} name={daoName} />
+          <DaoLogo imageUri={daoMetadata?.logo} name={daoMetadata?.name} />
           {links.map(({ label, path }) => (
             <NavLink key={path} to={`/daos/${daoAddress}/${path}`}>
               {label}

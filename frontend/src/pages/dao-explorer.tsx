@@ -18,24 +18,22 @@ export const DaoExplorerPage = () => {
   const fetchDaos = useCallback(async () => {
     try {
       setIsLoading({ fetchDaos: true });
-      const summaries = await fetchDaoSummaries(address!);
-      setDaos(summaries);
-      console.log(summaries);
+      setDaos(await fetchDaoSummaries(address!));
     } catch (e) {
       console.error(e);
     } finally {
       setIsLoading({ fetchDaos: false });
     }
-  }, []);
+  }, [daos]);
 
-  const filteredDaos = daos.filter((dao) => {
+  const filteredDaos = daos?.filter((dao) => {
     switch (value) {
       case 0: // Featured - show only first 3
-        return daos.indexOf(dao) < 3;
+        return daos?.indexOf(dao) < 3;
       case 1: // All DAOs
         return true;
       case 2: // Member - if current address is among dao members
-        return dao.isCallerMember;
+        return dao?.isCallerMember;
       default:
         return true;
     }
@@ -74,23 +72,23 @@ export const DaoExplorerPage = () => {
           </Tabs>
         </Box>
         <Cards>
-          {filteredDaos.map((dao, idx) => (
+          {filteredDaos?.map((dao, idx) => (
             <DaoOverviewCard
               key={idx}
-              onClick={() => navigate(`/daos/${dao.contractAddress}`)}
+              onClick={() => navigate(`/daos/${dao?.contractAddress}`)}
             >
               <Name>
-                <img src={dao.logo} />
-                <h3>{dao.name}</h3>
+                <img src={dao?.logo} />
+                <h3>{dao?.name}</h3>
               </Name>
-              <Description>{dao.summary}</Description>
+              <Description>{dao?.summary}</Description>
               <Footer>
                 <p style={{ marginRight: "3px" }}>Created by</p>
                 <p style={{ color: "#6666FF", fontWeight: "500" }}>
                   {" "}
-                  {address?.toLowerCase() === dao.owner.toLowerCase()
+                  {address?.toLowerCase() === dao?.owner.toLowerCase()
                     ? "You"
-                    : shortenAddress(dao.owner)}
+                    : shortenAddress(dao?.owner)}
                 </p>
               </Footer>
             </DaoOverviewCard>

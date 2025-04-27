@@ -3,7 +3,6 @@ import withdrawIcon from "../../assets/images/withdraw.svg";
 import depositIcon from "../../assets/images/deposit.svg";
 import { TransferType } from "../../types";
 import styled from "styled-components";
-import { formatWithCommas } from "../../utils";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -11,7 +10,7 @@ export const TreasuryActivityCard = ({ transfer }: { transfer: any }) => {
   const navigate = useNavigate();
   const { daoAddress } = useParams();
 
-  const isWithdrawal = transfer.type === TransferType.Withdrawal;
+  const isWithdrawal = transfer?.type === TransferType.Withdrawal;
   const sign = isWithdrawal ? "-" : "+";
 
   return (
@@ -41,14 +40,14 @@ export const TreasuryActivityCard = ({ transfer }: { transfer: any }) => {
         }}
       >
         <Top>
-          <p className="top">{TransferType[transfer.type]}</p>
+          <p className="top">{TransferType[transfer?.type]}</p>
           <p className="top">
-            {sign} {formatWithCommas(Number(transfer.amount))} {transfer.token}
+            {sign} {Number(transfer?.amount).toLocaleString()} {transfer?.token}
           </p>
         </Top>
         <Bottom>
           <p>05/02/2025</p>
-          <p>${Number(transfer.amount) * 0.99}</p>
+          <p>${(Number(transfer?.amount) * 0.99).toLocaleString()}</p>
         </Bottom>
       </div>
       <KeyboardArrowRightIcon

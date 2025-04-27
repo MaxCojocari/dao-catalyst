@@ -4,6 +4,7 @@ import { getPublicClient } from "wagmi/actions";
 import { Dao__factory, DaoToken__factory } from "../typechain-types";
 import { MEMBER_ROLE } from "../constants/roles";
 import { wagmiConfig } from "../utils/provider";
+import { fetchMetadata } from "./fetch-metadata";
 
 const url = import.meta.env.VITE_SUBGRAPH_URL;
 
@@ -30,18 +31,17 @@ export async function fetchDaoSummaries(caller: string) {
     const res = (await request(url, query, {}, headers)) as any;
 
     for (const data of res.daoCreateds) {
-      const { daoURI, daoAddress, owner, daoToken, daoType } = data;
+      const { daoURI, daoAddress, daoToken, daoType, owner } = data;
+      const { name, logo, summary } = await fetchMetadata(daoURI);
 
-      const res = await fetch(daoURI);
-      const { name, logo, summary } = await res.json();
       summaries.push({
         daoType,
+        owner,
+        daoToken,
         name,
         logo,
         summary,
-        owner,
         contractAddress: daoAddress,
-        daoToken,
         isCallerMember: await isCallerMember(
           +daoType,
           daoAddress,
@@ -55,6 +55,43 @@ export async function fetchDaoSummaries(caller: string) {
   }
 
   return summaries;
+}
+
+export async function fetchDaoSummary(
+  daoAddress: string
+): Promise<DaoSummary | undefined> {
+  const query = gql`
+    {
+      daoCreateds(where: {daoAddress: "${daoAddress}"}) {
+        daoType
+        daoURI
+        owner
+        daoAddress
+        blockTimestamp
+      }
+    }
+  `;
+
+  try {
+    const res_gql = (await request(url, query, {}, headers)) as any;
+    const { daoType, daoURI, owner, daoAddress, blockTimestamp } =
+      res_gql.daoCreateds[0];
+    const res = await fetch(daoURI);
+    const { name, logo, summary, links } = await res.json();
+
+    return {
+      links,
+      daoType,
+      owner,
+      name,
+      logo,
+      summary,
+      contractAddress: daoAddress,
+      creationDate: getMonthYear(Number(blockTimestamp)),
+    };
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function isCallerMember(
@@ -96,11 +133,14 @@ export async function isCallerMember(
   return false;
 }
 
-// export async function fetchDaoMetadata(uri: string) {
-//   try {
-//     const response = await fetch(uri);
-//     return await response.json();
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
+function getMonthYear(timestamp: number) {
+  const date = new Date(timestamp * 1000);
+
+  const monthYear = date.toLocaleString("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+
+  return monthYear;
+}

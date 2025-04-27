@@ -12,7 +12,7 @@ interface Member {
 
 interface MembersListExtendedProps {
   members: Member[];
-  tokenSymbol: string;
+  tokenSymbol?: string;
 }
 
 export const MembersListExtended = ({
@@ -26,11 +26,15 @@ export const MembersListExtended = ({
     <Container>
       <Header>
         <ColumnTitle>Member</ColumnTitle>
-        <ColumnTitle>Voting power</ColumnTitle>
-        <ColumnTitle>Delegations</ColumnTitle>
+        {tokenSymbol && (
+          <>
+            <ColumnTitle>Voting power</ColumnTitle>
+            <ColumnTitle>Delegations</ColumnTitle>
+          </>
+        )}
       </Header>
 
-      {displayMembers.map((member, index) => (
+      {displayMembers?.map((member, index) => (
         <MemberCard key={index}>
           <Left>
             <img
@@ -45,16 +49,18 @@ export const MembersListExtended = ({
             />
             <Info>
               <Row>
-                <Address>{shortenAddress(member.address)}</Address>
+                <Address>{shortenAddress(member?.address)}</Address>
                 {connectedAddress?.toLowerCase() ===
-                  member.address.toLowerCase() && <YouBadge>You</YouBadge>}
+                  member?.address.toLowerCase() && <YouBadge>You</YouBadge>}
               </Row>
             </Info>
           </Left>
-          <VotingPower>
-            {member.votingPower.toLocaleString()} {tokenSymbol}
-            <Percentage>({member.percentage.toFixed(2)}%)</Percentage>
-          </VotingPower>
+          {tokenSymbol && (
+            <VotingPower>
+              {member?.votingPower.toLocaleString()} {tokenSymbol}
+              <Percentage>({member?.percentage.toFixed(2)}%)</Percentage>
+            </VotingPower>
+          )}
           <Delegation>
             <CircleButton>
               <KeyboardArrowRightIcon width={10} sx={{ color: "#8F8FB2" }} />

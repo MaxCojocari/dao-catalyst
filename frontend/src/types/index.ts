@@ -4,7 +4,6 @@ export * from "./generic-props";
 export * from "./proposal";
 export * from "./voting";
 export * from "./token";
-export * from "./proposal";
 
 export type Fraction = {
   numerator: number;

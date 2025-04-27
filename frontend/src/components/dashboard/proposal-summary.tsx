@@ -9,8 +9,13 @@ import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProposalOverviewCard } from "./proposal-overview-card";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { ProposalSummary as ProposalSummaryType } from "../../types";
 
-export const ProposalSummary = ({ proposals }: { proposals: any[] }) => {
+export const ProposalSummary = ({
+  proposals,
+}: {
+  proposals: ProposalSummaryType[];
+}) => {
   const navigate = useNavigate();
   const { daoAddress } = useParams();
 
@@ -37,7 +42,7 @@ export const ProposalSummary = ({ proposals }: { proposals: any[] }) => {
               gap: "12px",
             }}
           >
-            <Number>{proposals.length}</Number>
+            <Number>{proposals?.length}</Number>
             <p>Proposals created</p>
           </div>
         </Box>
@@ -50,7 +55,7 @@ export const ProposalSummary = ({ proposals }: { proposals: any[] }) => {
         </FilledButtonOverview>
       </Container>
 
-      {displayProposals.map((proposal, idx) => (
+      {displayProposals?.map((proposal, idx) => (
         <ProposalOverviewCard key={idx} proposal={proposal} />
       ))}
 

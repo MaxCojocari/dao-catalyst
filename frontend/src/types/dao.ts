@@ -1,4 +1,4 @@
-import { Duration, Fraction, Link } from ".";
+import { Duration, Fraction, Link, TransferType } from ".";
 
 export enum DaoType {
   SimpleVote,
@@ -42,12 +42,34 @@ export enum EligibleVoters {
 }
 
 export interface DaoSummary {
-  daoType: string;
+  daoType: DaoType;
   name: string;
   logo: string;
   summary: string;
   owner: string;
   contractAddress: string;
-  daoToken: string;
-  isCallerMember: boolean;
+  daoToken?: string;
+  isCallerMember?: boolean;
+  creationDate?: string;
+  links?: Link[];
 }
+
+export type DaoMember = {
+  address: string;
+  votingPower: number;
+  percentage: number;
+};
+
+export type DaoTransfer = {
+  type: TransferType;
+  amount: string;
+  token: string;
+  timestamp: number;
+};
+
+export type DaoMetadata = {
+  name: string;
+  logo: string;
+  summary: string;
+  links: Link[];
+};

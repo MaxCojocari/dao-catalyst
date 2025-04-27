@@ -20,8 +20,8 @@ export const TreasuryPanel = ({
   const navigate = useNavigate();
   const { daoAddress } = useParams();
 
-  const displayTransfers = transfers.slice(0, 2);
-  const hasMoreThanTwo = transfers.length > 2;
+  const displayTransfers = transfers?.slice(0, 2);
+  const hasMoreThanTwo = transfers?.length > 2;
 
   return (
     <>
@@ -44,7 +44,7 @@ export const TreasuryPanel = ({
         </Footer>
       </Container>
 
-      {displayTransfers.map((transfer, idx) => (
+      {displayTransfers?.map((transfer, idx) => (
         <TreasuryActivityCard key={idx} transfer={transfer} />
       ))}
 
