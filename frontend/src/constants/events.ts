@@ -60,3 +60,17 @@ export const PROPOSAL_CREATION_EVENT = {
   name: "ProposalCreated",
   type: "event",
 } as AbiEvent;
+
+export const PROPOSAL_EXECUTED_EVENT = {
+  anonymous: false,
+  inputs: [
+    {
+      indexed: false,
+      internalType: "uint256",
+      name: "proposalId",
+      type: "uint256",
+    },
+  ],
+  name: "ProposalExecuted",
+  type: "event",
+} as AbiEvent;

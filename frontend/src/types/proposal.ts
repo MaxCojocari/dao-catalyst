@@ -1,5 +1,6 @@
 import { Dayjs } from "dayjs";
 import { Duration, Link, VoteCounting } from ".";
+import { StatusItem } from "../components/proposal-details/status-timeline";
 
 export enum ActionType {
   TransferTokens = "Transfer Funds",
@@ -13,7 +14,7 @@ export type ProposalAction = {
   value: string;
   type: ActionType;
   functionFragment: string;
-  inputs: any[];
+  inputs: any[] | readonly any[];
 };
 
 export enum VoteStartOptions {
@@ -81,3 +82,14 @@ export type ProposalMetadata = {
   summary: string;
   resources: Link[];
 };
+
+export interface ProposalSummaryExtended {
+  author: string;
+  title: string;
+  summary: string;
+  state: ProposalState;
+  resources: Link[];
+  statuses: StatusItem[];
+  actions: ProposalAction[];
+  txHashExecuted: string | undefined;
+}

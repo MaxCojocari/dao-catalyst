@@ -7,7 +7,7 @@ export const ResourcesSection = ({
 }: {
   resources: { label: string; url: string }[];
 }) => {
-  const hasValidResources = resources.some(
+  const hasValidResources = resources?.some(
     (r) => r.label.trim() !== "" || r.url.trim() !== ""
   );
 
@@ -19,8 +19,8 @@ export const ResourcesSection = ({
         <>
           <h1>Resources</h1>
           <List>
-            {resources.map((resource, i) =>
-              resource.label || resource.url ? (
+            {resources?.map((resource, i) =>
+              resource?.label || resource?.url ? (
                 <Link key={i}>
                   <p>{resource.label}</p>
                   <a href={resource.url} target="_blank" rel="noreferrer">

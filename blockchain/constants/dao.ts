@@ -163,7 +163,7 @@ export const getTestProposals = (
     descriptionURI:
       'https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreihcrjckey5b7nv2mcq2frlkya6eha4k2jvxhhlkqxvy6vzwbhgphe',
     voteStart: Math.floor(Date.now() / 1000) + Number(ONE_MINUTE_SECONDS),
-    voteDuration: ONE_MONTH_SECONDS,
+    voteDuration: 6n * ONE_HOUR_SECONDS,
   },
   {
     actions: [

@@ -24,7 +24,7 @@ export const StatusTimeline = ({ statuses }: StatusTimelineProps) => {
     <Container>
       <h1>Status</h1>
       <br /> <br />
-      {statuses.map((status, idx) => (
+      {statuses?.map((status, idx) => (
         <Row key={idx}>
           <Left>
             {status.isCompleted &&
@@ -67,7 +67,7 @@ export const StatusTimeline = ({ statuses }: StatusTimelineProps) => {
             <div
               style={{ display: "flex", flexDirection: "column", gap: "10px" }}
             >
-              <Label $highlight={status.isCurrent} status={status}>
+              <Label $highlight={status.isCurrent} $status={status}>
                 {status.label}
               </Label>
               <Timestamp>{status.timestamp}</Timestamp>
@@ -103,12 +103,12 @@ const Left = styled.div`
   margin-top: -4px;
 `;
 
-const Label = styled.span<{ $highlight?: boolean; status?: StatusItem }>`
+const Label = styled.span<{ $highlight?: boolean; $status?: StatusItem }>`
   font-weight: 600;
-  color: ${({ status, $highlight }) => {
-    if (status?.label === StatusTimelineType.Executed && status.isCompleted)
+  color: ${({ $status, $highlight }) => {
+    if ($status?.label === StatusTimelineType.Executed && $status.isCompleted)
       return "#1FBA66";
-    if (status?.label === StatusTimelineType.Rejected) return "#de3c48";
+    if ($status?.label === StatusTimelineType.Rejected) return "#de3c48";
     if ($highlight) return "#6666ff";
     return "#292933";
   }};

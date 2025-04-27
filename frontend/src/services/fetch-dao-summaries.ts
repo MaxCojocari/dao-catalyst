@@ -100,9 +100,9 @@ export async function isCallerMember(
   daoToken: string,
   caller: string
 ): Promise<boolean> {
-  const publicClient = getPublicClient(wagmiConfig);
+  const publicClient = getPublicClient(wagmiConfig)!;
 
-  const [balanceOfResult, hasRoleResult] = await publicClient!.multicall({
+  const [balanceOfResult, hasRoleResult] = await publicClient.multicall({
     contracts: [
       {
         abi: DaoToken__factory.abi,

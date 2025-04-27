@@ -14,7 +14,7 @@ async function main() {
   const dao = Dao__factory.connect(daos[0], signer);
   const proposals = getTestProposals(dao, usdt.address, usdc.address, targetContract);
 
-  for (const proposal of proposals) {
+  for (const proposal of [proposals[0]]) {
     const { actions, descriptionURI, voteStart, voteDuration } = proposal;
     const tx = await dao.propose(actions, descriptionURI, voteStart, voteDuration);
     await tx.wait();

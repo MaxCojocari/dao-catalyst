@@ -3,7 +3,7 @@ import successIcon from "../../assets/images/success_progress.svg";
 import pendingIcon from "../../assets/images/pending.svg";
 import errorIcon from "../../assets/images/error-filled.svg";
 import activeIcon from "../../assets/images/active-icon.svg";
-import { StatusType } from "../../types";
+import { ProposalState, StatusType } from "../../types";
 
 const statusMap: Record<
   StatusType,
@@ -31,15 +31,31 @@ const statusMap: Record<
   },
 };
 
+const proposalStateToStatusType: Record<ProposalState, StatusType> = {
+  [ProposalState.Pending]: "pending",
+  [ProposalState.Active]: "active",
+  [ProposalState.Succeeded]: "success",
+  [ProposalState.Executed]: "success",
+  [ProposalState.Canceled]: "error",
+  [ProposalState.Defeated]: "error",
+};
+
+export function getStatusTypeFromProposalState(
+  state: ProposalState
+): StatusType {
+  return proposalStateToStatusType[state] || "pending";
+}
+
 export const StatusTag = ({
-  type,
+  state,
   text,
   style,
 }: {
-  type: StatusType;
+  state: ProposalState;
   text?: string;
   style?: React.CSSProperties;
 }) => {
+  const type = getStatusTypeFromProposalState(state);
   const { icon, color, defaultText } = statusMap[type];
 
   return (

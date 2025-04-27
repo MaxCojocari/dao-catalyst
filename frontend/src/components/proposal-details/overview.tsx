@@ -1,15 +1,19 @@
 import styled from "styled-components";
 import { StatusTag } from "..";
-import { TEST_PROPOSAL as proposal } from "../../constants";
 import { useAccount } from "wagmi";
 import { shortenAddress } from "../../utils";
+import { ProposalSummaryExtended } from "../../types";
 
-export const ProposalOverview = () => {
+export const ProposalOverview = ({
+  proposal,
+}: {
+  proposal: ProposalSummaryExtended;
+}) => {
   const { address } = useAccount();
 
   return (
     <Container>
-      <h1>{proposal.title}</h1>
+      <h1>{proposal?.title}</h1>
       <div
         style={{
           display: "flex",
@@ -21,15 +25,15 @@ export const ProposalOverview = () => {
         <Author>
           <p className="proposed-by">Proposed by</p>
           <p className="proposer-address">
-            {address?.toLowerCase() === proposal.author.toLowerCase()
+            {address?.toLowerCase() === proposal?.author?.toLowerCase()
               ? "You"
-              : shortenAddress(proposal.author)}
+              : shortenAddress(proposal?.author)}
           </p>
         </Author>
         <p className="delimeter">|</p>
-        <StatusTag type={"active"} />
+        <StatusTag state={proposal?.state} />
       </div>
-      <h2>{proposal.summary}</h2>
+      <h2>{proposal?.summary}</h2>
     </Container>
   );
 };

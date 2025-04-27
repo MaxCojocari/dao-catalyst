@@ -6,13 +6,13 @@ import { Token } from "../types";
 export const TOKENS: Token[] = [
   {
     symbol: "USDC",
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    address: "0x68C169fE6D5233770DdA0FDf5F47F077175517F0",
     decimals: 6,
     icon: usdcIcon,
   },
   {
     symbol: "USDT",
-    address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    address: "0x75514BEcF3263054D32b45be7a5dB6C532D9b504",
     decimals: 6,
     icon: usdtIcon,
   },

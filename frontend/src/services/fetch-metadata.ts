@@ -13,8 +13,9 @@ const headers = {
   Authorization: `Bearer ${import.meta.env.VITE_SUBGRAPH_API_KEY}`,
 };
 
-export async function fetchMetadata(uri: string) {
+export async function fetchMetadata(uri: string): Promise<any> {
   try {
+    if (!uri) return;
     const response = await fetch(uri);
     return await response.json();
   } catch (error) {
@@ -36,7 +37,7 @@ export async function fetchDaoMetadata(
   try {
     const res_gql = (await request(url, query, {}, headers)) as any;
     const { daoURI } = res_gql.daoCreateds[0];
-    return await fetchMetadata(daoURI);
+    return (await fetchMetadata(daoURI)) as DaoMetadata;
   } catch (error) {
     console.error(error);
   }
@@ -60,5 +61,5 @@ export async function fetchProposalMetadata(
 
   const uri = log[0].args.descriptionURI;
 
-  return await fetchMetadata(uri);
+  return (await fetchMetadata(uri)) as ProposalMetadata;
 }

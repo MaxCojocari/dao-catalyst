@@ -46,7 +46,13 @@ const CustomAction = ({ action }: { action: ProposalAction }) => {
   );
 };
 
-const TransferTokenAction = ({ action }: { action: ProposalAction }) => {
+const TransferTokenAction = ({
+  action,
+  daoName,
+}: {
+  action: ProposalAction;
+  daoName: string;
+}) => {
   const token = TOKENS.find(
     (t) => t.address.toLowerCase() === action.inputs[0].toLowerCase()
   );
@@ -58,7 +64,9 @@ const TransferTokenAction = ({ action }: { action: ProposalAction }) => {
         <Row>
           <h2>Transfer assets</h2>
           <Token>
-            <p className="target-address">{shortenAddress(action.inputs[0])}</p>
+            <p className="target-address">
+              {shortenAddress(action?.inputs[0])}
+            </p>
             <CheckCircleOutlineIcon
               style={{
                 color: "#6666ff",
@@ -75,7 +83,7 @@ const TransferTokenAction = ({ action }: { action: ProposalAction }) => {
       <Recipient>
         <Address>
           <p className="name">From</p>
-          <p className="address">PikaDAO</p>
+          <p className="address">{daoName}</p>
         </Address>
         <KeyboardArrowRightIcon
           width={10}
@@ -84,11 +92,11 @@ const TransferTokenAction = ({ action }: { action: ProposalAction }) => {
         <Address>
           <p className="name">To</p>
           <a
-            href={`https://sepolia.etherscan.io/address/${action.inputs[1]}`}
+            href={`https://sepolia.etherscan.io/address/${action?.inputs[1]}`}
             target="_blank"
             rel="noreferrer"
           >
-            {shortenAddress(action.inputs[1])}
+            {shortenAddress(action?.inputs[1])}
           </a>
         </Address>
       </Recipient>
@@ -108,7 +116,7 @@ const TransferTokenAction = ({ action }: { action: ProposalAction }) => {
               fontWeight: "400",
             }}
           >
-            {amount} {token?.symbol}
+            {amount.toLocaleString()} {token?.symbol}
           </p>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <p
@@ -119,7 +127,7 @@ const TransferTokenAction = ({ action }: { action: ProposalAction }) => {
                 letterSpacing: "-0.02em",
               }}
             >
-              ${amount * 0.98}
+              ${(amount * 0.98).toLocaleString()}
             </p>
           </div>
         </div>
@@ -132,14 +140,17 @@ export const ActionsSection = ({
   state,
   txHash,
   actions,
+  daoName,
 }: {
   state: ProposalState;
   txHash?: string;
   actions: ProposalAction[];
+  daoName: string;
 }) => {
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.Idle);
   const [_, setTxHash] = useState<`0x${string}` | undefined>(undefined);
   const { writeContractAsync } = useWriteContract();
+  console.log("actions", actions);
 
   const handleExecute = async () => {
     try {
@@ -257,9 +268,15 @@ export const ActionsSection = ({
         These actions can be executed only once the governance parameters are
         met.
       </Summary>
-      {actions.map((action, _) => {
+      {actions?.map((action, _) => {
         if (action.type === ActionType.TransferTokens)
-          return <TransferTokenAction key={action.id} action={action} />;
+          return (
+            <TransferTokenAction
+              key={action.id}
+              action={action}
+              daoName={daoName}
+            />
+          );
         if (action.type === ActionType.Other)
           return <CustomAction key={action.id} action={action} />;
       })}
