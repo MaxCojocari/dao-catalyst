@@ -5,6 +5,7 @@ import { TransferType } from "../../types";
 import styled from "styled-components";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useNavigate, useParams } from "react-router-dom";
+import { formatTimestampSimple } from "../../utils";
 
 export const TreasuryActivityCard = ({ transfer }: { transfer: any }) => {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ export const TreasuryActivityCard = ({ transfer }: { transfer: any }) => {
           </p>
         </Top>
         <Bottom>
-          <p>05/02/2025</p>
+          <p>{formatTimestampSimple(transfer?.timestamp)}</p>
           <p>${(Number(transfer?.amount) * 0.99).toLocaleString()}</p>
         </Bottom>
       </div>

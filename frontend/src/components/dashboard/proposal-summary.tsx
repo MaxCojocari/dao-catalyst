@@ -10,19 +10,32 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProposalOverviewCard } from "./proposal-overview-card";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { ProposalSummary as ProposalSummaryType } from "../../types";
+import { ErrorModal } from "../error-modal";
+import { useState } from "react";
 
 export const ProposalSummary = ({
   proposals,
   proposalLength,
+  isMember,
 }: {
   proposals: ProposalSummaryType[];
   proposalLength: number;
+  isMember: boolean;
 }) => {
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const navigate = useNavigate();
   const { daoAddress } = useParams();
 
-  const displayProposals = proposals.slice(0, 2);
-  const hasMoreThanTwo = proposals.length > 2;
+  const displayProposals = proposals.slice(0, 3);
+  const hasMoreThanTwo = proposals.length > 3;
+
+  const handleClickNewProposal = () => {
+    if (!isMember) {
+      setErrorModalOpen(true);
+      return;
+    }
+    navigate(`/daos/${daoAddress}/create-proposal`);
+  };
 
   return (
     <>
@@ -48,11 +61,7 @@ export const ProposalSummary = ({
             <p>Proposals created</p>
           </div>
         </Box>
-        <FilledButtonOverview
-          onClick={() => {
-            navigate(`/daos/${daoAddress}/create-proposal`);
-          }}
-        >
+        <FilledButtonOverview onClick={handleClickNewProposal}>
           New proposal
         </FilledButtonOverview>
       </Container>
@@ -71,6 +80,15 @@ export const ProposalSummary = ({
           <KeyboardArrowRightIcon width={10} sx={{ color: "#6666FF" }} />
         </SeeAllButton>
       )}
+
+      <ErrorModal
+        open={errorModalOpen}
+        setOpen={setErrorModalOpen}
+        name={"You can't create proposals"}
+        summary={
+          "You are not eligible member. To create new proposals, contact DAO admin to grant necessary permissions."
+        }
+      />
     </>
   );
 };

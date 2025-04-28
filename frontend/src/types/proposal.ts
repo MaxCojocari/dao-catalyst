@@ -101,14 +101,9 @@ export type Voter = {
 
 export interface VotingStats {
   infoSectionData: Record<string, any>;
-  votes: Record<
-    string,
-    {
-      amount: string;
-      percentage: number;
-    }
-  >;
+  votes: Record<string, any>;
   voters: Voter[];
   hasVoted: boolean;
-  tokenSymbol: string;
+  isMember: boolean;
+  tokenSymbol?: string;
 }

@@ -30,6 +30,8 @@ export const VotingStatus = ({ state, label }: VotingStatusProps) => {
         return "Proposal executed";
       case ProposalState.Defeated:
         return "Proposal defeated";
+      case ProposalState.Pending:
+        return "Proposal not started yet";
     }
   };
 

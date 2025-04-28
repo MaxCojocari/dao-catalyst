@@ -173,14 +173,14 @@ export const getTestProposals = (
         calldatas: Dao__factory.createInterface().encodeFunctionData('transfer', [
           usdt,
           '0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF',
-          parseUnits('52000', 6),
+          parseUnits('5200', 6),
         ]),
       },
     ],
     descriptionURI:
       'https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreigffwhns7ymb2zshnzipuyidmhs2l3xiqkdujeh3q22pigzwfjus4',
-    voteStart: Math.floor(Date.now() / 1000) + Number(ONE_WEEK_SECONDS),
-    voteDuration: ONE_MONTH_SECONDS,
+    voteStart: Math.floor(Date.now() / 1000) + Number(3n * ONE_HOUR_SECONDS),
+    voteDuration: ONE_DAY_SECONDS + 1n,
   },
   {
     actions: [

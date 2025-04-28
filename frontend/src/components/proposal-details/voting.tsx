@@ -3,6 +3,7 @@ import { Container, VoteButton } from "../common-styles";
 import { useCallback, useEffect, useState } from "react";
 import {
   BreakdownSection,
+  ErrorModal,
   InfoSection,
   ToggleTabs,
   TransactionModal,
@@ -11,6 +12,7 @@ import {
   VotingStatus,
 } from "..";
 import {
+  DaoType,
   ProposalState,
   TxStatus,
   VotingOption,
@@ -39,29 +41,42 @@ export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.Idle);
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
   const [votingStats, setVotingStats] = useState({} as VotingStats);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const { writeContractAsync } = useWriteContract();
 
-  const fetchVotingInfo = useCallback(async () => {
-    try {
-      setIsLoading({ fetchVotingInfo: true });
-      const res = await fetchVotingStats(daoAddress!, BigInt(id!), address!);
-      setVotingStats(res);
-      setVoted(res?.hasVoted);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading({ fetchVotingInfo: false });
-    }
-  }, [daoAddress, id, address, voted]);
+  const fetchVotingInfo = useCallback(
+    async (withLoading: boolean) => {
+      try {
+        if (withLoading) setIsLoading({ fetchVotingInfo: true });
+
+        const res = await fetchVotingStats(daoAddress!, BigInt(id!), address!);
+        setVotingStats(res);
+        setVoted(res?.hasVoted);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (withLoading) setIsLoading({ fetchVotingInfo: false });
+      }
+    },
+    [daoAddress, id, address, voted]
+  );
 
   const handleVoteSubmission = async (option: VotingOption) => {
     try {
+      const isSimpleVote =
+        votingStats?.infoSectionData.daoType === DaoType.SimpleVote;
+
+      if (!isSimpleVote && !votingStats?.isMember) {
+        setErrorModalOpen(true);
+        return;
+      }
+
       setTxStatus(TxStatus.Waiting);
       const hash = await writeContractAsync({
         address: daoAddress as `0x${string}`,
         abi: Dao__factory.abi,
-        functionName: "castVote",
-        args: [BigInt(id!), option],
+        functionName: isSimpleVote ? "castVote" : "castVoteEqualWeight",
+        args: isSimpleVote ? [BigInt(id!), option] : [BigInt(id!)],
       });
       setTxHash(hash);
 
@@ -69,6 +84,8 @@ export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
 
       if (receipt.status === "success") {
         setTxStatus(TxStatus.Submitted);
+        setVoted(true);
+        setVotePanelActive(false);
       } else {
         setTxStatus(TxStatus.Failed);
       }
@@ -79,8 +96,12 @@ export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
   };
 
   useEffect(() => {
-    fetchVotingInfo();
+    fetchVotingInfo(true);
   }, []);
+
+  useEffect(() => {
+    fetchVotingInfo(false);
+  }, [voted]);
 
   return (
     <Container>
@@ -98,6 +119,7 @@ export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
         <BreakdownSection
           votes={votingStats?.votes}
           tokenSymbol={votingStats?.tokenSymbol}
+          daoType={votingStats?.infoSectionData.daoType}
         />
       )}
       {activeTab === VotingTab.Voters && (
@@ -107,7 +129,14 @@ export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
         />
       )}
       {!votePanelActive && proposalState === ProposalState.Active && (
-        <VoteButton disabled={voted} onClick={() => setVotePanelActive(true)}>
+        <VoteButton
+          disabled={voted}
+          onClick={
+            votingStats?.infoSectionData.daoType === DaoType.SimpleVote
+              ? () => setVotePanelActive(true)
+              : () => handleVoteSubmission(0)
+          }
+        >
           {voted ? "Vote submitted" : "Vote now"}
         </VoteButton>
       )}
@@ -115,11 +144,7 @@ export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
         <>
           <br />
           <VotePanel
-            onSubmit={async (option: VotingOption) => {
-              await handleVoteSubmission(option);
-              setVoted(true);
-              setVotePanelActive(false);
-            }}
+            onSubmit={handleVoteSubmission}
             onCancel={() => setVotePanelActive(false)}
           />
         </>
@@ -135,6 +160,14 @@ export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
         titleSubmitted="Vote Submitted Successfully!"
         successLabel="Continue to Proposal"
         explorerUrl="https://sepolia.arbiscan.io/tx/"
+      />
+      <ErrorModal
+        open={errorModalOpen}
+        setOpen={setErrorModalOpen}
+        name={"You can't vote"}
+        summary={
+          "You are not eligible for voting. To vote on future proposals, contact DAO admin to grant necessary permissions."
+        }
       />
     </Container>
   );

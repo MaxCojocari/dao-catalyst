@@ -1,10 +1,9 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { Header, Footer, Loader } from "../components";
 import { useUnit } from "effector-react";
 import { $isLoading } from "../store";
-import { TEST_DAO_INFO as dao } from "../constants";
 import { useAccount } from "wagmi";
 
 export const Layout = ({ children }: PropsWithChildren) => {
@@ -13,29 +12,26 @@ export const Layout = ({ children }: PropsWithChildren) => {
   const isLoading = useUnit($isLoading);
   const { isConnected } = useAccount();
   const [checked, setChecked] = useState(false);
+  // const { daoAddress } = useParams();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pathname]);
 
-  useEffect(() => {
-    if (!isConnected) {
-      navigate("/auth");
-    }
-    setChecked(true);
-  }, [isConnected]);
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     localStorage.setItem("redirectAfterLogin", pathname);
+  //     navigate("/auth");
+  //   }
+  //   setChecked(true);
+  // }, [isConnected]);
 
-  if (!checked) return null;
+  // if (!checked) return null;
 
   return (
     <>
       {isLoading && <Loader />}
-      <Header
-        props={{
-          imageUri: dao.logo,
-          daoName: dao.name,
-        }}
-      />
+      <Header />
       {children}
       <Footer />
     </>

@@ -72,5 +72,7 @@ export async function fetchTreasuryInfo(daoAddress: string) {
     }
   }
 
-  return { totalNetWorth, transfers };
+  const sortedTransfers = transfers.sort((a, b) => b.timestamp - a.timestamp);
+
+  return { totalNetWorth, transfers: sortedTransfers };
 }

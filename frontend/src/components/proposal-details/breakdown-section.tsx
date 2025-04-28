@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { DaoType } from "../../types";
 
 interface BreakdownSectionProps {
   votes: Record<
@@ -8,17 +9,19 @@ interface BreakdownSectionProps {
       percentage: number;
     }
   >;
-  tokenSymbol: string;
+  tokenSymbol?: string;
+  daoType: DaoType | undefined;
 }
 
 export const BreakdownSection = ({
   votes,
   tokenSymbol,
+  daoType,
 }: BreakdownSectionProps) => {
   const renderOption = (label: string, amount: string, percent: number) => (
     <VoteRow key={label}>
       <RowTop>
-        <Label>{label}</Label>
+        {label && <Label>{label}</Label>}
         <Right>
           <Votes>{amount}</Votes>
           <Percentage>{percent.toFixed(2).replace(/\.00$/, "")}%</Percentage>
@@ -30,31 +33,37 @@ export const BreakdownSection = ({
     </VoteRow>
   );
 
-  return (
-    <Container>
-      {renderOption(
-        "Yes",
-        tokenSymbol
-          ? `${votes.yes.amount} ${tokenSymbol}`
-          : `${votes.yes.amount}`,
-        votes.yes.percentage
-      )}
-      {renderOption(
-        "No",
-        tokenSymbol
-          ? `${votes.no.amount} ${tokenSymbol}`
-          : `${votes.no.amount}`,
-        votes.no.percentage
-      )}
-      {renderOption(
-        "Abstain",
-        tokenSymbol
-          ? `${votes.abstain.amount} ${tokenSymbol}`
-          : `${votes.abstain.amount}`,
-        votes.abstain.percentage
-      )}
-    </Container>
-  );
+  if (daoType == DaoType.SimpleVote)
+    return (
+      <Container>
+        {renderOption(
+          "Yes",
+          `${votes.yes.amount} ${tokenSymbol}`,
+          votes.yes.percentage
+        )}
+        {renderOption(
+          "No",
+          `${votes.no.amount} ${tokenSymbol}`,
+          votes.no.percentage
+        )}
+        {renderOption(
+          "Abstain",
+          `${votes.abstain.amount} ${tokenSymbol}`,
+          votes.abstain.percentage
+        )}
+      </Container>
+    );
+
+  if (daoType === DaoType.MultisigVote)
+    return (
+      <Container>
+        {renderOption(
+          "",
+          `${votes.confirmations.amount} confirmations`,
+          votes.confirmations.percentage
+        )}
+      </Container>
+    );
 };
 
 const Container = styled.div`

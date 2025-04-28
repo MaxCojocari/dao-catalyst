@@ -21,7 +21,9 @@ export const ProposalDetailsPage = () => {
   const fetchProposalDetails = useCallback(async () => {
     try {
       setIsLoading({ fetchProposalMetadata: true });
-      setDaoMetadata((await fetchDaoMetadata(daoAddress!)) as DaoMetadata);
+
+      const res = await fetchDaoMetadata(daoAddress!);
+      setDaoMetadata(res as DaoMetadata);
       setProposal(await fetchProposal(daoAddress!, BigInt(id!)));
     } catch (e) {
       console.error(e);

@@ -39,8 +39,6 @@ const isNextEnabled = (step: number, dao: DaoSettings): boolean => {
     }
   }
 
-  console.log("dao", dao);
-
   return true;
 };
 

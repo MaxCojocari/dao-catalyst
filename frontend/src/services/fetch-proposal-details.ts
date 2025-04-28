@@ -1,4 +1,4 @@
-import { decodeFunctionData, formatUnits, getContract } from "viem";
+import { formatUnits, getContract } from "viem";
 import { getPublicClient } from "wagmi/actions";
 import {
   PROPOSAL_CREATION_EVENT,
@@ -8,21 +8,13 @@ import {
 } from "../constants";
 import {
   Dao__factory,
+  DaoMultisigVote__factory,
   DaoSimpleVote__factory,
   DaoToken__factory,
-  TargetContract__factory,
 } from "../typechain-types";
 import { wagmiConfig } from "../utils/provider";
 import { fetchMetadata } from "./fetch-metadata";
-import {
-  DaoType,
-  ProposalAction,
-  ProposalState,
-  ProposalSummaryExtended,
-  StatusTimelineType,
-  VotingStats,
-} from "../types";
-import { StatusItem } from "../components/proposal-details/status-timeline";
+import { DaoType, ProposalSummaryExtended, VotingStats } from "../types";
 import {
   buildDecodedActions,
   formatCompactNumber,
@@ -30,6 +22,7 @@ import {
   generateStatuses,
 } from "../utils";
 import request, { gql } from "graphql-request";
+import { MEMBER_ROLE } from "../constants/roles";
 
 export async function fetchProposal(
   daoAddress: string,
@@ -58,10 +51,6 @@ export async function fetchProposal(
     fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
     toBlock: "latest",
   });
-
-  //   console.log("proposalLog", proposalLog);
-  //   console.log("proposalLog args", proposalLog[0].args);
-  //   console.log("proposalExecutedLog", proposalExecutedLog);
 
   const {
     blockNumber: blockNumberProposalCreation,
@@ -110,6 +99,30 @@ export async function fetchVotingStats(
   proposalId: bigint,
   voter: string
 ): Promise<VotingStats> {
+  const daoType = (await getDaoType(daoAddress)) as DaoType;
+
+  if (daoType === DaoType.SimpleVote) {
+    return await _fetchVotingStats(daoAddress, proposalId, voter, daoType);
+  }
+
+  if (daoType === DaoType.MultisigVote) {
+    return await _fetchVotingStatsMultisig(
+      daoAddress,
+      proposalId,
+      voter,
+      daoType
+    );
+  }
+
+  return {} as VotingStats;
+}
+
+async function _fetchVotingStats(
+  daoAddress: string,
+  proposalId: bigint,
+  voter: string,
+  daoType: DaoType
+): Promise<VotingStats> {
   const client = getPublicClient(wagmiConfig)!;
 
   const contract = getContract({
@@ -126,15 +139,23 @@ export async function fetchVotingStats(
     toBlock: "latest",
   });
 
-  const [quorum, minParticipation, token, proposal, accVotes, hasVoted] =
-    await Promise.all([
-      contract.read.quorumFraction(),
-      contract.read.minimumParticipationFraction(),
-      contract.read.token(),
-      contract.read.proposals([proposalId]),
-      contract.read.proposalVotes([proposalId]),
-      contract.read.hasVoted([proposalId, voter as `0x{string}`]),
-    ]);
+  const [
+    quorum,
+    minParticipation,
+    token,
+    proposal,
+    accVotes,
+    hasVoted,
+    isMember,
+  ] = await Promise.all([
+    contract.read.quorumFraction(),
+    contract.read.minimumParticipationFraction(),
+    contract.read.token(),
+    contract.read.proposals([proposalId]),
+    contract.read.proposalVotes([proposalId]),
+    contract.read.hasVoted([proposalId, voter as `0x{string}`]),
+    contract.read.hasRole([MEMBER_ROLE, voter as `0x{string}`]),
+  ]);
 
   const tokenContract = getContract({
     address: token as `0x{string}`,
@@ -177,7 +198,7 @@ export async function fetchVotingStats(
   );
 
   const infoSectionData = {
-    daoType: await getDaoType(daoAddress),
+    daoType,
     support: `> ${support}%`,
     quorum: `≥ ${quorumFormated} of ${formatedTotalSupply} ${symbol} (${quorumPercentageFormated}%)`,
     participation: `${participationFormated} of ${formatedTotalSupply} ${symbol} (${participationPercentage
@@ -199,24 +220,105 @@ export async function fetchVotingStats(
     };
   });
 
-  console.log({
-    infoSectionData,
-    votes,
-    voters,
-    hasVoted,
-    tokenSymbol: symbol,
-  });
-
   return {
     infoSectionData,
     votes,
     voters,
     hasVoted,
     tokenSymbol: symbol,
+    isMember,
   };
 }
 
-async function getDaoType(daoAddress: string) {
+async function _fetchVotingStatsMultisig(
+  daoAddress: string,
+  proposalId: bigint,
+  voter: string,
+  daoType: DaoType
+): Promise<VotingStats> {
+  const client = getPublicClient(wagmiConfig)!;
+
+  const contract = getContract({
+    address: daoAddress as `0x{string}`,
+    abi: DaoMultisigVote__factory.abi,
+    client,
+  });
+
+  const votingLogs: any = await client.getLogs({
+    address: daoAddress as `0x{string}`,
+    event: VOTE_CAST_EVENT,
+    args: { proposalId },
+    fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
+    toBlock: "latest",
+  });
+
+  const [
+    quorum,
+    minParticipation,
+    proposal,
+    confirmations,
+    hasVoted,
+    isMember,
+  ] = await Promise.all([
+    contract.read.quorumFraction(),
+    contract.read.minimumParticipationFraction(),
+    contract.read.proposals([proposalId]),
+    contract.read.confirmations([proposalId]),
+    contract.read.hasVoted([proposalId, voter as `0x{string}`]),
+    contract.read.hasRole([MEMBER_ROLE, voter as `0x{string}`]),
+  ]);
+
+  const support = ((Number(quorum[0]) / Number(quorum[1])) * 100)
+    .toFixed(2)
+    .replace(/\.00$/, "");
+  const quorumPercentage =
+    (Number(minParticipation[0]) / Number(minParticipation[1])) * 100;
+  const quorumPercentageFormated = quorumPercentage
+    .toFixed(2)
+    .replace(/\.00$/, "");
+
+  const quorumAsAmount = Number(quorum[0]);
+  const participationPercentage =
+    (Number(confirmations) / Number(quorum[1])) * 100;
+
+  const infoSectionData = {
+    daoType,
+    support: `> ${support}%`,
+    quorum: `≥ ${quorumAsAmount} out of ${Number(
+      quorum[1]
+    )} (${quorumPercentageFormated}%)`,
+    participation: `${Number(confirmations)} out of ${Number(
+      quorum[1]
+    )} (${participationPercentage.toFixed(2).replace(/\.00$/, "")}%)`,
+    participationReached: participationPercentage >= quorumPercentage,
+    uniqueVoters: votingLogs.length,
+    start: formatTimestamp(Number(proposal[2])),
+    end: formatTimestamp(Number(proposal[3])),
+  };
+
+  const voters = votingLogs.map((log: any) => {
+    const { voter, weight } = log.args;
+    return {
+      address: voter,
+      power: Number(weight),
+    };
+  });
+
+  return {
+    infoSectionData,
+    voters,
+    hasVoted,
+    votes: {
+      confirmations: {
+        amount: Number(confirmations),
+        percentage: participationPercentage,
+      },
+    },
+    isMember,
+  };
+}
+
+export async function getDaoType(daoAddress: string) {
   const url = import.meta.env.VITE_SUBGRAPH_URL;
 
   const headers = {
@@ -227,10 +329,6 @@ async function getDaoType(daoAddress: string) {
       {
         daoCreateds(where: {daoAddress: "${daoAddress}"}) {
           daoType
-          daoURI
-          owner
-          daoAddress
-          blockTimestamp
         }
       }
     `;

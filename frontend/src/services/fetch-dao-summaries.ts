@@ -68,13 +68,14 @@ export async function fetchDaoSummary(
         owner
         daoAddress
         blockTimestamp
+        daoToken
       }
     }
   `;
 
   try {
     const res_gql = (await request(url, query, {}, headers)) as any;
-    const { daoType, daoURI, owner, daoAddress, blockTimestamp } =
+    const { daoType, daoURI, owner, daoAddress, blockTimestamp, daoToken } =
       res_gql.daoCreateds[0];
     const res = await fetch(daoURI);
     const { name, logo, summary, links } = await res.json();
@@ -88,6 +89,7 @@ export async function fetchDaoSummary(
       summary,
       contractAddress: daoAddress,
       creationDate: getMonthYear(Number(blockTimestamp)),
+      daoToken,
     };
   } catch (error) {
     console.error(error);

@@ -22,8 +22,10 @@ import {
   fetchDaoSummary,
   fetchProposalSummaries,
   fetchTreasuryInfo,
+  isCallerMember,
 } from "../../services";
 import { useParams } from "react-router-dom";
+import { useAccount } from "wagmi";
 
 export const BodyEmpty = ({
   members,
@@ -60,6 +62,7 @@ export const Body = ({
   balance,
   members,
   tokenSymbol,
+  isMember,
 }: {
   proposals: ProposalSummaryType[];
   proposalLength: number;
@@ -67,6 +70,7 @@ export const Body = ({
   balance: number;
   members: DaoMember[];
   tokenSymbol?: string;
+  isMember: boolean;
 }) => {
   return (
     <Container>
@@ -75,6 +79,7 @@ export const Body = ({
           <ProposalSummary
             proposals={proposals}
             proposalLength={proposalLength}
+            isMember={isMember}
           />
         ) : (
           <EmptyProposalCard />
@@ -97,11 +102,13 @@ export const Body = ({
 
 export const DashboardPage = () => {
   const { daoAddress } = useParams();
+  const { address } = useAccount();
   const [proposals, setProposals] = useState<ProposalSummaryType[]>([]);
   const [dao, setDao] = useState({} as DaoSummary);
   const [proposalLength, setProposalLength] = useState(3);
   const [treasuryInfo, setTreasuryInfo] = useState({} as any);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [isMember, setIsMember] = useState(false);
   const tokenSymbol = dao?.daoType === DaoType.SimpleVote ? "PIK" : undefined;
 
   const fetchDashboardInfo = useCallback(async () => {
@@ -115,7 +122,14 @@ export const DashboardPage = () => {
         fetchDaoSummary(daoAddress!),
         fetchTreasuryInfo(daoAddress!),
       ]);
-
+      setIsMember(
+        await isCallerMember(
+          _dao?.daoType!,
+          daoAddress,
+          _dao?.daoToken!,
+          address!
+        )
+      );
       setProposals(_proposals?.enrichedLogs);
       setProposalLength(_proposals?.totalProposals || 3);
       setDao(_dao as DaoSummary);
@@ -127,9 +141,29 @@ export const DashboardPage = () => {
     }
   }, [daoAddress]);
 
+  const fetchIsMember = useCallback(async () => {
+    try {
+      if (!daoAddress || !address) return;
+      setIsMember(
+        await isCallerMember(
+          dao?.daoType!,
+          daoAddress,
+          dao?.daoToken!,
+          address!
+        )
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  }, [address]);
+
   useEffect(() => {
     fetchDashboardInfo();
   }, []);
+
+  useEffect(() => {
+    fetchIsMember();
+  }, [address]);
 
   return (
     <>
@@ -142,6 +176,7 @@ export const DashboardPage = () => {
           members={members}
           tokenSymbol={tokenSymbol}
           balance={treasuryInfo.totalNetWorth}
+          isMember={isMember}
         />
       ) : (
         <BodyEmpty members={members} tokenSymbol={tokenSymbol} />

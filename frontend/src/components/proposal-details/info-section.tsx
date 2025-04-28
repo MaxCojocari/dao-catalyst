@@ -63,7 +63,17 @@ export const InfoSection = (props: InfoSectionProps | {}) => {
           <Row>
             <h3>Current participation</h3>
             <Value>
-              <p>{participation}</p>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  width: "100%",
+                }}
+              >
+                <p>{participation}</p>
+              </div>
               <div
                 style={{
                   display: "flex",
@@ -156,6 +166,7 @@ export const Value = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
 `;
 

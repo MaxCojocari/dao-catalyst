@@ -15,11 +15,11 @@ export const VotersSection = ({ voters, tokenSymbol }: VotersSectionProps) => {
   const [showAll, setShowAll] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredVoters = voters.filter((voter) =>
+  const filteredVoters = voters?.filter((voter) =>
     voter.address.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  const visibleVoters = showAll ? filteredVoters : filteredVoters.slice(0, 3);
-  const canToggle = filteredVoters.length > 3;
+  const visibleVoters = showAll ? filteredVoters : filteredVoters?.slice(0, 3);
+  const canToggle = filteredVoters?.length > 3;
 
   return (
     <Container>
