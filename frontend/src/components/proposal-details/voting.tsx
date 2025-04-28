@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Container, VoteButton } from "../common-styles";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   BreakdownSection,
   InfoSection,
@@ -10,13 +10,19 @@ import {
   VotersSection,
   VotingStatus,
 } from "..";
-import { DaoType, TxStatus } from "../../types";
-import { ERC20__factory } from "../../typechain-types";
-import { parseUnits } from "viem";
-import { useWriteContract } from "wagmi";
+import {
+  ProposalState,
+  TxStatus,
+  VotingOption,
+  VotingStats,
+} from "../../types";
+import { Dao__factory } from "../../typechain-types";
+import { useAccount, useWriteContract } from "wagmi";
 import { wagmiConfig } from "../../utils/provider";
 import { waitForTransactionReceipt } from "@wagmi/core";
-import { votes, voters } from "../../constants";
+import { fetchVotingStats } from "../../services";
+import { setIsLoading } from "../../store";
+import { useParams } from "react-router-dom";
 
 export enum VotingTab {
   Breakdown = "Breakdown",
@@ -24,25 +30,38 @@ export enum VotingTab {
   Info = "Info",
 }
 
-export const Voting = () => {
+export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
+  const { id, daoAddress } = useParams();
+  const { address } = useAccount();
   const [activeTab, setActiveTab] = useState(VotingTab.Info);
   const [votePanelActive, setVotePanelActive] = useState(false);
   const [voted, setVoted] = useState(false);
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.Idle);
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
+  const [votingStats, setVotingStats] = useState({} as VotingStats);
   const { writeContractAsync } = useWriteContract();
 
-  const handleVoteSubmission = async () => {
+  const fetchVotingInfo = useCallback(async () => {
+    try {
+      setIsLoading({ fetchVotingInfo: true });
+      const res = await fetchVotingStats(daoAddress!, BigInt(id!), address!);
+      setVotingStats(res);
+      setVoted(res?.hasVoted);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading({ fetchVotingInfo: false });
+    }
+  }, [daoAddress, id, address, voted]);
+
+  const handleVoteSubmission = async (option: VotingOption) => {
     try {
       setTxStatus(TxStatus.Waiting);
       const hash = await writeContractAsync({
-        address: "0x34f2c50DBA5e998690C1b5047A74405c2FF2C54F" as `0x${string}`,
-        abi: ERC20__factory.abi,
-        functionName: "transfer",
-        args: [
-          "0x03C25c5Dd860B021165A127A6553c67C371551b0",
-          parseUnits("0.01", 6),
-        ],
+        address: daoAddress as `0x${string}`,
+        abi: Dao__factory.abi,
+        functionName: "castVote",
+        args: [BigInt(id!), option],
       });
       setTxHash(hash);
 
@@ -59,9 +78,9 @@ export const Voting = () => {
     }
   };
 
-  const handleClose = () => {
-    setTxStatus(TxStatus.Idle);
-  };
+  useEffect(() => {
+    fetchVotingInfo();
+  }, []);
 
   return (
     <Container>
@@ -69,38 +88,35 @@ export const Voting = () => {
         <h1>Voting</h1>
         <ToggleTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </Row>
-      <VotingStatus type={"active"} />
+      <VotingStatus state={proposalState} />
       <br />
       <br />
       {activeTab === VotingTab.Info && (
-        <InfoSection
-          daoType={DaoType.SimpleVote}
-          support="> 66%"
-          quorum="≥ 1950 of 13k PIK (15%)"
-          participation="3000 of 13k PIK (23.08%)"
-          participationReached={true}
-          uniqueVoters={4}
-          start="2025/02/05 10:20 PM UTC+2"
-          end="2025/02/06 10:20 PM UTC+2"
-        />
+        <InfoSection {...votingStats?.infoSectionData} />
       )}
       {activeTab === VotingTab.Breakdown && (
-        <BreakdownSection votes={votes} tokenSymbol="PIK" />
+        <BreakdownSection
+          votes={votingStats?.votes}
+          tokenSymbol={votingStats?.tokenSymbol}
+        />
       )}
       {activeTab === VotingTab.Voters && (
-        <VotersSection voters={voters} tokenSymbol="PIK" />
+        <VotersSection
+          voters={votingStats?.voters}
+          tokenSymbol={votingStats?.tokenSymbol}
+        />
       )}
-      {!votePanelActive && (
+      {!votePanelActive && proposalState === ProposalState.Active && (
         <VoteButton disabled={voted} onClick={() => setVotePanelActive(true)}>
-          {!voted ? "Vote now" : "Vote submitted"}
+          {voted ? "Vote submitted" : "Vote now"}
         </VoteButton>
       )}
       {votePanelActive && !voted && (
         <>
           <br />
           <VotePanel
-            onSubmit={async (option) => {
-              await handleVoteSubmission();
+            onSubmit={async (option: VotingOption) => {
+              await handleVoteSubmission(option);
               setVoted(true);
               setVotePanelActive(false);
             }}
@@ -111,12 +127,14 @@ export const Voting = () => {
       <TransactionModal
         status={txStatus}
         txHash={txHash}
-        onClose={handleClose}
+        onClose={() => {
+          setTxStatus(TxStatus.Idle);
+        }}
         titleWaiting="Waiting for Signature"
         descriptionWaiting="Sign vote and confirm transaction in your wallet"
         titleSubmitted="Vote Submitted Successfully!"
         successLabel="Continue to Proposal"
-        explorerUrl="https://sepolia.etherscan.io/tx/"
+        explorerUrl="https://sepolia.arbiscan.io/tx/"
       />
     </Container>
   );

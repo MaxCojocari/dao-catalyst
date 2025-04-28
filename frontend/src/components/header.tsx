@@ -2,17 +2,18 @@ import styled from "styled-components";
 import logo from "../assets/images/app-logo.svg";
 import { CustomWalletButton } from "./custom-wallet-button";
 import { DaoLogo } from "./dao-logo";
-import { NavLink, useLocation, useParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { CreateDaoButton, DelegateButton } from ".";
 import { fetchDaoMetadata } from "../services";
 import { setIsLoading } from "../store";
 import { useCallback, useEffect, useState } from "react";
-import { DaoMetadata } from "../types";
+import { DaoMetadata, DaoType } from "../types";
 
 export const Header = () => {
   const { daoAddress } = useParams();
   const { pathname } = useLocation();
   const [daoMetadata, setDaoMetadata] = useState({} as DaoMetadata);
+  const navigate = useNavigate();
 
   const links = [
     { label: "Dashboard", path: "dashboard" },
@@ -21,8 +22,6 @@ export const Header = () => {
     { label: "Members", path: "members" },
     { label: "Settings", path: "settings" },
   ];
-
-  const isDaoSubPage = /^\/daos\/0x[a-fA-F0-9]{40}(\/[^/]*)?$/.test(pathname);
 
   const fetchMetadata = useCallback(async () => {
     try {
@@ -42,7 +41,7 @@ export const Header = () => {
   return (
     <Container>
       {daoAddress ? (
-        <LeftSection>
+        <LeftSection onClick={() => navigate(`/daos/${daoAddress}`)}>
           <DaoLogo imageUri={daoMetadata?.logo} name={daoMetadata?.name} />
           {links.map(({ label, path }) => (
             <NavLink key={path} to={`/daos/${daoAddress}/${path}`}>
@@ -51,13 +50,15 @@ export const Header = () => {
           ))}
         </LeftSection>
       ) : (
-        <LeftSection>
+        <LeftSection onClick={() => navigate(`/daos/${daoAddress}`)}>
           <img src={logo} alt="dao-catalyst-logo" width="150px" />
         </LeftSection>
       )}
       <RightSection>
         {pathname === "/daos" && <CreateDaoButton />}
-        {isDaoSubPage && <DelegateButton />}
+        {daoMetadata && daoMetadata.daoType === DaoType.SimpleVote && (
+          <DelegateButton />
+        )}
         <CustomWalletButton />
       </RightSection>
     </Container>
@@ -90,6 +91,7 @@ const LeftSection = styled.div`
   flex-direction: row;
   align-items: center;
   gap: 32px;
+  cursor: pointer;
 
   a {
     font-family: "Inter";

@@ -4,7 +4,7 @@ export enum VoteCounting {
 }
 
 export enum VotingOption {
-  Yes = "Yes",
-  No = "No",
-  Abstain = "Abstain",
+  Yes,
+  No,
+  Abstain,
 }

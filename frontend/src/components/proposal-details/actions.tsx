@@ -150,7 +150,6 @@ export const ActionsSection = ({
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.Idle);
   const [_, setTxHash] = useState<`0x${string}` | undefined>(undefined);
   const { writeContractAsync } = useWriteContract();
-  console.log("actions", actions);
 
   const handleExecute = async () => {
     try {

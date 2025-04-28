@@ -74,3 +74,29 @@ export const PROPOSAL_EXECUTED_EVENT = {
   name: "ProposalExecuted",
   type: "event",
 } as AbiEvent;
+
+export const VOTE_CAST_EVENT = {
+  anonymous: false,
+  inputs: [
+    {
+      indexed: true,
+      internalType: "address",
+      name: "voter",
+      type: "address",
+    },
+    {
+      indexed: true,
+      internalType: "uint256",
+      name: "proposalId",
+      type: "uint256",
+    },
+    {
+      indexed: false,
+      internalType: "uint256",
+      name: "weight",
+      type: "uint256",
+    },
+  ],
+  name: "VoteCast",
+  type: "event",
+} as AbiEvent;

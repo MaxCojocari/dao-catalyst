@@ -20,6 +20,8 @@ interface StatusTimelineProps {
 }
 
 export const StatusTimeline = ({ statuses }: StatusTimelineProps) => {
+  console.log(statuses);
+
   return (
     <Container>
       <h1>Status</h1>

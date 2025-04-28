@@ -1,11 +1,19 @@
 export const formatCompactNumber = (value: number): string => {
-  if (value >= 1_000_000)
-    return (value / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
-  if (value >= 1_000)
-    return (value / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
-  return value.toString();
-};
-
-export const formatWithCommas = (value: number): string => {
+  if (value >= 1_000_000) {
+    const compact = value / 1_000_000;
+    return (
+      new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(
+        compact
+      ) + "M"
+    );
+  }
+  if (value >= 1_000) {
+    const compact = value / 1_000;
+    return (
+      new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(
+        compact
+      ) + "k"
+    );
+  }
   return new Intl.NumberFormat("en-US").format(value);
 };

@@ -2,11 +2,20 @@ import styled from "styled-components";
 import { shortenAddress } from "../../utils";
 import startIcon from "../../assets/images/flag.svg";
 import peopleIcon from "../../assets/images/people.svg";
+import backIcon from "../../assets/images/back-icon.svg";
 import { DaoSummary, DaoType } from "../../types";
+import { BackButtonFlex } from "../common-styles";
+import { useNavigate } from "react-router-dom";
 
 export const DaoOverview = ({ dao }: { dao: DaoSummary }) => {
+  const navigate = useNavigate();
+
   return (
     <Container>
+      <BackButtonFlex onClick={() => navigate(`/daos`)}>
+        <img src={backIcon} alt="back-icon" />
+        <a>Back</a>
+      </BackButtonFlex>
       <Header>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h1>{dao?.name}</h1>

@@ -1,11 +1,13 @@
 import styled from "styled-components";
 
 interface BreakdownSectionProps {
-  votes: {
-    yes: { amount: string; percentage: number };
-    no: { amount: string; percentage: number };
-    abstain: { amount: string; percentage: number };
-  };
+  votes: Record<
+    string,
+    {
+      amount: string;
+      percentage: number;
+    }
+  >;
   tokenSymbol: string;
 }
 
@@ -19,7 +21,7 @@ export const BreakdownSection = ({
         <Label>{label}</Label>
         <Right>
           <Votes>{amount}</Votes>
-          <Percentage>{percent.toFixed(2)}%</Percentage>
+          <Percentage>{percent.toFixed(2).replace(/\.00$/, "")}%</Percentage>
         </Right>
       </RowTop>
       <ProgressBar>
@@ -32,17 +34,23 @@ export const BreakdownSection = ({
     <Container>
       {renderOption(
         "Yes",
-        `${votes.yes.amount} ${tokenSymbol}`,
+        tokenSymbol
+          ? `${votes.yes.amount} ${tokenSymbol}`
+          : `${votes.yes.amount}`,
         votes.yes.percentage
       )}
       {renderOption(
         "No",
-        `${votes.no.amount} ${tokenSymbol}`,
+        tokenSymbol
+          ? `${votes.no.amount} ${tokenSymbol}`
+          : `${votes.no.amount}`,
         votes.no.percentage
       )}
       {renderOption(
         "Abstain",
-        `${votes.abstain.amount} ${tokenSymbol}`,
+        tokenSymbol
+          ? `${votes.abstain.amount} ${tokenSymbol}`
+          : `${votes.abstain.amount}`,
         votes.abstain.percentage
       )}
     </Container>

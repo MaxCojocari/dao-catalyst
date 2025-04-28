@@ -1,16 +1,15 @@
 import styled from "styled-components";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
-
-type VotingStatusType = "active" | "passed" | "executed" | "defeated";
+import { ProposalState } from "../../types";
 
 interface VotingStatusProps {
-  type: VotingStatusType;
+  state: ProposalState;
   label?: string;
 }
 
-export const VotingStatus = ({ type, label }: VotingStatusProps) => {
-  const isError = type === "defeated";
+export const VotingStatus = ({ state, label }: VotingStatusProps) => {
+  const isError = state === ProposalState.Defeated;
 
   const getIcon = () =>
     isError ? (
@@ -22,14 +21,14 @@ export const VotingStatus = ({ type, label }: VotingStatusProps) => {
     );
 
   const getLabel = () => {
-    switch (type) {
-      case "active":
+    switch (state) {
+      case ProposalState.Active:
         return label || "Voting ends soon";
-      case "passed":
+      case ProposalState.Succeeded:
         return "Proposal passed";
-      case "executed":
+      case ProposalState.Executed:
         return "Proposal executed";
-      case "defeated":
+      case ProposalState.Defeated:
         return "Proposal defeated";
     }
   };

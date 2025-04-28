@@ -4,13 +4,7 @@ import searchIcon from "../../assets/images/search-icon.svg";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { blo } from "blo";
 import { shortenAddress } from "../../utils";
-import { VotingOption } from "../../types";
-
-interface Voter {
-  address: string;
-  power: string;
-  vote: VotingOption;
-}
+import { Voter } from "../../types";
 
 interface VotersSectionProps {
   voters: Voter[];
@@ -54,13 +48,14 @@ export const VotersSection = ({ voters, tokenSymbol }: VotersSectionProps) => {
               />
               <VoterData>
                 <Address>{shortenAddress(voter.address)}</Address>
-                <Power>
-                  {voter.power} {tokenSymbol}
-                </Power>
+                {tokenSymbol && (
+                  <Power>
+                    {voter.power} {tokenSymbol}
+                  </Power>
+                )}
               </VoterData>
             </VoterInfo>
             <RightSide>
-              <VoteTag type={voter.vote}>{voter.vote}</VoteTag>
               <KeyboardArrowRightIcon width={10} sx={{ color: "#8F8FB2" }} />
             </RightSide>
           </VoterRow>
@@ -165,17 +160,6 @@ const RightSide = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-`;
-
-const VoteTag = styled.span<{ type: "Yes" | "No" | "Abstain" }>`
-  font-size: 13px;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 4px;
-  color: ${({ type }) =>
-    type === "Yes" ? "#1a490f" : type === "No" ? "#7b1f1f" : "#524600"};
-  background: ${({ type }) =>
-    type === "Yes" ? "#e3f8d3" : type === "No" ? "#f9d0d0" : "#fff7cf"};
 `;
 
 const LoadMore = styled.div`

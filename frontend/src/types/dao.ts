@@ -72,4 +72,5 @@ export type DaoMetadata = {
   logo: string;
   summary: string;
   links: Link[];
+  daoType: DaoType;
 };

@@ -1,23 +1,6 @@
+import { formatTimestamp } from ".";
 import { StatusItem } from "../components/proposal-details/status-timeline";
 import { ProposalState, StatusTimelineType } from "../types";
-
-export function formatTimestamp(timestamp: number) {
-  const date = new Date(timestamp * 1000);
-  return (
-    date
-      .toLocaleString("en-GB", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-        timeZone: "Europe/Chisinau",
-      })
-      .replace(",", "")
-      .toUpperCase() + " UTC+3"
-  );
-}
 
 export async function generateStatuses({
   blockHashProposalCreation,
@@ -61,13 +44,15 @@ export async function generateStatuses({
     isCurrent: state === ProposalState.Pending,
   });
 
-  statuses.push({
-    label: StatusTimelineType.Running,
-    timestamp: formatTimestamp(Number(voteStart)),
-    isCompleted:
-      state !== ProposalState.Active && state !== ProposalState.Pending,
-    isCurrent: state === ProposalState.Active,
-  });
+  if (state === ProposalState.Active) {
+    statuses.push({
+      label: StatusTimelineType.Running,
+      timestamp: formatTimestamp(Number(voteStart)),
+      isCompleted:
+        state !== ProposalState.Active && state !== ProposalState.Pending,
+      isCurrent: state === ProposalState.Active,
+    });
+  }
 
   if (state === ProposalState.Canceled || state === ProposalState.Defeated) {
     statuses.push({

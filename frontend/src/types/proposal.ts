@@ -93,3 +93,22 @@ export interface ProposalSummaryExtended {
   actions: ProposalAction[];
   txHashExecuted: string | undefined;
 }
+
+export type Voter = {
+  address: string;
+  power: string;
+};
+
+export interface VotingStats {
+  infoSectionData: Record<string, any>;
+  votes: Record<
+    string,
+    {
+      amount: string;
+      percentage: number;
+    }
+  >;
+  voters: Voter[];
+  hasVoted: boolean;
+  tokenSymbol: string;
+}

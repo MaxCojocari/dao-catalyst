@@ -16,13 +16,12 @@ export const ProposalDetailsPage = () => {
   const { id, daoAddress } = useParams();
   const navigate = useNavigate();
   const [proposal, setProposal] = useState({} as ProposalSummaryExtended);
-  const [daoName, setDaoName] = useState("");
+  const [daoMetadata, setDaoMetadata] = useState({} as DaoMetadata);
 
   const fetchProposalDetails = useCallback(async () => {
     try {
       setIsLoading({ fetchProposalMetadata: true });
-      const { name } = (await fetchDaoMetadata(daoAddress!)) as DaoMetadata;
-      setDaoName(name);
+      setDaoMetadata((await fetchDaoMetadata(daoAddress!)) as DaoMetadata);
       setProposal(await fetchProposal(daoAddress!, BigInt(id!)));
     } catch (e) {
       console.error(e);
@@ -30,6 +29,10 @@ export const ProposalDetailsPage = () => {
       setIsLoading({ fetchProposalMetadata: false });
     }
   }, [id, daoAddress]);
+
+  useEffect(() => {
+    fetchProposalDetails();
+  }, []);
 
   useEffect(() => {
     if (!id) {
@@ -41,21 +44,17 @@ export const ProposalDetailsPage = () => {
     }
   }, [id]);
 
-  useEffect(() => {
-    fetchProposalDetails();
-  }, []);
-
   return (
     <>
       <ProposalOverview proposal={proposal} />
       <Container>
         <LeftColumn>
-          <Voting />
+          <Voting proposalState={proposal?.state} />
           <ActionsSection
             txHash={proposal?.txHashExecuted}
             state={proposal?.state}
             actions={proposal?.actions}
-            daoName={daoName}
+            daoName={daoMetadata?.name}
           />
         </LeftColumn>
         <RightColumn>

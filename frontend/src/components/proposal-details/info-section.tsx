@@ -14,16 +14,18 @@ interface InfoSectionProps {
   end: string;
 }
 
-export const InfoSection = ({
-  daoType,
-  support,
-  quorum,
-  participation,
-  participationReached,
-  uniqueVoters,
-  start,
-  end,
-}: InfoSectionProps) => {
+export const InfoSection = (props: InfoSectionProps | {}) => {
+  const {
+    daoType,
+    support,
+    quorum,
+    participation,
+    participationReached,
+    uniqueVoters,
+    start,
+    end,
+  } = props as InfoSectionProps;
+
   return (
     <Container>
       <Box>

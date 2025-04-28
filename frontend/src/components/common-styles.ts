@@ -343,3 +343,26 @@ export const EmptyContainer = styled(Container)`
     text-align: center;
   }
 `;
+
+export const BackButtonFlex = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 36px;
+
+  cursor: pointer;
+
+  img {
+    width: 12.5px;
+    height: 12px;
+  }
+
+  a {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.02em;
+    color: #6666ff;
+  }
+`;

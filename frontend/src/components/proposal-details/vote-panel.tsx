@@ -6,7 +6,7 @@ import { Button } from "../preview-styles";
 import { VotingOption } from "../../types";
 
 interface VotePanelProps {
-  onSubmit: (option: string) => void;
+  onSubmit: (option: VotingOption) => void;
   onCancel: () => void;
 }
 
@@ -24,7 +24,7 @@ export const VotePanel = ({ onSubmit, onCancel }: VotePanelProps) => {
 
       <RadioGroup
         value={selected}
-        onChange={(e) => setSelected(e.target.value as VotingOption)}
+        onChange={(e) => setSelected(Number(e.target.value) as VotingOption)}
       >
         {[VotingOption.Yes, VotingOption.No, VotingOption.Abstain].map(
           (option) => (
@@ -34,8 +34,10 @@ export const VotePanel = ({ onSubmit, onCancel }: VotePanelProps) => {
               control={<Radio size="small" />}
               label={
                 <Label $isSelected={selected === option}>
-                  <h3>{option}</h3>
-                  <p>Your choice will be counted for "{option}"</p>
+                  <h3>{VotingOption[option]}</h3>
+                  <p>
+                    Your choice will be counted for "{VotingOption[option]}"
+                  </p>
                 </Label>
               }
               labelPlacement="start"
@@ -46,10 +48,7 @@ export const VotePanel = ({ onSubmit, onCancel }: VotePanelProps) => {
       </RadioGroup>
 
       <Actions>
-        <VoteButton
-          disabled={!selected}
-          onClick={() => selected && onSubmit(selected)}
-        >
+        <VoteButton onClick={() => onSubmit(selected)}>
           Submit your vote
         </VoteButton>
         <Button onClick={onCancel} style={{ fontSize: "14px" }}>

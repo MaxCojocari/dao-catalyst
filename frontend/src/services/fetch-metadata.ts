@@ -24,20 +24,24 @@ export async function fetchMetadata(uri: string): Promise<any> {
 }
 
 export async function fetchDaoMetadata(
-  daoAddress: string
+  daoAddress: string | undefined
 ): Promise<DaoMetadata | undefined> {
+  if (!daoAddress) return;
+
   const query = gql`
     {
       daoCreateds(where: {daoAddress: "${daoAddress}"}) {
         daoURI
+        daoType
       }
     }
   `;
 
   try {
     const res_gql = (await request(url, query, {}, headers)) as any;
-    const { daoURI } = res_gql.daoCreateds[0];
-    return (await fetchMetadata(daoURI)) as DaoMetadata;
+    const { daoURI, daoType } = res_gql.daoCreateds[0];
+    const res = await fetchMetadata(daoURI);
+    return { daoType, ...res } as DaoMetadata;
   } catch (error) {
     console.error(error);
   }

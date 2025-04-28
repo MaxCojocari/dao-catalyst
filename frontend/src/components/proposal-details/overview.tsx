@@ -3,16 +3,25 @@ import { StatusTag } from "..";
 import { useAccount } from "wagmi";
 import { shortenAddress } from "../../utils";
 import { ProposalSummaryExtended } from "../../types";
+import backIcon from "../../assets/images/back-icon.svg";
+import { useNavigate, useParams } from "react-router-dom";
+import { BackButtonFlex } from "../common-styles";
 
 export const ProposalOverview = ({
   proposal,
 }: {
   proposal: ProposalSummaryExtended;
 }) => {
+  const { daoAddress } = useParams();
   const { address } = useAccount();
+  const navigate = useNavigate();
 
   return (
     <Container>
+      <BackButtonFlex onClick={() => navigate(`/daos/${daoAddress}`)}>
+        <img src={backIcon} alt="back-icon" />
+        <a>Back</a>
+      </BackButtonFlex>
       <h1>{proposal?.title}</h1>
       <div
         style={{
@@ -42,7 +51,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   background-color: white;
-  margin-top: -10px;
+  margin-top: -20px;
   padding: 80px 150px;
 
   * {
