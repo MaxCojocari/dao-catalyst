@@ -11,27 +11,29 @@ async function main() {
     tokens: { usdt, usdc },
   } = DEPLOY_CONSTANTS[network.name];
 
-  const amountUsdt = parseUnits('13244.22', 6);
-  const amountUsdc = parseUnits('15000', 6);
-  const takeAmount = parseUnits('8991.1', 6);
-  const usdtContract = ERC20__factory.connect(usdt.address, signer);
-  const usdcContract = ERC20__factory.connect(usdc.address, signer);
+  // const amountUsdt = parseUnits('13244.22', 6);
+  // const amountUsdc = parseUnits('15000', 6);
+  // const takeAmount = parseUnits('8991.1', 6);
+  // const usdtContract = ERC20__factory.connect(usdt.address, signer);
+  // const usdcContract = ERC20__factory.connect(usdc.address, signer);
 
-  for (const dao of daos) {
-    const daoContract = Dao__factory.connect(dao, signer);
+  // for (const dao of daos) {
+  //   const daoContract = Dao__factory.connect(dao, signer);
 
-    let tx = await usdcContract.transfer(dao, amountUsdc);
-    await tx.wait();
-    console.log('Transfer 1', tx.hash);
+  //   let tx = await usdcContract.transfer(dao, amountUsdc);
+  //   await tx.wait();
+  //   console.log('Transfer 1', tx.hash);
 
-    tx = await daoContract.transfer(usdc.address, signer, takeAmount);
-    await tx.wait();
-    console.log('Withdraw', tx.hash);
+  //   tx = await daoContract.transfer(usdc.address, signer, takeAmount);
+  //   await tx.wait();
+  //   console.log('Withdraw', tx.hash);
 
-    tx = await usdtContract.transfer(dao, amountUsdt);
-    await tx.wait();
-    console.log('Transfer 2', tx.hash);
-  }
+  //   tx = await usdtContract.transfer(dao, amountUsdt);
+  //   await tx.wait();
+  //   console.log('Transfer 2', tx.hash);
+  // }
+
+  console.log('0x' + Buffer.from(ethers.randomBytes(32)).toString('hex'));
 }
 
 main().catch(console.error);

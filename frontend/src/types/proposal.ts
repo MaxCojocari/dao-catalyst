@@ -50,14 +50,14 @@ export interface ProposalSettings {
   };
 }
 
-export type StatusType = "success" | "pending" | "error" | "active";
+export type StatusType = "success" | "pending" | "defeated" | "active";
 
 export enum StatusTimelineType {
-  Published = "Published",
-  Running = "Running",
-  Succeeded = "Succeeded",
-  Executed = "Executed",
-  Rejected = "Rejected",
+  Published,
+  Running,
+  Succeeded,
+  Executed,
+  Rejected,
 }
 
 export enum ProposalState {

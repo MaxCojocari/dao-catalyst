@@ -27,7 +27,7 @@ export const ProposalSummary = ({
   const { daoAddress } = useParams();
 
   const displayProposals = proposals.slice(0, 3);
-  const hasMoreThanTwo = proposals.length > 3;
+  const hasMoreThanThree = proposals.length >= 3;
 
   const handleClickNewProposal = () => {
     if (!isMember) {
@@ -70,7 +70,7 @@ export const ProposalSummary = ({
         <ProposalOverviewCard key={idx} proposal={proposal} />
       ))}
 
-      {hasMoreThanTwo && (
+      {hasMoreThanThree && (
         <SeeAllButton
           onClick={() => {
             navigate(`/daos/${daoAddress}/governance`);

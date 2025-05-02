@@ -15,10 +15,10 @@ import { ProgressBarPosition } from "../components/progress-bar";
 import { $daoInfo } from "../store";
 import { DaoSettings, DaoType, TxStatus } from "../types";
 import { useWriteContract } from "wagmi";
-import { ERC20__factory } from "../typechain-types";
-import { parseUnits } from "viem";
+import { DaoFactory__factory } from "../typechain-types";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { wagmiConfig } from "../utils/provider";
+import { DAO_FACTORY, test_dao_params } from "../constants";
 
 const isNextEnabled = (step: number, dao: DaoSettings): boolean => {
   if (step === 1) {
@@ -54,13 +54,10 @@ export const CreateDaoPage = () => {
     try {
       setTxStatus(TxStatus.Waiting);
       const hash = await writeContractAsync({
-        address: "0x34f2c50DBA5e998690C1b5047A74405c2FF2C54F" as `0x${string}`,
-        abi: ERC20__factory.abi,
-        functionName: "transfer",
-        args: [
-          "0x03C25c5Dd860B021165A127A6553c67C371551b0",
-          parseUnits("0.01", 6),
-        ],
+        address: DAO_FACTORY as `0x${string}`,
+        abi: DaoFactory__factory.abi,
+        functionName: "createDao",
+        args: [test_dao_params as any],
       });
       setTxHash(hash);
 
@@ -138,7 +135,7 @@ export const CreateDaoPage = () => {
           titleWaiting="Waiting for Confirmation"
           titleSubmitted="DAO Created Successfully!"
           successLabel="Open DAO Page"
-          explorerUrl="https://sepolia.etherscan.io/tx/"
+          explorerUrl="https://sepolia.arbiscan.io/tx/"
         />
       </Container>
     </>

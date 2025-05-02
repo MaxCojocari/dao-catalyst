@@ -18,15 +18,17 @@ export const Layout = ({ children }: PropsWithChildren) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pathname]);
 
-  // useEffect(() => {
-  //   if (!isConnected) {
-  //     localStorage.setItem("redirectAfterLogin", pathname);
-  //     navigate("/auth");
-  //   }
-  //   setChecked(true);
-  // }, [isConnected]);
+  useEffect(() => {
+    if (!isConnected) {
+      if (pathname != "/auth") {
+        localStorage.setItem("redirectAfterLogin", pathname);
+      }
+      navigate("/auth");
+    }
+    setChecked(true);
+  }, [isConnected]);
 
-  // if (!checked) return null;
+  if (!checked) return null;
 
   return (
     <>

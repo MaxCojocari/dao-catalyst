@@ -68,7 +68,7 @@ export const StatusTimeline = ({ statuses }: StatusTimelineProps) => {
               style={{ display: "flex", flexDirection: "column", gap: "10px" }}
             >
               <Label $highlight={status.isCurrent} $status={status}>
-                {status.label}
+                {StatusTimelineType[status.label]}
               </Label>
               <Timestamp>{status.timestamp}</Timestamp>
             </div>

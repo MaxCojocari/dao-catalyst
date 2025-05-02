@@ -21,11 +21,13 @@ import { setIsLoading } from "../../store";
 import {
   fetchDaoSummary,
   fetchProposalSummaries,
+  fetchTokenSymbol,
   fetchTreasuryInfo,
   isCallerMember,
 } from "../../services";
 import { useParams } from "react-router-dom";
-import { useAccount } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
+import { ERC20__factory } from "../../typechain-types";
 
 export const BodyEmpty = ({
   members,
@@ -109,7 +111,7 @@ export const DashboardPage = () => {
   const [treasuryInfo, setTreasuryInfo] = useState({} as any);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
-  const tokenSymbol = dao?.daoType === DaoType.SimpleVote ? "PIK" : undefined;
+  const [tokenSymbol, setTokenSymbol] = useState<string | undefined>(undefined);
 
   const fetchDashboardInfo = useCallback(async () => {
     try {
@@ -134,6 +136,7 @@ export const DashboardPage = () => {
       setProposalLength(_proposals?.totalProposals || 3);
       setDao(_dao as DaoSummary);
       setTreasuryInfo(_treasuryInfo);
+      setTokenSymbol(await fetchTokenSymbol(_dao?.daoToken as `0x{string}`));
     } catch (e) {
       console.error(e);
     } finally {

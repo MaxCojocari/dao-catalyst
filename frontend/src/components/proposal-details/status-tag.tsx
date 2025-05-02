@@ -19,10 +19,10 @@ const statusMap: Record<
     color: "#FFD056",
     defaultText: "Pending",
   },
-  error: {
+  defeated: {
     icon: errorIcon,
     color: "#FF9999",
-    defaultText: "Error",
+    defaultText: "Defeated",
   },
   active: {
     icon: activeIcon,
@@ -36,8 +36,8 @@ const proposalStateToStatusType: Record<ProposalState, StatusType> = {
   [ProposalState.Active]: "active",
   [ProposalState.Succeeded]: "success",
   [ProposalState.Executed]: "success",
-  [ProposalState.Canceled]: "error",
-  [ProposalState.Defeated]: "error",
+  [ProposalState.Canceled]: "defeated",
+  [ProposalState.Defeated]: "defeated",
 };
 
 export function getStatusTypeFromProposalState(

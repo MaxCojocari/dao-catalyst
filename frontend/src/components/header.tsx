@@ -41,7 +41,7 @@ export const Header = () => {
   return (
     <Container>
       {daoAddress ? (
-        <LeftSection onClick={() => navigate(`/daos/${daoAddress}`)}>
+        <LeftSection onClick={() => navigate(`/daos/${daoAddress || ""}`)}>
           <DaoLogo imageUri={daoMetadata?.logo} name={daoMetadata?.name} />
           {links.map(({ label, path }) => (
             <NavLink key={path} to={`/daos/${daoAddress}/${path}`}>
@@ -50,7 +50,7 @@ export const Header = () => {
           ))}
         </LeftSection>
       ) : (
-        <LeftSection onClick={() => navigate(`/daos/${daoAddress}`)}>
+        <LeftSection onClick={() => navigate(`/daos/${daoAddress || ""}`)}>
           <img src={logo} alt="dao-catalyst-logo" width="150px" />
         </LeftSection>
       )}

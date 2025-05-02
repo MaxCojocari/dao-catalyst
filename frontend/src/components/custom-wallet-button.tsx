@@ -21,15 +21,15 @@ export const CustomWalletButton = () => {
               },
             })}
           >
-            {/* {connected && (
+            {connected && (
               <ConnectedWalletButton onClick={openAccountModal}>
                 {account.displayName}
                 <img src={copyIcon} alt="copy-icon" width="20px" />
                 <img src={disconnectIcon} alt="disconnect-icon" width="16px" />
               </ConnectedWalletButton>
-            )} */}
+            )}
 
-            {connected ? (
+            {/* {connected ? (
               <ConnectedWalletButton onClick={openAccountModal}>
                 {account.displayName}
                 <img src={copyIcon} alt="copy-icon" width="20px" />
@@ -39,7 +39,7 @@ export const CustomWalletButton = () => {
               <ConnectWalletButton onClick={openConnectModal}>
                 Connect Wallet
               </ConnectWalletButton>
-            )}
+            )} */}
           </div>
         );
       }}

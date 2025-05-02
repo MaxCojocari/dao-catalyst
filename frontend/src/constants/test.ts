@@ -1,8 +1,9 @@
 // export const TEST_DAO_IMGAGE_URL =
 //   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreibvu277rizhevfpe6bxa46a4tdlyzle3kjtjkuqknd55kieccdyom";
-// export const TEST_DAO_IMGAGE_URL =
-//   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib6rurdcxtxil5crchbjpnc76tiuvcifjezzef3cdc57awmk4mhti";
+export const TEST_DAO_IMGAGE_URL =
+  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreihbik6lvzagahquz52qcyxqhuiaafumepejtsfof56gkmglojkjie";
 
+import { ethers, parseUnits, ZeroAddress } from "ethers";
 import { StatusItem } from "../components/proposal-details/status-timeline";
 import {
   ActionType,
@@ -12,9 +13,10 @@ import {
   TransferType,
   VotingOption,
 } from "../types";
+import { USDC_ADDRESS } from ".";
+import { Dao__factory } from "../typechain-types";
 
-export const TEST_DAO_IMGAGE_URL =
-  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib2su7oqwqlmibinhhxc4yfaotq6boltij4dnk6namtcf7zomcpim";
+// export const TEST_DAO_IMGAGE_URL = "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib2su7oqwqlmibinhhxc4yfaotq6boltij4dnk6namtcf7zomcpim";
 export const TEST_DAO_NAME = "Taiko DAO";
 export const TEST_DAO_CONTRACT_ADDRESS =
   "0xF079A5c205B622349A648965c4E5F05969eB0542";
@@ -426,22 +428,80 @@ export const transfers = [
 export const members = [
   {
     address: "0x03C25c5Dd860B021165A127A6553c67C371551b0",
-    votingPower: 10000,
+    votingPower: 1000,
     percentage: 76.92,
   },
   {
     address: "0xe35Fa1aDf92F9C948f849e69D5b8eD61Bd3401f1",
-    votingPower: 2630,
+    votingPower: 500,
     percentage: 15.38,
   },
   {
     address: "0x329D5B5CcC46cD933918eF66c8b2F88411C542bf",
-    votingPower: 1500,
+    votingPower: 200,
     percentage: 7.69,
   },
-  {
-    address: "0xD3d6aEc7e2AA97F174622d36c5865533Ab69504b",
-    votingPower: 233,
-    percentage: 1.1,
-  },
+  // {
+  //   address: "0xD3d6aEc7e2AA97F174622d36c5865533Ab69504b",
+  //   votingPower: 233,
+  //   percentage: 1.1,
+  // },
 ];
+
+export const ONE_MINUTE_SECONDS = 60n;
+export const ONE_HOUR_SECONDS = 3600n;
+export const ONE_DAY_SECONDS = 86400n;
+export const ONE_WEEK_SECONDS = 604800n;
+export const ONE_MONTH_SECONDS = 2592000n;
+export const ONE_YEAR_SECONDS = 31557600n;
+
+export const test_dao_params = {
+  daoType: DaoType.SimpleVote,
+  daoURI:
+    "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreig75xvix7zocnxty2lndugitd7cikwqzp4oneg3sokbvodumkyzze",
+  members: [
+    "0x03C25c5Dd860B021165A127A6553c67C371551b0",
+    "0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF",
+    "0xBB7CCc4F133F9F2F593061EEB4a38F86c40c959C",
+  ],
+  minimalDuration: ONE_HOUR_SECONDS,
+  proposalCreationMinVotingPower: parseUnits("0.1"),
+  daoToken: {
+    isDeployed: false,
+    tokenAddress: ZeroAddress,
+    name: "Pika Token",
+    symbol: "PIK",
+    recipients: [
+      "0x03C25c5Dd860B021165A127A6553c67C371551b0",
+      "0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF",
+      "0xBB7CCc4F133F9F2F593061EEB4a38F86c40c959C",
+    ],
+    amounts: [parseUnits("10000"), parseUnits("7300"), parseUnits("2000")],
+  },
+  quorumFraction: { numerator: 60, denominator: 100 },
+  minimumParticipationFraction: { numerator: 50, denominator: 100 },
+  salt: "0x3c0386a8d51c23777bea191d3fa1b611ab3778e90741db79a617b53ad76900e6",
+};
+
+export const test_proposal = (dao: string) => {
+  return {
+    actions: [
+      {
+        target: dao,
+        value: 0n,
+        calldatas: Dao__factory.createInterface().encodeFunctionData(
+          "transfer",
+          [
+            USDC_ADDRESS,
+            "0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF",
+            parseUnits("150000", 6),
+          ]
+        ),
+      },
+    ],
+    descriptionURI:
+      "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreihcrjckey5b7nv2mcq2frlkya6eha4k2jvxhhlkqxvy6vzwbhgphe",
+    voteStart: Math.floor(Date.now() / 1000) + Number(ONE_MINUTE_SECONDS),
+    voteDuration: 6n * ONE_HOUR_SECONDS,
+  };
+};

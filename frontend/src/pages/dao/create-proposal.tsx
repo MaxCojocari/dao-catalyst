@@ -19,10 +19,11 @@ import { ProgressBarPosition } from "../../components/progress-bar";
 import { ProposalSettings, TxStatus } from "../../types";
 import { $proposalInfo } from "../../store/proposal";
 import { useWriteContract } from "wagmi";
-import { ERC20__factory } from "../../typechain-types";
-import { parseUnits } from "viem";
+import { Dao__factory } from "../../typechain-types";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { wagmiConfig } from "../../utils/provider";
+import { useParams } from "react-router-dom";
+import { test_proposal } from "../../constants";
 
 const isNextEnabled = (step: number, proposal: ProposalSettings): boolean => {
   if (step === 1) {
@@ -57,18 +58,18 @@ export const CreateProposalPage = () => {
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.Idle);
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
   const { writeContractAsync } = useWriteContract();
+  const { daoAddress } = useParams();
+  const testProposal = test_proposal(daoAddress!);
 
   const handleDeploy = async () => {
     try {
       setTxStatus(TxStatus.Waiting);
+      const { actions, descriptionURI, voteStart, voteDuration } = testProposal;
       const hash = await writeContractAsync({
-        address: "0x34f2c50DBA5e998690C1b5047A74405c2FF2C54F" as `0x${string}`,
-        abi: ERC20__factory.abi,
-        functionName: "transfer",
-        args: [
-          "0x03C25c5Dd860B021165A127A6553c67C371551b0",
-          parseUnits("0.01", 6),
-        ],
+        address: daoAddress as `0x${string}`,
+        abi: Dao__factory.abi,
+        functionName: "propose",
+        args: [actions as any, descriptionURI, BigInt(voteStart), voteDuration],
       });
       setTxHash(hash);
 
@@ -146,7 +147,7 @@ export const CreateProposalPage = () => {
           titleWaiting="Waiting for Confirmation"
           titleSubmitted="Proposal Created Successfully!"
           successLabel="Open Proposal Page"
-          explorerUrl="https://sepolia.etherscan.io/tx/"
+          explorerUrl="https://sepolia.arbiscan.io/tx/"
         />
       </Container>
     </>

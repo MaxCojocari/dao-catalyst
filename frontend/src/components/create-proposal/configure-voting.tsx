@@ -115,7 +115,7 @@ export const ConfigureVoting = () => {
           </Error>
         )}
 
-        {!isMinimumDurationRespected(proposalInfo) && (
+        {!isMinimumDurationRespected(proposalInfo, 3600) && (
           <Error>
             <img
               src={failureIcon}
@@ -123,7 +123,7 @@ export const ConfigureVoting = () => {
               style={{ marginRight: "5px", marginTop: "2px" }}
             />
             <p>
-              The minimum duration of 1 days, 0 hours, and 0 minutes is defined
+              The minimum duration of 0 days, 1 hours, and 0 minutes is defined
               by DAO governance settings
             </p>
           </Error>
