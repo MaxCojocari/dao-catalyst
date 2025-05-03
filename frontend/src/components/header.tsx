@@ -20,7 +20,6 @@ export const Header = () => {
     { label: "Governance", path: "governance" },
     { label: "Finance", path: "finance" },
     { label: "Members", path: "members" },
-    { label: "Settings", path: "settings" },
   ];
 
   const fetchMetadata = useCallback(async () => {

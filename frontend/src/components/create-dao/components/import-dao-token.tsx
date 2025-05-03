@@ -90,7 +90,7 @@ export const ImportDaoToken = () => {
       <Input>
         <InputMetadata
           inputName="Contract address"
-          inputDescription="Enter the contract address. We reccoment double checking it in a block explorer."
+          inputDescription="Enter the contract address. We reccomend double checking it in a block explorer."
         />
         <Container>
           <input

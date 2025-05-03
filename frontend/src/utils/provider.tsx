@@ -7,6 +7,7 @@ import { Config, http, WagmiProvider } from "wagmi";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
 import { arbitrum, arbitrumSepolia, sepolia } from "viem/chains";
+import { PinataSDK } from "pinata";
 
 export const wagmiConfig = getDefaultConfig({
   appName: "DAO Catalyst",
@@ -32,6 +33,11 @@ export const wagmiConfig = getDefaultConfig({
 }) as Config;
 
 const queryClient = new QueryClient();
+
+export const pinata = new PinataSDK({
+  pinataJwt: import.meta.env.VITE_PINATA_JWT,
+  pinataGateway: import.meta.env.VITE_PINATA_GATEWAY,
+});
 
 export const Provider = ({ children }: PropsWithChildren) => {
   return (

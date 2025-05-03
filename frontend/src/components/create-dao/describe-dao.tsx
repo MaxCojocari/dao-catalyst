@@ -6,8 +6,13 @@ import { InputMetadata } from "../input-metadata";
 import { Header, StepInfo, Input } from "../common-styles";
 import { $daoInfo, updateDaoInfo } from "../../store";
 import { useUnit } from "effector-react";
+import { FileUploadProps } from "../../pages/create-dao";
 
-export const DescribeDao = () => {
+export const DescribeDao = ({
+  setLogo,
+  previewUrl,
+  setPreviewUrl,
+}: FileUploadProps) => {
   const daoInfo = useUnit($daoInfo);
 
   return (
@@ -37,7 +42,11 @@ export const DescribeDao = () => {
         />
         <a className="input-description">{daoInfo.name.length}/128</a>
       </Input>
-      <LogoUploader />
+      <LogoUploader
+        setLogo={setLogo}
+        previewUrl={previewUrl}
+        setPreviewUrl={setPreviewUrl}
+      />
       <Input>
         <InputMetadata
           inputName="Description"

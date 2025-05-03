@@ -45,4 +45,8 @@ contract DaoToken is ERC20Votes, AccessControl {
     function CLOCK_MODE() public pure override returns (string memory) {
         return "mode=blocktimestamp";
     }
+
+    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+        return interfaceId == type(IVotes).interfaceId || super.supportsInterface(interfaceId);
+    }
 }

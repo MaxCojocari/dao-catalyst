@@ -25,7 +25,6 @@ export interface DaoSettings {
   name: string;
   summary: string;
   links: Link[];
-  daoURI: string;
   members: (string | undefined)[];
   minimumDuration: Duration;
   token: DaoTokenSettings;

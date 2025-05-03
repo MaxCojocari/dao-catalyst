@@ -3,10 +3,13 @@ import uploadFileIcon from "../../../assets/images/upload-file.svg";
 import styled from "styled-components";
 import deleteIcon from "../../../assets/images/delete-icon.svg";
 import { OptionalInputMetadata } from "../../optional-input-metadata";
+import { FileUploadProps } from "../../../pages/create-dao";
 
-export const LogoUploader = () => {
-  const [, setLogo] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+export const LogoUploader = ({
+  setLogo,
+  previewUrl,
+  setPreviewUrl,
+}: FileUploadProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [, setIsDragging] = useState(false);
 

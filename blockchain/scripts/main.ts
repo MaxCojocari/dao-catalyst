@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { ethers, network } from 'hardhat';
-import { Dao__factory, ERC20__factory } from '../typechain-types';
+import { Dao__factory, DaoToken__factory, ERC20__factory } from '../typechain-types';
 import { DEPLOY_CONSTANTS } from '../constants';
 import { parseUnits } from 'ethers';
 
@@ -10,6 +10,11 @@ async function main() {
     daos,
     tokens: { usdt, usdc },
   } = DEPLOY_CONSTANTS[network.name];
+
+  const govTokenAddr = '0x3b08846e23c3fbdc7e0b5567a4359307015cfef9';
+  const govToken = DaoToken__factory.connect(govTokenAddr, signer);
+
+  console.log(await govToken.supportsInterface('0xe90fb3f6'));
 
   // const amountUsdt = parseUnits('13244.22', 6);
   // const amountUsdc = parseUnits('15000', 6);
@@ -32,8 +37,6 @@ async function main() {
   //   await tx.wait();
   //   console.log('Transfer 2', tx.hash);
   // }
-
-  console.log('0x' + Buffer.from(ethers.randomBytes(32)).toString('hex'));
 }
 
 main().catch(console.error);

@@ -1,5 +1,6 @@
 import { createEvent, createStore } from "effector";
 import { DaoSettings, DaoType, Recipient } from "../types";
+import { ethers } from "ethers";
 
 export const updateDaoInfo = createEvent<Partial<DaoSettings>>();
 export const resetDaoInfo = createEvent();
@@ -9,7 +10,6 @@ export const $daoInfo = createStore<DaoSettings>({
   name: "",
   summary: "",
   links: [{ label: "", url: "" }],
-  daoURI: "",
   members: [""],
   minimumDuration: { days: "1", hours: "0", minutes: "0" },
   token: {
@@ -29,7 +29,7 @@ export const $daoInfo = createStore<DaoSettings>({
   minimumParticipation: { numerator: 50, denominator: 100 },
   proposalCreationMinVotingPower: "",
   earlyExecution: false,
-  salt: "",
+  salt: "0x" + Buffer.from(ethers.randomBytes(32)).toString("hex"),
 })
   .on(updateDaoInfo, (state, payload) => ({
     ...state,

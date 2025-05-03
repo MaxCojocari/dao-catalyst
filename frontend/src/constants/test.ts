@@ -1,7 +1,7 @@
-// export const TEST_DAO_IMGAGE_URL =
-//   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreibvu277rizhevfpe6bxa46a4tdlyzle3kjtjkuqknd55kieccdyom";
 export const TEST_DAO_IMGAGE_URL =
-  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreihbik6lvzagahquz52qcyxqhuiaafumepejtsfof56gkmglojkjie";
+  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreibvu277rizhevfpe6bxa46a4tdlyzle3kjtjkuqknd55kieccdyom";
+// export const TEST_DAO_IMGAGE_URL =
+//   "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreihbik6lvzagahquz52qcyxqhuiaafumepejtsfof56gkmglojkjie";
 
 import { ethers, parseUnits, ZeroAddress } from "ethers";
 import { StatusItem } from "../components/proposal-details/status-timeline";
@@ -10,6 +10,7 @@ import {
   DaoType,
   ProposalAction,
   ProposalState,
+  StatusTimelineType,
   TransferType,
   VotingOption,
 } from "../types";
@@ -350,26 +351,26 @@ export const votes = {
 
 export const statuses = [
   {
-    label: "Published",
+    label: StatusTimelineType.Published,
     timestamp: "2025/02/05 10:20 PM UTC+2",
     blockNumber: "7647095",
     isCompleted: true,
     isCurrent: false,
   },
   {
-    label: "Running",
+    label: StatusTimelineType.Running,
     timestamp: "2025/02/05 10:20 PM UTC+2",
     isCompleted: true,
     isCurrent: false,
   },
   {
-    label: "Succeeded",
+    label: StatusTimelineType.Succeeded,
     timestamp: "2025/02/05 10:59 PM UTC+2",
     isCompleted: true,
     isCurrent: false,
   },
   {
-    label: "Executed",
+    label: StatusTimelineType.Executed,
     timestamp: "2025/02/05 11:12 PM UTC+2",
     blockNumber: "7647338",
     isCompleted: true,
@@ -505,3 +506,11 @@ export const test_proposal = (dao: string) => {
     voteDuration: 6n * ONE_HOUR_SECONDS,
   };
 };
+
+export const DEFAULT_LOGOS = [
+  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreifb6tvmvcus44ahrh6olcklyckdu7fqt2rnq7ihqdv7kmfosb4kvy",
+  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreia6uwf5qgtv3ouw4tnamnou4mognvlrxsis53xtpmm73rjnjrmkmm",
+  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreihyw7gfc62bgi2unlqsv7jzfojbie6ix7sjbc376frvx2s6twkk7q",
+  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib2su7oqwqlmibinhhxc4yfaotq6boltij4dnk6namtcf7zomcpim",
+  "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreih7jp4ha4ut5iz4y77zny6ivekunyxe3jus5qiy3d73glckfgzicm",
+];

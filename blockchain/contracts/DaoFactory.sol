@@ -2,10 +2,6 @@
 pragma solidity 0.8.28;
 
 import {Fraction} from "./utils/Utils.sol";
-import {Dao} from "./Dao.sol";
-import {DaoSimpleVote} from "./dao/DaoSimpleVote.sol";
-import {DaoFractionalVote} from "./dao/DaoFractionalVote.sol";
-import {DaoMultisigVote} from "./dao/DaoMultisigVote.sol";
 import {DaoToken} from "./DaoToken.sol";
 import {IDaoFractionalVote} from "./interfaces/IDaoFractionalVote.sol";
 import {IDaoSimpleVote} from "./interfaces/IDaoSimpleVote.sol";

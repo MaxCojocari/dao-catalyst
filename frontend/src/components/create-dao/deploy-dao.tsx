@@ -1,7 +1,6 @@
 import { CheckBox, Header, StepInfo } from "../common-styles";
 import stepIcon from "../../assets/images/step1_icon.svg";
 import infoIcon from "../../assets/images/info-icon.svg";
-import { TEST_DAO_INFO } from "../../constants";
 import { DaoType } from "../../types";
 import CheckBoxRoundedIcon from "@mui/icons-material/CheckBoxRounded";
 import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutlineBlankRounded";
@@ -21,6 +20,7 @@ interface DeployDaoProps {
   confirmed: boolean;
   setConfirmed: (v: any) => void;
   setStep: (v: any) => void;
+  logoPreviewUrl: string | null;
 }
 
 interface EditButtonProps {
@@ -183,8 +183,10 @@ export const DeployDao = ({
   confirmed,
   setConfirmed,
   setStep,
+  logoPreviewUrl,
 }: DeployDaoProps) => {
   const dao = useUnit($daoInfo);
+
   return (
     <>
       <Header>
@@ -206,7 +208,7 @@ export const DeployDao = ({
         <Content>
           <ContentRow>
             <h3>Logo</h3>
-            <img src={TEST_DAO_INFO.logo} />
+            {logoPreviewUrl ? <img src={logoPreviewUrl} /> : <p>None</p>}
           </ContentRow>
           <ContentRow>
             <h3>Name</h3>
