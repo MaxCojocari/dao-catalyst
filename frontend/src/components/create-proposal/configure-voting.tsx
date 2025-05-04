@@ -23,12 +23,31 @@ import {
   isStartDateInFuture,
   isVoteEndAfterStart,
 } from "../../utils";
+import { useParams } from "react-router-dom";
+import { useReadContract } from "wagmi";
+import { Dao__factory } from "../../typechain-types";
+
+function parseDuration(seconds: number) {
+  const days = Math.floor(seconds / (24 * 3600));
+  const hours = Math.floor((seconds % (24 * 3600)) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  return { days, hours, minutes, seconds: remainingSeconds };
+}
 
 export const ConfigureVoting = () => {
   const proposalInfo = useUnit($proposalInfo);
   const [votingOption, setVotingOption] = useState<"simple" | "fractional">(
     "simple"
   );
+  const { daoAddress } = useParams();
+  const { data: minimalDuration } = useReadContract({
+    abi: Dao__factory.abi,
+    functionName: "minimalDuration",
+    address: daoAddress as `0x${string}`,
+  });
+  const { days, hours, minutes } = parseDuration(Number(minimalDuration));
 
   return (
     <>
@@ -115,19 +134,23 @@ export const ConfigureVoting = () => {
           </Error>
         )}
 
-        {!isMinimumDurationRespected(proposalInfo, 3600) && (
-          <Error>
-            <img
-              src={failureIcon}
-              width="15px"
-              style={{ marginRight: "5px", marginTop: "2px" }}
-            />
-            <p>
-              The minimum duration of 0 days, 1 hours, and 0 minutes is defined
-              by DAO governance settings
-            </p>
-          </Error>
-        )}
+        {minimalDuration &&
+          !isMinimumDurationRespected(
+            proposalInfo,
+            Number(minimalDuration)
+          ) && (
+            <Error>
+              <img
+                src={failureIcon}
+                width="15px"
+                style={{ marginRight: "5px", marginTop: "2px" }}
+              />
+              <p>
+                The minimum duration of {days} days, {hours} hours, and{" "}
+                {minutes} minutes is defined by DAO governance settings
+              </p>
+            </Error>
+          )}
 
         <br />
       </Input>

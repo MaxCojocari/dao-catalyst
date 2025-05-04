@@ -47,7 +47,6 @@ const defaultProposalInfo: ProposalSettings = {
       inputs: [],
     },
   ],
-  descriptionURI: "",
   voteStart: {
     optionSelected: false,
     date: dayjs(),
@@ -63,7 +62,11 @@ const defaultProposalInfo: ProposalSettings = {
   },
 };
 
-export const $proposalInfo = createStore<ProposalSettings>(defaultProposalInfo)
+const createInitialProposalInfo = (): ProposalSettings => defaultProposalInfo;
+
+export const $proposalInfo = createStore<ProposalSettings>(
+  createInitialProposalInfo()
+)
   .on(updateProposalInfo, (state, payload) => ({
     ...state,
     ...payload,
@@ -122,4 +125,4 @@ export const $proposalInfo = createStore<ProposalSettings>(defaultProposalInfo)
       actions: updatedActions,
     };
   })
-  .reset(resetProposalInfo);
+  .reset(resetProposalInfo.map(() => createInitialProposalInfo()));

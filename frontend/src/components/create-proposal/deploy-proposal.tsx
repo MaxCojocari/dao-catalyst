@@ -96,21 +96,20 @@ export const DeployProposal = ({
   )
     .toFixed(2)
     .replace(/\.00$/, "");
-  const tz = resolveTimezone(proposal.voteStart.timezone);
   const voteStart = !proposal.voteStart.optionSelected
     ? dayjs()
     : dayjs.tz(
         `${proposal.voteStart.date.format(
           "YYYY-MM-DD"
         )}T${proposal.voteStart.time.format("HH:mm")}`,
-        tz
+        resolveTimezone(proposal.voteStart.timezone)
       );
   const voteEnd = proposal.endDuration.optionSelected
     ? dayjs.tz(
         `${proposal.endDuration.date.format(
           "YYYY-MM-DD"
         )}T${proposal.endDuration.time.format("HH:mm")}`,
-        tz
+        resolveTimezone(proposal.endDuration.timezone)
       )
     : voteStart
         .add(Number(proposal.endDuration.duration.days), "day")
@@ -118,7 +117,11 @@ export const DeployProposal = ({
         .add(Number(proposal.endDuration.duration.minutes), "minute");
   const startLabel = !proposal.voteStart.optionSelected
     ? "Now"
-    : formatDateTime(proposal.voteStart.date, proposal.voteStart.time, tz);
+    : formatDateTime(
+        proposal.voteStart.date,
+        proposal.voteStart.time,
+        resolveTimezone(proposal.voteStart.timezone)
+      );
 
   const endRelative = voteEnd.from(voteStart, true);
   const endExact = voteEnd.format("YYYY/MM/DD hh:mm A [UTC]Z");

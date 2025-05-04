@@ -5,10 +5,12 @@ import { MembersList } from "./members-list";
 import { MembersListExtended, MembersSummary } from "..";
 
 export const MembersPanel = ({
+  isMember,
   members,
   tokenSymbol,
   isExtended,
 }: {
+  isMember: boolean;
   members: any[];
   tokenSymbol?: string;
   isExtended: boolean;
@@ -20,7 +22,7 @@ export const MembersPanel = ({
 
   return (
     <>
-      <MembersSummary membersLength={members?.length} />
+      <MembersSummary membersLength={members?.length} isMember={isMember} />
       {isExtended ? (
         <MembersListExtended members={members} tokenSymbol={tokenSymbol} />
       ) : (

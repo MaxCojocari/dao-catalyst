@@ -9,19 +9,32 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { TreasuryActivityCard } from "./treasury-activity-card";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { useState } from "react";
+import { ErrorModal } from "..";
 
 export const TreasuryPanel = ({
   transfers,
   balance,
+  isMember,
 }: {
   transfers: any[];
   balance: string;
+  isMember: boolean;
 }) => {
   const navigate = useNavigate();
   const { daoAddress } = useParams();
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
 
   const displayTransfers = transfers?.slice(0, 3);
   const hasMoreThanTwo = transfers?.length > 3;
+
+  const handleClickNewProposal = () => {
+    if (!isMember) {
+      setErrorModalOpen(true);
+      return;
+    }
+    navigate(`/daos/${daoAddress}/create-proposal`);
+  };
 
   return (
     <>
@@ -30,11 +43,7 @@ export const TreasuryPanel = ({
           <Badge color="#6666FF">
             <img src={treasuryIcon} />
           </Badge>
-          <FilledButtonOverview
-            onClick={() => {
-              navigate(`/daos/${daoAddress}/create-proposal`);
-            }}
-          >
+          <FilledButtonOverview onClick={handleClickNewProposal}>
             New transfer
           </FilledButtonOverview>
         </Header>
@@ -58,6 +67,15 @@ export const TreasuryPanel = ({
           <KeyboardArrowRightIcon width={10} sx={{ color: "#6666FF" }} />
         </SeeAllButton>
       )}
+
+      <ErrorModal
+        open={errorModalOpen}
+        setOpen={setErrorModalOpen}
+        name={"You can't make transfers"}
+        summary={
+          "You are not eligible member. To make new transfers, contact DAO admin to grant necessary permissions."
+        }
+      />
     </>
   );
 };

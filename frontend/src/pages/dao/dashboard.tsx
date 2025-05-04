@@ -30,19 +30,21 @@ import { useAccount } from "wagmi";
 
 export const BodyEmpty = ({
   members,
+  isMember,
   tokenSymbol,
 }: {
   members: DaoMember[];
+  isMember: boolean;
   tokenSymbol?: string;
 }) => {
   return (
     <>
       <ContainerEmpty>
         <LeftColumn style={{ flex: 1 }}>
-          <EmptyProposalCard />
+          <EmptyProposalCard isMember={isMember} />
         </LeftColumn>
         <RightColumn style={{ flex: 1 }}>
-          <EmptyTreasuryCard />
+          <EmptyTreasuryCard isMember={isMember} />
         </RightColumn>
       </ContainerEmpty>
       <Bottom>
@@ -50,6 +52,7 @@ export const BodyEmpty = ({
           members={members}
           tokenSymbol={tokenSymbol}
           isExtended={true}
+          isMember={isMember}
         />
       </Bottom>
     </>
@@ -83,18 +86,20 @@ export const Body = ({
             isMember={isMember}
           />
         ) : (
-          <EmptyProposalCard />
+          <EmptyProposalCard isMember={isMember} />
         )}
       </LeftColumn>
       <RightColumn>
         <TreasuryPanel
           transfers={transfers}
           balance={balance?.toLocaleString()}
+          isMember={isMember}
         />
         <MembersPanel
           members={members}
           tokenSymbol={tokenSymbol}
           isExtended={false}
+          isMember={isMember}
         />
       </RightColumn>
     </Container>
@@ -183,7 +188,11 @@ export const DashboardPage = () => {
           isMember={isMember}
         />
       ) : (
-        <BodyEmpty members={members} tokenSymbol={tokenSymbol} />
+        <BodyEmpty
+          members={members}
+          tokenSymbol={tokenSymbol}
+          isMember={isMember}
+        />
       )}
       <ErrorModal
         open={errorModalOpen}

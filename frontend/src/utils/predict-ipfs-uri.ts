@@ -9,7 +9,6 @@ export async function predictIpfsUriJson(
   if (!json) return;
 
   const jsonString = JSON.stringify(json);
-  console.log(jsonString);
 
   const blob = new Blob([jsonString]);
   const file = new File([blob], "metadata.json");
@@ -22,8 +21,6 @@ export async function predictIpfsUriFile(
   version: 0 | 1 = 1
 ) {
   if (!file) return;
-
-  console.log("file name", file.name);
 
   try {
     const arrayBuffer = await file.arrayBuffer();

@@ -112,7 +112,7 @@ export const CustomAction = ({
 }) => {
   const [signature, setSignature] = useState(action.functionFragment);
   const [params, setParams] = useState<string[]>([]);
-  const [values, setValues] = useState<string[]>(action.inputs);
+  const [values, setValues] = useState<any[]>(action.inputs as any[]);
   const [target, setTarget] = useState(action.target);
 
   useEffect(() => {
@@ -121,9 +121,7 @@ export const CustomAction = ({
     if (match) {
       const paramTypes = match[1].split(",").map((p) => p.trim());
       setParams(paramTypes);
-      if (values.length === 0) {
-        setValues(Array(paramTypes.length).fill(""));
-      }
+      setValues(Array(paramTypes.length).fill(""));
     } else {
       setParams([]);
       setValues([]);
@@ -168,7 +166,7 @@ export const CustomAction = ({
         <p>Enter function signature</p>
         <Input
           type="text"
-          value={signature}
+          value={signature ?? ""}
           placeholder="e.g. transfer(address,uint256)"
           onChange={(e) => setSignature(e.target.value)}
         />
@@ -186,7 +184,7 @@ export const CustomAction = ({
               <p>Enter {type} value</p>
               <Input
                 type="text"
-                value={values[i]}
+                value={values[i] ?? ""}
                 placeholder={`Type: ${type}`}
                 onChange={(e) => handleValueChange(i, e.target.value)}
               />

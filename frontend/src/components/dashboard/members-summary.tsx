@@ -4,35 +4,54 @@ import { Badge, Container, FilledButtonOverview } from "../common-styles";
 import { DaoType } from "../../types";
 import { TEST_DAO_INFO as dao } from "../../constants";
 import membersIcon from "../../assets/images/people.svg";
+import { useState } from "react";
+import { ErrorModal } from "..";
 
 export const MembersSummary = ({
+  isMember,
   membersLength,
 }: {
+  isMember: boolean;
   membersLength: number;
 }) => {
   const navigate = useNavigate();
   const { daoAddress } = useParams();
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+
+  const handleClickNewProposal = () => {
+    if (!isMember) {
+      setErrorModalOpen(true);
+      return;
+    }
+    navigate(`/daos/${daoAddress}/create-proposal`);
+  };
 
   return (
-    <Container style={{ height: "210px", justifyContent: "space-between" }}>
-      <Header>
-        <Badge color="#6666FF">
-          <img src={membersIcon} />
-        </Badge>
-        <FilledButtonOverview
-          onClick={() => {
-            navigate(`/daos/${daoAddress}/create-proposal`);
-          }}
-        >
-          Add members
-        </FilledButtonOverview>
-      </Header>
-      <Footer>
-        <p className="members">{membersLength} Members</p>
-        {dao.type === DaoType.SimpleVote && <p>Token-based</p>}
-        {dao.type === DaoType.MultisigVote && <p>Wallet-based</p>}
-      </Footer>
-    </Container>
+    <>
+      <Container style={{ height: "210px", justifyContent: "space-between" }}>
+        <Header>
+          <Badge color="#6666FF">
+            <img src={membersIcon} />
+          </Badge>
+          <FilledButtonOverview onClick={handleClickNewProposal}>
+            Add members
+          </FilledButtonOverview>
+        </Header>
+        <Footer>
+          <p className="members">{membersLength} Members</p>
+          {dao.type === DaoType.SimpleVote && <p>Token-based</p>}
+          {dao.type === DaoType.MultisigVote && <p>Wallet-based</p>}
+        </Footer>
+      </Container>
+      <ErrorModal
+        open={errorModalOpen}
+        setOpen={setErrorModalOpen}
+        name={"You can't add members"}
+        summary={
+          "You are not eligible member. To add new members, contact DAO admin to grant necessary permissions."
+        }
+      />
+    </>
   );
 };
 

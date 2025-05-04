@@ -17,13 +17,16 @@ import {
 import backIcon from "../../assets/images/back-icon.svg";
 import { ProgressBarPosition } from "../../components/progress-bar";
 import { ProposalSettings, TxStatus } from "../../types";
-import { $proposalInfo } from "../../store/proposal";
+import { $proposalInfo, resetProposalInfo } from "../../store";
 import { useWriteContract } from "wagmi";
 import { Dao__factory } from "../../typechain-types";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { wagmiConfig } from "../../utils/provider";
-import { useParams } from "react-router-dom";
-import { test_proposal } from "../../constants";
+import { useNavigate, useParams } from "react-router-dom";
+import { PROPOSAL_CREATION_EVENT } from "../../constants";
+import { getCreateProposalParams } from "../../utils";
+import { decodeEventLog } from "viem";
+import { uploadJson } from "../../services";
 
 const isNextEnabled = (step: number, proposal: ProposalSettings): boolean => {
   if (step === 1) {
@@ -59,23 +62,52 @@ export const CreateProposalPage = () => {
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
   const { writeContractAsync } = useWriteContract();
   const { daoAddress } = useParams();
-  const testProposal = test_proposal(daoAddress!);
+  const [proposalId, setProposalId] = useState(0);
+  const navigate = useNavigate();
 
   const handleDeploy = async () => {
     try {
       setTxStatus(TxStatus.Waiting);
-      const { actions, descriptionURI, voteStart, voteDuration } = testProposal;
+      const proposalSettings = await getCreateProposalParams(proposal);
+      const { actions, descriptionURI, voteStart, voteDuration } =
+        proposalSettings?.params as any;
+
       const hash = await writeContractAsync({
         address: daoAddress as `0x${string}`,
         abi: Dao__factory.abi,
         functionName: "propose",
-        args: [actions as any, descriptionURI, BigInt(voteStart), voteDuration],
+        args: [actions as any, descriptionURI, voteStart, voteDuration],
       });
       setTxHash(hash);
 
       const receipt = await waitForTransactionReceipt(wagmiConfig, { hash });
 
       if (receipt.status === "success") {
+        const logs = receipt.logs;
+        const proposalCreatedLog: any = logs
+          .map((log) => {
+            try {
+              return decodeEventLog({
+                abi: [PROPOSAL_CREATION_EVENT],
+                data: log.data,
+                topics: log.topics,
+              });
+            } catch {
+              return null;
+            }
+          })
+          .find((decoded) => decoded?.eventName === "ProposalCreated");
+
+        if (proposalCreatedLog)
+          setProposalId(proposalCreatedLog.args?.proposalId);
+
+        await uploadJson(
+          proposalSettings?.proposalMetadata!,
+          proposalSettings?.proposalMetadata.title!
+        );
+
+        resetProposalInfo();
+
         setTxStatus(TxStatus.Submitted);
       } else {
         setTxStatus(TxStatus.Failed);
@@ -93,6 +125,10 @@ export const CreateProposalPage = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [step]);
+
+  useEffect(() => {
+    resetProposalInfo();
+  }, []);
 
   return (
     <>
@@ -144,6 +180,9 @@ export const CreateProposalPage = () => {
           status={txStatus}
           txHash={txHash}
           onClose={handleClose}
+          onCloseSuccess={() =>
+            navigate(`/daos/${daoAddress}/proposals/${proposalId}`)
+          }
           titleWaiting="Waiting for Confirmation"
           titleSubmitted="Proposal Created Successfully!"
           successLabel="Open Proposal Page"

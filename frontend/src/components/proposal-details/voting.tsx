@@ -155,6 +155,9 @@ export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
         onClose={() => {
           setTxStatus(TxStatus.Idle);
         }}
+        onCloseSuccess={() => {
+          setTxStatus(TxStatus.Idle);
+        }}
         titleWaiting="Waiting for Signature"
         descriptionWaiting="Sign vote and confirm transaction in your wallet"
         titleSubmitted="Vote Submitted Successfully!"

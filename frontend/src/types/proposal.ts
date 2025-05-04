@@ -34,7 +34,6 @@ export interface ProposalSettings {
   votingOption: VoteCounting;
   resources: Link[];
   actions: ProposalAction[];
-  descriptionURI: string;
   voteStart: {
     optionSelected: VoteStartOptions | boolean;
     date: Dayjs;
