@@ -1,7 +1,7 @@
 import { getAddress, parseUnits } from "viem";
 import { DaoSettings, DaoType, Link } from "../types";
 import { predictIpfsUriFile, predictIpfsUriJson } from "./predict-ipfs-uri";
-import { ZeroAddress } from "ethers";
+import { ethers, ZeroAddress } from "ethers";
 import { DEFAULT_LOGOS } from "../constants";
 
 export async function getCreateDaoParams(
@@ -21,14 +21,12 @@ export async function getCreateDaoParams(
     quorum,
     minimumParticipation,
     proposalCreationMinVotingPower,
-    salt,
   } = daoSettings;
 
   let logoUri = await predictIpfsUriFile(logo);
   if (!logoUri) {
     logoUri = DEFAULT_LOGOS[Math.floor(Math.random() * DEFAULT_LOGOS.length)];
   }
-  console.log({ logoUri });
 
   let formattedLinks: Link[] = [];
   if (links.length >= 1 && links[0].url) {
@@ -89,7 +87,7 @@ export async function getCreateDaoParams(
       daoToken: formattedDaoTokenParams,
       quorumFraction: quorum,
       minimumParticipationFraction: minimumParticipation,
-      salt,
+      salt: "0x" + Buffer.from(ethers.randomBytes(32)).toString("hex"),
     },
     daoMetadata,
   };

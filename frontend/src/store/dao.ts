@@ -1,11 +1,10 @@
 import { createEvent, createStore } from "effector";
 import { DaoSettings, DaoType, Recipient } from "../types";
-import { ethers } from "ethers";
 
 export const updateDaoInfo = createEvent<Partial<DaoSettings>>();
 export const resetDaoInfo = createEvent();
 
-export const $daoInfo = createStore<DaoSettings>({
+const createInitialDaoInfo = (): DaoSettings => ({
   type: DaoType.SimpleVote,
   name: "",
   summary: "",
@@ -29,13 +28,14 @@ export const $daoInfo = createStore<DaoSettings>({
   minimumParticipation: { numerator: 50, denominator: 100 },
   proposalCreationMinVotingPower: "",
   earlyExecution: false,
-  salt: "0x" + Buffer.from(ethers.randomBytes(32)).toString("hex"),
-})
+});
+
+export const $daoInfo = createStore<DaoSettings>(createInitialDaoInfo())
   .on(updateDaoInfo, (state, payload) => ({
     ...state,
     ...payload,
   }))
-  .reset(resetDaoInfo);
+  .reset(resetDaoInfo.map(() => createInitialDaoInfo()));
 
 export const setQuorumNumerator = createEvent<number>();
 $daoInfo.on(setQuorumNumerator, (state, value) => ({

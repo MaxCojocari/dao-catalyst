@@ -20,6 +20,7 @@ export async function fetchMetadata(uri: string): Promise<any> {
     return await response.json();
   } catch (error) {
     console.error(error);
+    return {};
   }
 }
 

@@ -32,7 +32,6 @@ export interface DaoSettings {
   minimumParticipation: Fraction;
   proposalCreationMinVotingPower: number | string;
   earlyExecution: boolean;
-  salt: string;
 }
 
 export enum EligibleVoters {

@@ -26,8 +26,7 @@ import {
   isCallerMember,
 } from "../../services";
 import { useParams } from "react-router-dom";
-import { useAccount, useReadContract } from "wagmi";
-import { ERC20__factory } from "../../typechain-types";
+import { useAccount } from "wagmi";
 
 export const BodyEmpty = ({
   members,
@@ -136,7 +135,9 @@ export const DashboardPage = () => {
       setProposalLength(_proposals?.totalProposals || 3);
       setDao(_dao as DaoSummary);
       setTreasuryInfo(_treasuryInfo);
-      setTokenSymbol(await fetchTokenSymbol(_dao?.daoToken as `0x{string}`));
+      if (_dao?.daoType === DaoType.SimpleVote) {
+        setTokenSymbol(await fetchTokenSymbol(_dao?.daoToken as `0x{string}`));
+      }
     } catch (e) {
       console.error(e);
     } finally {

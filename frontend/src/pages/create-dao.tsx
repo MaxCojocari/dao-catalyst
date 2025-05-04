@@ -12,15 +12,17 @@ import styled from "styled-components";
 import { BackButton, Box, NextStepButton } from "../components/common-styles";
 import backIcon from "../assets/images/back-icon.svg";
 import { ProgressBarPosition } from "../components/progress-bar";
-import { $daoInfo } from "../store";
+import { $daoInfo, resetDaoInfo } from "../store";
 import { DaoSettings, DaoType, TxStatus } from "../types";
 import { useWriteContract } from "wagmi";
 import { DaoFactory__factory } from "../typechain-types";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { wagmiConfig } from "../utils/provider";
-import { DAO_FACTORY } from "../constants";
+import { DAO_CREATED_EVENT, DAO_FACTORY } from "../constants";
 import { getCreateDaoParams } from "../utils";
 import { uploadJson, uploadLogo } from "../services";
+import { decodeEventLog } from "viem";
+import { useNavigate } from "react-router-dom";
 
 export interface FileUploadProps {
   setLogo: (file: File | null) => void;
@@ -59,6 +61,8 @@ export const CreateDaoPage = () => {
   const { writeContractAsync } = useWriteContract();
   const [logo, setLogo] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [daoAddress, setDaoAddress] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleDeploy = async () => {
     try {
@@ -77,8 +81,28 @@ export const CreateDaoPage = () => {
       const receipt = await waitForTransactionReceipt(wagmiConfig, { hash });
 
       if (receipt.status === "success") {
+        const logs = receipt.logs;
+        const daoCreatedLog: any = logs
+          .map((log) => {
+            try {
+              return decodeEventLog({
+                abi: [DAO_CREATED_EVENT],
+                data: log.data,
+                topics: log.topics,
+              });
+            } catch {
+              return null;
+            }
+          })
+          .find((decoded) => decoded?.eventName === "DaoCreated");
+
+        if (daoCreatedLog) setDaoAddress(daoCreatedLog.args?.daoAddress);
+
         await uploadLogo(logo);
         await uploadJson(deployParams?.daoMetadata!, dao.name);
+
+        resetDaoInfo();
+
         setTxStatus(TxStatus.Submitted);
       } else {
         setTxStatus(TxStatus.Failed);
@@ -152,6 +176,7 @@ export const CreateDaoPage = () => {
           onClose={() => {
             setTxStatus(TxStatus.Idle);
           }}
+          onCloseSuccess={() => navigate(`/daos/${daoAddress}`)}
           titleWaiting="Waiting for Confirmation"
           titleSubmitted="DAO Created Successfully!"
           successLabel="Open DAO Page"

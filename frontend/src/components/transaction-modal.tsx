@@ -9,6 +9,7 @@ interface TransactionModalProps {
   status: TxStatus;
   txHash?: string | null;
   onClose: () => void;
+  onCloseSuccess: () => void;
   titleWaiting?: string;
   titleSubmitted?: string;
   descriptionWaiting?: string;
@@ -21,6 +22,7 @@ export const TransactionModal = ({
   status,
   txHash,
   onClose,
+  onCloseSuccess,
   titleWaiting = "Waiting for Confirmation",
   titleSubmitted = "Transaction Submitted",
   descriptionWaiting = "Confirm this transaction in your wallet",
@@ -62,7 +64,7 @@ export const TransactionModal = ({
                 View on Arbiscan
               </a>
             )}
-            <ModalCloseButton onClick={onClose}>
+            <ModalCloseButton onClick={onCloseSuccess}>
               {successLabel}
             </ModalCloseButton>
           </>

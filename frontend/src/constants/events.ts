@@ -100,3 +100,83 @@ export const VOTE_CAST_EVENT = {
   name: "VoteCast",
   type: "event",
 } as AbiEvent;
+
+export const DAO_CREATED_EVENT = {
+  anonymous: false,
+  inputs: [
+    {
+      indexed: true,
+      internalType: "address",
+      name: "daoAddress",
+      type: "address",
+    },
+    {
+      indexed: true,
+      internalType: "enum DaoFactory.DaoType",
+      name: "daoType",
+      type: "uint8",
+    },
+    {
+      indexed: true,
+      internalType: "address",
+      name: "owner",
+      type: "address",
+    },
+    {
+      indexed: false,
+      internalType: "string",
+      name: "daoURI",
+      type: "string",
+    },
+    {
+      indexed: false,
+      internalType: "address",
+      name: "daoToken",
+      type: "address",
+    },
+    {
+      indexed: false,
+      internalType: "uint256",
+      name: "minimalDuration",
+      type: "uint256",
+    },
+    {
+      components: [
+        {
+          internalType: "uint16",
+          name: "numerator",
+          type: "uint16",
+        },
+        {
+          internalType: "uint16",
+          name: "denominator",
+          type: "uint16",
+        },
+      ],
+      indexed: false,
+      internalType: "struct Fraction",
+      name: "quorumFraction",
+      type: "tuple",
+    },
+    {
+      components: [
+        {
+          internalType: "uint16",
+          name: "numerator",
+          type: "uint16",
+        },
+        {
+          internalType: "uint16",
+          name: "denominator",
+          type: "uint16",
+        },
+      ],
+      indexed: false,
+      internalType: "struct Fraction",
+      name: "minimumParticipationFraction",
+      type: "tuple",
+    },
+  ],
+  name: "DaoCreated",
+  type: "event",
+};
