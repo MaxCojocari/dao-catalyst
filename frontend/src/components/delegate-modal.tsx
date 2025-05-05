@@ -9,8 +9,16 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddressInput } from ".";
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { waitForTransactionReceipt } from "@wagmi/core";
+import { wagmiConfig } from "../utils/provider";
+import { DaoSimpleVote__factory, DaoToken__factory } from "../typechain-types";
+import { useParams } from "react-router-dom";
+import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
+import { Success } from "./common-styles";
+import successIcon from "../assets/images/done.svg";
 
 enum DelegateOption {
   HimSelf = "Claim your voting power",
@@ -25,14 +33,50 @@ interface DelegateModalProps {
 export const DelegateModal = ({ open, setOpen }: DelegateModalProps) => {
   const [disabled, setDisabled] = useState(false);
   const [selected, setSelected] = useState(DelegateOption.ToSomebody);
-  const [delegatee, setDelegatee] = useState("");
+  const [delegatee, setDelegatee] = useState<string>("");
+  const [status, setStatus] = useState<"success" | "error" | null>(null);
+  const { writeContractAsync } = useWriteContract();
+  const { address } = useAccount();
+  const { daoAddress } = useParams();
+  const { data: token } = useReadContract({
+    address: daoAddress as `0x{string}`,
+    abi: DaoSimpleVote__factory.abi,
+    functionName: "token",
+  });
 
   const handleDelegation = async () => {
-    setDisabled(true);
-    console.log(delegatee);
+    if (selected === DelegateOption.ToSomebody && !delegatee) return;
 
-    setDisabled(false);
+    try {
+      setDisabled(true);
+      const hash = await writeContractAsync({
+        address: token?.toString() as `0x${string}`,
+        abi: DaoToken__factory.abi,
+        functionName: "delegate",
+        args: [
+          selected === DelegateOption.ToSomebody
+            ? (delegatee as `0x{string}`)
+            : (address as `0x{string}`),
+        ],
+      });
+
+      const receipt = await waitForTransactionReceipt(wagmiConfig, { hash });
+      setStatus(receipt.status === "success" ? "success" : "error");
+      setDisabled(false);
+    } catch (error) {
+      setStatus("error");
+      console.error("Transaction failed:", error);
+    } finally {
+      setDisabled(false);
+    }
   };
+
+  useEffect(() => {
+    if (status) {
+      const timer = setTimeout(() => setStatus(null), 9000);
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   return (
     <Modal
@@ -114,7 +158,7 @@ export const DelegateModal = ({ open, setOpen }: DelegateModalProps) => {
                   thickness={5}
                   sx={{
                     color: "white",
-                    marginTop: "5px",
+                    marginTop: "2px",
                     marginRight: "2px",
                   }}
                 />
@@ -125,6 +169,26 @@ export const DelegateModal = ({ open, setOpen }: DelegateModalProps) => {
             )}
           </Button>
         </ButtonGroup>
+
+        {status === "success" && (
+          <Success style={{ margin: 0 }}>
+            <img
+              src={successIcon}
+              width="14px"
+              style={{ marginRight: "8px" }}
+            />
+            <p style={{ fontSize: "14px" }}>Delegated successfully!</p>
+          </Success>
+        )}
+
+        {status === "error" && (
+          <ErrorText>
+            <InfoOutlineIcon
+              sx={{ width: 18, marginRight: "6px", color: "#de3c48" }}
+            />
+            <p>Transaction failed, try again.</p>
+          </ErrorText>
+        )}
       </ModalBox>
     </Modal>
   );
@@ -321,5 +385,19 @@ const Label = styled.div<{ $isSelected: boolean }>`
     letter-spacing: -0.02em;
 
     color: ${({ $isSelected }) => ($isSelected ? "#6666FF" : "#555566")};
+  }
+`;
+
+export const ErrorText = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  p {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: -0.02em;
+    color: #cc1f1a;
   }
 `;

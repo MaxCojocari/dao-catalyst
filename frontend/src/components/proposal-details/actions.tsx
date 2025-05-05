@@ -238,6 +238,7 @@ export const ActionsSection = ({
             status={txStatus}
             txHash={txHash}
             onClose={handleClose}
+            onCloseSuccess={handleClose}
             titleWaiting="Waiting for Confirmation"
             titleSubmitted="Proposal Executed Successfully!"
             successLabel="Continue to proposal"
