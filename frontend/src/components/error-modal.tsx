@@ -1,5 +1,4 @@
 import { Modal } from "@mui/material";
-import { useState } from "react";
 import styled from "styled-components";
 import closeIcon from "../assets/images/close-icon.svg";
 import rejectIcon from "../assets/images/reject.svg";

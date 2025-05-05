@@ -23,7 +23,7 @@ export const AddressInput = ({ address, onChange }: AddressInputProps) => {
 
   const openInExplorer = (addr: string) => {
     if (isAddress(address)) {
-      const url = `https://arbiscan.io/address/${addr}`;
+      const url = `https://sepolia.arbiscan.io/address/${addr}`;
       window.open(url, "_blank");
     }
   };

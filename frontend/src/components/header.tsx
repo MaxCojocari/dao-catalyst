@@ -3,7 +3,7 @@ import logo from "../assets/images/app-logo.svg";
 import { CustomWalletButton } from "./custom-wallet-button";
 import { DaoLogo } from "./dao-logo";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
-import { CreateDaoButton, DelegateButton } from ".";
+import { CreateDaoButton, DelegateButton, DelegateModal } from ".";
 import { fetchDaoMetadata } from "../services";
 import { setIsLoading } from "../store";
 import { useCallback, useEffect, useState } from "react";
@@ -14,6 +14,7 @@ export const Header = () => {
   const { pathname } = useLocation();
   const [daoMetadata, setDaoMetadata] = useState({} as DaoMetadata);
   const navigate = useNavigate();
+  const [delegateModalOpen, setDelegateModalOpen] = useState(false);
 
   const links = [
     { label: "Dashboard", path: "dashboard" },
@@ -38,29 +39,34 @@ export const Header = () => {
   }, []);
 
   return (
-    <Container>
-      {daoAddress ? (
-        <LeftSection onClick={() => navigate(`/daos/${daoAddress || ""}`)}>
-          <DaoLogo imageUri={daoMetadata?.logo} name={daoMetadata?.name} />
-          {links.map(({ label, path }) => (
-            <NavLink key={path} to={`/daos/${daoAddress}/${path}`}>
-              {label}
-            </NavLink>
-          ))}
-        </LeftSection>
-      ) : (
-        <LeftSection onClick={() => navigate(`/daos/${daoAddress || ""}`)}>
-          <img src={logo} alt="dao-catalyst-logo" width="150px" />
-        </LeftSection>
-      )}
-      <RightSection>
-        {pathname === "/daos" && <CreateDaoButton />}
-        {daoMetadata && daoMetadata.daoType === DaoType.SimpleVote && (
-          <DelegateButton />
+    <>
+      <Container>
+        {daoAddress ? (
+          <LeftSection onClick={() => navigate(`/daos/${daoAddress || ""}`)}>
+            <DaoLogo imageUri={daoMetadata?.logo} name={daoMetadata?.name} />
+            {links.map(({ label, path }) => (
+              <NavLink key={path} to={`/daos/${daoAddress}/${path}`}>
+                {label}
+              </NavLink>
+            ))}
+          </LeftSection>
+        ) : (
+          <LeftSection onClick={() => navigate(`/daos/${daoAddress || ""}`)}>
+            <img src={logo} alt="dao-catalyst-logo" width="150px" />
+          </LeftSection>
         )}
-        <CustomWalletButton />
-      </RightSection>
-    </Container>
+        <RightSection>
+          {(pathname === "/daos" || pathname === "/daos/") && (
+            <CreateDaoButton />
+          )}
+          {daoMetadata && daoMetadata.daoType === DaoType.SimpleVote && (
+            <DelegateButton setDelegateModalOpen={setDelegateModalOpen} />
+          )}
+          <CustomWalletButton />
+        </RightSection>
+      </Container>
+      <DelegateModal open={delegateModalOpen} setOpen={setDelegateModalOpen} />
+    </>
   );
 };
 

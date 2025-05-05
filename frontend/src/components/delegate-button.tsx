@@ -1,9 +1,13 @@
 import styled from "styled-components";
 import delegateIcon from "../assets/images/delegate.svg";
 
-export const DelegateButton = () => {
+export const DelegateButton = ({
+  setDelegateModalOpen,
+}: {
+  setDelegateModalOpen: (open: boolean) => void;
+}) => {
   return (
-    <Button>
+    <Button onClick={() => setDelegateModalOpen(true)}>
       <img src={delegateIcon} style={{ color: "#6666FF", width: "20px" }} />
       Delegate
     </Button>

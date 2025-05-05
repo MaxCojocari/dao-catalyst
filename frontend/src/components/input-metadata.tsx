@@ -29,7 +29,7 @@ export const Container = styled.div`
   gap: 4px;
 `;
 
-export const InputName = styled.a`
+export const InputName = styled.h2`
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
@@ -37,7 +37,7 @@ export const InputName = styled.a`
   color: #555566;
 `;
 
-export const InputDescription = styled.a`
+export const InputDescription = styled.p`
   font-weight: 400;
   font-size: 12px;
   line-height: 15px;

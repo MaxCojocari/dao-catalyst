@@ -64,3 +64,4 @@ export { MembersListExtended } from "./dashboard/members-list-extended";
 export { MembersSummary } from "./dashboard/members-summary";
 export { DelegateButton } from "./delegate-button";
 export { ErrorModal } from "./error-modal";
+export { DelegateModal } from "./delegate-modal";
