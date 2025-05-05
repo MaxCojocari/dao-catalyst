@@ -8,7 +8,7 @@ import {
   ProposalSummary,
   TreasuryPanel,
 } from "../../components";
-import { members, transfers } from "../../constants";
+import { members } from "../../constants";
 import { useCallback, useEffect, useState } from "react";
 import {
   DaoMember,
@@ -177,7 +177,7 @@ export const DashboardPage = () => {
   return (
     <>
       <DaoOverview dao={dao} />
-      {proposals?.length > 0 || transfers?.length > 0 ? (
+      {proposals?.length > 0 || treasuryInfo.transfers?.length > 0 ? (
         <Body
           proposals={proposals}
           proposalLength={proposalLength}

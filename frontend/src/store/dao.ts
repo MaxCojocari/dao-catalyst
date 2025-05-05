@@ -40,15 +40,22 @@ export const $daoInfo = createStore<DaoSettings>(createInitialDaoInfo())
 export const setQuorumNumerator = createEvent<number>();
 $daoInfo.on(setQuorumNumerator, (state, value) => ({
   ...state,
-  quorum: { ...state.quorum, numerator: Math.min(value, 100) },
+  quorum: {
+    numerator: Math.min(value, 100),
+    denominator:
+      state.type === DaoType.SimpleVote ? 100 : state.quorum.denominator,
+  },
 }));
 
 export const setMinimumParticipationNumerator = createEvent<number>();
 $daoInfo.on(setMinimumParticipationNumerator, (state, value) => ({
   ...state,
   minimumParticipation: {
-    ...state.minimumParticipation,
     numerator: Math.min(value, 100),
+    denominator:
+      state.type === DaoType.SimpleVote
+        ? 100
+        : state.minimumParticipation.denominator,
   },
 }));
 

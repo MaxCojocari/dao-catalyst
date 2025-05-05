@@ -523,18 +523,18 @@ export const transfers = [
 export const members = [
   {
     address: "0x03C25c5Dd860B021165A127A6553c67C371551b0",
-    votingPower: 1000,
-    percentage: 76.92,
+    votingPower: 10000,
+    percentage: 51.81,
   },
   {
-    address: "0xe35Fa1aDf92F9C948f849e69D5b8eD61Bd3401f1",
-    votingPower: 500,
-    percentage: 15.38,
+    address: "0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF",
+    votingPower: 7300,
+    percentage: 37.82,
   },
   {
-    address: "0x329D5B5CcC46cD933918eF66c8b2F88411C542bf",
-    votingPower: 200,
-    percentage: 7.69,
+    address: "0xBB7CCc4F133F9F2F593061EEB4a38F86c40c959C",
+    votingPower: 2000,
+    percentage: 10.36,
   },
   // {
   //   address: "0xD3d6aEc7e2AA97F174622d36c5865533Ab69504b",
