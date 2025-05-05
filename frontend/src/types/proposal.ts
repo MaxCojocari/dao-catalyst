@@ -74,6 +74,7 @@ export interface ProposalSummary {
   title: string;
   summary: string;
   state: ProposalState;
+  voteEnd: number;
 }
 
 export type ProposalMetadata = {

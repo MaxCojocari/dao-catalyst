@@ -44,7 +44,7 @@ export interface DaoSummary {
   name: string;
   logo: string;
   summary: string;
-  owner: string;
+  owner?: string;
   contractAddress: string;
   daoToken?: string;
   isCallerMember?: boolean;

@@ -2,8 +2,9 @@ import styled from "styled-components";
 import { Container } from "../common-styles";
 import { ProposalState } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
-import { shortenAddress, truncateText } from "../../utils";
+import { getTimeLeftText, shortenAddress, truncateText } from "../../utils";
 import { useAccount } from "wagmi";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 
 const stateStyles: Record<ProposalState, { bg: string; color: string }> = {
   [ProposalState.Pending]: {
@@ -46,9 +47,17 @@ export const ProposalOverviewCard = ({ proposal }: { proposal: any }) => {
 
   return (
     <Container style={{ cursor: "pointer" }} onClick={handleClick}>
-      <Pill $bg={bg} $color={color}>
-        {label}
-      </Pill>
+      <Header>
+        <Pill $bg={bg} $color={color}>
+          {label}
+        </Pill>
+        {proposal.state === ProposalState.Active && (
+          <TimeLeft>
+            <AccessTimeOutlinedIcon sx={{ width: "18px", color: "#00B0E0" }} />
+            <p>{getTimeLeftText(proposal.voteEnd)}</p>
+          </TimeLeft>
+        )}
+      </Header>
       <div
         style={{ display: "flex", flexDirection: "column", marginTop: "18px" }}
       >
@@ -68,7 +77,7 @@ export const ProposalOverviewCard = ({ proposal }: { proposal: any }) => {
   );
 };
 
-const Pill = styled.span<{ $bg: string; $color: string }>`
+export const Pill = styled.span<{ $bg: string; $color: string }>`
   padding: 4px 8px;
   border-radius: 4px;
   font-weight: 400;
@@ -78,6 +87,29 @@ const Pill = styled.span<{ $bg: string; $color: string }>`
   background-color: ${({ $bg }) => $bg};
   color: ${({ $color }) => $color};
   display: inline-block;
+`;
+
+export const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  p {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 13px;
+    letter-spacing: -0.02em;
+    color: #004b7c;
+  }
+`;
+
+export const TimeLeft = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
 `;
 
 export const Title = styled.h2`

@@ -7,7 +7,10 @@ import { useAccount } from "wagmi";
 import { shortenAddress } from "../utils";
 import { fetchDaoSummaries } from "../services";
 import { setIsLoading } from "../store";
-import { DaoSummary } from "../types";
+import { DaoSummary, DaoType } from "../types";
+import { TEST_DAOS } from "../constants";
+import peopleIcon from "../assets/images/people.svg";
+import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 
 export const DaoExplorerPage = () => {
   const [value, setValue] = useState(0);
@@ -15,16 +18,16 @@ export const DaoExplorerPage = () => {
   const { address } = useAccount();
   const [daos, setDaos] = useState<DaoSummary[]>([]);
 
-  const fetchDaos = useCallback(async () => {
-    try {
-      setIsLoading({ fetchDaos: true });
-      setDaos(await fetchDaoSummaries(address!));
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading({ fetchDaos: false });
-    }
-  }, [daos]);
+  // const fetchDaos = useCallback(async () => {
+  //   try {
+  //     setIsLoading({ fetchDaos: true });
+  //     setDaos(await fetchDaoSummaries(address!));
+  //   } catch (e) {
+  //     console.error(e);
+  //   } finally {
+  //     setIsLoading({ fetchDaos: false });
+  //   }
+  // }, [daos]);
 
   const filteredDaos = daos?.filter((dao) => {
     switch (value) {
@@ -40,7 +43,8 @@ export const DaoExplorerPage = () => {
   });
 
   useEffect(() => {
-    fetchDaos();
+    // fetchDaos();
+    setDaos(TEST_DAOS);
   }, []);
 
   return (
@@ -83,13 +87,17 @@ export const DaoExplorerPage = () => {
               </Name>
               <Description>{dao?.summary}</Description>
               <Footer>
-                <p style={{ marginRight: "3px" }}>Created by</p>
-                <p style={{ color: "#6666FF", fontWeight: "500" }}>
-                  {" "}
-                  {address?.toLowerCase() === dao?.owner.toLowerCase()
-                    ? "You"
-                    : shortenAddress(dao?.owner)}
-                </p>
+                <Fragment>
+                  <InsertDriveFileOutlinedIcon
+                    sx={{ width: "16px", color: "#6666FF" }}
+                  />
+                  <p>{shortenAddress(dao?.contractAddress)}</p>
+                </Fragment>
+                <Fragment>
+                  <img src={peopleIcon} width="16px" />
+                  {dao?.daoType === DaoType.SimpleVote && <p>Token-based</p>}
+                  {dao?.daoType === DaoType.MultisigVote && <p>Wallet-based</p>}
+                </Fragment>
               </Footer>
             </DaoOverviewCard>
           ))}
@@ -291,7 +299,7 @@ export const DaoOverviewCard = styled.div`
 export const Footer = styled.div`
   display: flex;
   flex-direction: row;
-  margin-top: 12px;
+  margin-top: 18px;
 
   p {
     font-weight: 300;
@@ -300,4 +308,12 @@ export const Footer = styled.div`
     letter-spacing: -0.02em;
     color: #666680;
   }
+`;
+
+export const Fragment = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 30px;
+  gap: 8px;
 `;

@@ -20,7 +20,6 @@ export async function fetchDaoSummaries(caller: string) {
       daoCreateds(orderBy: blockTimestamp, orderDirection: desc) {
         daoType
         daoURI
-        owner
         daoAddress
         daoToken
       }
@@ -31,12 +30,11 @@ export async function fetchDaoSummaries(caller: string) {
     const res = (await request(url, query, {}, headers)) as any;
 
     for (const data of res.daoCreateds) {
-      const { daoURI, daoAddress, daoToken, daoType, owner } = data;
+      const { daoURI, daoAddress, daoToken, daoType } = data;
       const { name, logo, summary } = await fetchMetadata(daoURI);
 
       summaries.push({
         daoType,
-        owner,
         daoToken,
         name,
         logo,

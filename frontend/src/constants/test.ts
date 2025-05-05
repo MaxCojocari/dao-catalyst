@@ -7,6 +7,8 @@ import { ethers, parseUnits, ZeroAddress } from "ethers";
 import { StatusItem } from "../components/proposal-details/status-timeline";
 import {
   ActionType,
+  DaoSettings,
+  DaoSummary,
   DaoType,
   ProposalAction,
   ProposalState,
@@ -21,6 +23,13 @@ import { Dao__factory } from "../typechain-types";
 export const TEST_DAO_NAME = "Taiko DAO";
 export const TEST_DAO_CONTRACT_ADDRESS =
   "0xF079A5c205B622349A648965c4E5F05969eB0542";
+
+export const ONE_MINUTE_SECONDS = 60n;
+export const ONE_HOUR_SECONDS = 3600n;
+export const ONE_DAY_SECONDS = 86400n;
+export const ONE_WEEK_SECONDS = 604800n;
+export const ONE_MONTH_SECONDS = 2592000n;
+export const ONE_YEAR_SECONDS = 31557600n;
 
 export const TEST_DAO_INFO = {
   owner: "0x329a8a9e8c4d69a288db0f831da9acd9518142bf",
@@ -74,11 +83,244 @@ export const TEST_DAO_INFO = {
   proposalCreationMinVotingPower: 0.1,
 };
 
-export const TEST_DAOS = [
-  TEST_DAO_INFO,
+// export const TEST_DAOS = [
+//   TEST_DAO_INFO,
+//   {
+//     owner: "0x9876543210fedcba9876543210fedcba98765432",
+//     type: DaoType.FractionalVote,
+//     name: "NovaSphereDAO",
+//     logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreifb6tvmvcus44ahrh6olcklyckdu7fqt2rnq7ihqdv7kmfosb4kvy",
+//     summary:
+//       "NovaSphere DAO is a decentralized think tank and innovation hub, where members collaboratively shape the future of emerging technologies, open science, and global governance through on-chain decision-making and funding initiatives.",
+//     links: [
+//       {
+//         label: "Nova X",
+//         url: "https://twitter.com/NovaSphere",
+//       },
+//       {
+//         label: "Nova Discord",
+//         url: "https://discord.com/invite/novasphere",
+//       },
+//     ],
+//     members: [
+//       "0x1234567890abcdef1234567890abcdef12345678",
+//       "0x03c25c5dd860b021165a127a6553c67c371551b0",
+//       "0x9876543210fedcba9876543210fedcba98765432",
+//     ],
+//     contractAddress: "0xeE4BD9FA4eF0AaE436016208FeEFB87F39c4f7EE",
+//     minimumDuration: {
+//       days: 2,
+//       hours: 0,
+//       minutes: 0,
+//     },
+//     token: {
+//       isDeployed: false,
+//       tokenAddress: "",
+//       name: "Nova",
+//       symbol: "NOVA",
+//       recipients: [
+//         "0x1234567890abcdef1234567890abcdef12345678",
+//         "0x03c25c5dd860b021165a127a6553c67c371551b0",
+//         "0x9876543210fedcba9876543210fedcba98765432",
+//       ],
+//       amounts: [10000, 5000, 2500],
+//     },
+//     quorum: {
+//       numerator: 60,
+//       denominator: 100,
+//     },
+//     minimumParticipation: {
+//       numerator: 20,
+//       denominator: 100,
+//     },
+//     proposalCreationMinVotingPower: 0.05,
+//   },
+//   {
+//     owner: "0x03c25c5dd860b021165a127a6553c67c371551b0",
+//     type: DaoType.SimpleVote,
+//     name: "MetaForgeDAO",
+//     logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreia6uwf5qgtv3ouw4tnamnou4mognvlrxsis53xtpmm73rjnjrmkmm",
+//     summary:
+//       "MetaForge DAO empowers builders and creators to launch experimental projects with community-driven backing. The DAO utilizes transparent voting and collaborative ideation to steer innovation in the metaverse and Web3 ecosystem.",
+//     links: [
+//       {
+//         label: "MetaForge Forum",
+//         url: "https://forum.metaforge.xyz",
+//       },
+//     ],
+//     members: [
+//       "0xabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
+//       "0x1234123412341234123412341234123412341234",
+//       "0x03c25c5dd860b021165a127a6553c67c371551b0",
+//     ],
+//     contractAddress: "0x935B3247622491b8A0cFF2ae9dddD83E3174862C",
+//     minimumDuration: {
+//       days: 1,
+//       hours: 12,
+//       minutes: 0,
+//     },
+//     token: {
+//       isDeployed: true,
+//       tokenAddress: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+//       name: "ForgeToken",
+//       symbol: "FORGE",
+//       recipients: [
+//         "0xabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
+//         "0x1234123412341234123412341234123412341234",
+//         "0x03c25c5dd860b021165a127a6553c67c371551b0",
+//       ],
+//       amounts: [12000, 6000, 3000],
+//     },
+//     quorum: {
+//       numerator: 65,
+//       denominator: 100,
+//     },
+//     minimumParticipation: {
+//       numerator: 18,
+//       denominator: 100,
+//     },
+//     proposalCreationMinVotingPower: 0.2,
+//   },
+//   {
+//     owner: "0x99887766554433221100ffeeddccbbaa99887766",
+//     type: DaoType.SimpleVote,
+//     name: "EthoraDAO",
+//     logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreih7jp4ha4ut5iz4y77zny6ivekunyxe3jus5qiy3d73glckfgzicm",
+//     summary:
+//       "Ethora Collective is a community-led DAO focused on open-source infrastructure, fostering ecosystem-wide collaboration on tools, protocols, and educational content that advance the Ethereum and Layer 2 networks.",
+//     links: [],
+//     members: [
+//       "0x99887766554433221100ffeeddccbbaa99887766",
+//       "0x03c25c5dd860b021165a127a6553c67c371551b0",
+//       "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+//     ],
+//     contractAddress: "0xF50cd534993d1792E992C64Da079Bf750B58B004",
+//     minimumDuration: {
+//       days: 3,
+//       hours: 0,
+//       minutes: 0,
+//     },
+//     token: {
+//       isDeployed: true,
+//       tokenAddress: "0xcccccccccccccccccccccccccccccccccccccccc",
+//       name: "Ethora",
+//       symbol: "ETHO",
+//       recipients: [
+//         "0x99887766554433221100ffeeddccbbaa99887766",
+//         "0x03c25c5dd860b021165a127a6553c67c371551b0",
+//         "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+//       ],
+//       amounts: [20000, 7000, 3000],
+//     },
+//     quorum: {
+//       numerator: 70,
+//       denominator: 100,
+//     },
+//     minimumParticipation: {
+//       numerator: 25,
+//       denominator: 100,
+//     },
+//     proposalCreationMinVotingPower: 0.15,
+//   },
+//   {
+//     owner: "0x88ae23a2BC3a4061B5321Fe86BCf3F15A72Fd8CE",
+//     type: DaoType.MultisigVote,
+//     name: "ZentauriSyndicate",
+//     logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib2su7oqwqlmibinhhxc4yfaotq6boltij4dnk6namtcf7zomcpim",
+//     summary:
+//       "Zentauri Syndicate is a decentralized guild driving cross-chain interoperability and governance. It enables members to fund, vote, and implement key cross-protocol initiatives, ensuring resilience and inclusivity in Web3 infrastructure.",
+//     links: [
+//       {
+//         label: "Zentauri Hub",
+//         url: "https://zentauri.org",
+//       },
+//       {
+//         label: "Zentauri Telegram",
+//         url: "https://t.me/zentauridao",
+//       },
+//     ],
+//     members: [
+//       "0x0abc0abc0abc0abc0abc0abc0abc0abc0abc0abc",
+//       "0x1def1def1def1def1def1def1def1def1def1def",
+//       "0x2fed2fed2fed2fed2fed2fed2fed2fed2fed2fed",
+//     ],
+//     contractAddress: "0xBb804ED243Eb28224Ebb18EaD02369d235203958",
+//     minimumDuration: {
+//       days: 1,
+//       hours: 6,
+//       minutes: 0,
+//     },
+//     token: {
+//       isDeployed: false,
+//       tokenAddress: "0xdddddddddddddddddddddddddddddddddddddddd",
+//       name: "Zentauri",
+//       symbol: "ZEN",
+//       recipients: [
+//         "0x0abc0abc0abc0abc0abc0abc0abc0abc0abc0abc",
+//         "0x1def1def1def1def1def1def1def1def1def1def",
+//         "0x2fed2fed2fed2fed2fed2fed2fed2fed2fed2fed",
+//       ],
+//       amounts: [15000, 8000, 2000],
+//     },
+//     quorum: {
+//       numerator: 66,
+//       denominator: 100,
+//     },
+//     minimumParticipation: {
+//       numerator: 30,
+//       denominator: 100,
+//     },
+//     proposalCreationMinVotingPower: 0.05,
+//   },
+// ];
+
+export const TEST_DAOS: DaoSummary[] = [
   {
-    owner: "0x9876543210fedcba9876543210fedcba98765432",
-    type: DaoType.FractionalVote,
+    daoType: DaoType.SimpleVote,
+    name: "TaikoDAO",
+    logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib2su7oqwqlmibinhhxc4yfaotq6boltij4dnk6namtcf7zomcpim",
+    summary:
+      "Taiko DAO is a decentralized autonomous organization that fosters collaborative decision-making within a vibrant community, using transparent governance to shape initiatives, fund projects, and drive collective actions. TaikoDAO empowers members to propose, debate, and vote on key decisions, with a truly democratic and community-led ecosystem.",
+    links: [
+      {
+        label: "Taiko Blog",
+        url: "https://taiko.xyz/blog",
+      },
+      {
+        label: "Taiko Forum",
+        url: "https://community.taiko.xyz/",
+      },
+    ],
+    isCallerMember: true,
+    contractAddress: "0xf305fda0a2f03e52f8370a2480b81f08ae61a230",
+  },
+  {
+    daoType: DaoType.MultisigVote,
+    name: "EthoraDAO",
+    logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreih7jp4ha4ut5iz4y77zny6ivekunyxe3jus5qiy3d73glckfgzicm",
+    summary:
+      "Ethora Collective is a community-led DAO focused on open-source infrastructure, fostering ecosystem-wide collaboration on tools, protocols, and educational content that advance the Ethereum and Layer 2 networks.",
+    links: [],
+    isCallerMember: true,
+    contractAddress: "0xb1e4498fd67fa4f445e068d104ed563eca8b5650",
+  },
+  {
+    daoType: DaoType.SimpleVote,
+    name: "MetaForgeDAO",
+    logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreia6uwf5qgtv3ouw4tnamnou4mognvlrxsis53xtpmm73rjnjrmkmm",
+    summary:
+      "MetaForge DAO empowers builders and creators to launch experimental projects with community-driven backing. The DAO utilizes transparent voting and collaborative ideation to steer innovation in the metaverse and Web3 ecosystem.",
+    links: [
+      {
+        label: "MetaForge Forum",
+        url: "https://forum.metaforge.xyz",
+      },
+    ],
+    isCallerMember: true,
+    contractAddress: "0x939172fe751fe7f439070ce9e36b3e6594d168d0",
+  },
+  {
+    daoType: DaoType.SimpleVote,
     name: "NovaSphereDAO",
     logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreifb6tvmvcus44ahrh6olcklyckdu7fqt2rnq7ihqdv7kmfosb4kvy",
     summary:
@@ -93,129 +335,11 @@ export const TEST_DAOS = [
         url: "https://discord.com/invite/novasphere",
       },
     ],
-    members: [
-      "0x1234567890abcdef1234567890abcdef12345678",
-      "0x03c25c5dd860b021165a127a6553c67c371551b0",
-      "0x9876543210fedcba9876543210fedcba98765432",
-    ],
-    contractAddress: "0xeE4BD9FA4eF0AaE436016208FeEFB87F39c4f7EE",
-    minimumDuration: {
-      days: 2,
-      hours: 0,
-      minutes: 0,
-    },
-    token: {
-      isDeployed: false,
-      tokenAddress: "",
-      name: "Nova",
-      symbol: "NOVA",
-      recipients: [
-        "0x1234567890abcdef1234567890abcdef12345678",
-        "0x03c25c5dd860b021165a127a6553c67c371551b0",
-        "0x9876543210fedcba9876543210fedcba98765432",
-      ],
-      amounts: [10000, 5000, 2500],
-    },
-    quorum: {
-      numerator: 60,
-      denominator: 100,
-    },
-    minimumParticipation: {
-      numerator: 20,
-      denominator: 100,
-    },
-    proposalCreationMinVotingPower: 0.05,
+    isCallerMember: false,
+    contractAddress: "0x98c065f07051d3e1a9d728522d00ee08fac480cd",
   },
   {
-    owner: "0x03c25c5dd860b021165a127a6553c67c371551b0",
-    type: DaoType.SimpleVote,
-    name: "MetaForgeDAO",
-    logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreia6uwf5qgtv3ouw4tnamnou4mognvlrxsis53xtpmm73rjnjrmkmm",
-    summary:
-      "MetaForge DAO empowers builders and creators to launch experimental projects with community-driven backing. The DAO utilizes transparent voting and collaborative ideation to steer innovation in the metaverse and Web3 ecosystem.",
-    links: [
-      {
-        label: "MetaForge Forum",
-        url: "https://forum.metaforge.xyz",
-      },
-    ],
-    members: [
-      "0xabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
-      "0x1234123412341234123412341234123412341234",
-      "0x03c25c5dd860b021165a127a6553c67c371551b0",
-    ],
-    contractAddress: "0x935B3247622491b8A0cFF2ae9dddD83E3174862C",
-    minimumDuration: {
-      days: 1,
-      hours: 12,
-      minutes: 0,
-    },
-    token: {
-      isDeployed: true,
-      tokenAddress: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-      name: "ForgeToken",
-      symbol: "FORGE",
-      recipients: [
-        "0xabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
-        "0x1234123412341234123412341234123412341234",
-        "0x03c25c5dd860b021165a127a6553c67c371551b0",
-      ],
-      amounts: [12000, 6000, 3000],
-    },
-    quorum: {
-      numerator: 65,
-      denominator: 100,
-    },
-    minimumParticipation: {
-      numerator: 18,
-      denominator: 100,
-    },
-    proposalCreationMinVotingPower: 0.2,
-  },
-  {
-    owner: "0x99887766554433221100ffeeddccbbaa99887766",
-    type: DaoType.SimpleVote,
-    name: "EthoraDAO",
-    logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreih7jp4ha4ut5iz4y77zny6ivekunyxe3jus5qiy3d73glckfgzicm",
-    summary:
-      "Ethora Collective is a community-led DAO focused on open-source infrastructure, fostering ecosystem-wide collaboration on tools, protocols, and educational content that advance the Ethereum and Layer 2 networks.",
-    links: [],
-    members: [
-      "0x99887766554433221100ffeeddccbbaa99887766",
-      "0x03c25c5dd860b021165a127a6553c67c371551b0",
-      "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
-    ],
-    contractAddress: "0xF50cd534993d1792E992C64Da079Bf750B58B004",
-    minimumDuration: {
-      days: 3,
-      hours: 0,
-      minutes: 0,
-    },
-    token: {
-      isDeployed: true,
-      tokenAddress: "0xcccccccccccccccccccccccccccccccccccccccc",
-      name: "Ethora",
-      symbol: "ETHO",
-      recipients: [
-        "0x99887766554433221100ffeeddccbbaa99887766",
-        "0x03c25c5dd860b021165a127a6553c67c371551b0",
-        "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
-      ],
-      amounts: [20000, 7000, 3000],
-    },
-    quorum: {
-      numerator: 70,
-      denominator: 100,
-    },
-    minimumParticipation: {
-      numerator: 25,
-      denominator: 100,
-    },
-    proposalCreationMinVotingPower: 0.15,
-  },
-  {
-    owner: "0x88ae23a2BC3a4061B5321Fe86BCf3F15A72Fd8CE",
-    type: DaoType.MultisigVote,
+    daoType: DaoType.MultisigVote,
     name: "ZentauriSyndicate",
     logo: "https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreib2su7oqwqlmibinhhxc4yfaotq6boltij4dnk6namtcf7zomcpim",
     summary:
@@ -230,38 +354,8 @@ export const TEST_DAOS = [
         url: "https://t.me/zentauridao",
       },
     ],
-    members: [
-      "0x0abc0abc0abc0abc0abc0abc0abc0abc0abc0abc",
-      "0x1def1def1def1def1def1def1def1def1def1def",
-      "0x2fed2fed2fed2fed2fed2fed2fed2fed2fed2fed",
-    ],
-    contractAddress: "0xBb804ED243Eb28224Ebb18EaD02369d235203958",
-    minimumDuration: {
-      days: 1,
-      hours: 6,
-      minutes: 0,
-    },
-    token: {
-      isDeployed: false,
-      tokenAddress: "0xdddddddddddddddddddddddddddddddddddddddd",
-      name: "Zentauri",
-      symbol: "ZEN",
-      recipients: [
-        "0x0abc0abc0abc0abc0abc0abc0abc0abc0abc0abc",
-        "0x1def1def1def1def1def1def1def1def1def1def",
-        "0x2fed2fed2fed2fed2fed2fed2fed2fed2fed2fed",
-      ],
-      amounts: [15000, 8000, 2000],
-    },
-    quorum: {
-      numerator: 66,
-      denominator: 100,
-    },
-    minimumParticipation: {
-      numerator: 30,
-      denominator: 100,
-    },
-    proposalCreationMinVotingPower: 0.05,
+    isCallerMember: false,
+    contractAddress: "0xa74b04e54bcd514050d6e637bab8cd629714996b",
   },
 ];
 
@@ -448,13 +542,6 @@ export const members = [
   //   percentage: 1.1,
   // },
 ];
-
-export const ONE_MINUTE_SECONDS = 60n;
-export const ONE_HOUR_SECONDS = 3600n;
-export const ONE_DAY_SECONDS = 86400n;
-export const ONE_WEEK_SECONDS = 604800n;
-export const ONE_MONTH_SECONDS = 2592000n;
-export const ONE_YEAR_SECONDS = 31557600n;
 
 export const test_dao_params = {
   daoType: DaoType.SimpleVote,

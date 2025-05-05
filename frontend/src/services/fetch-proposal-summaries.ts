@@ -40,7 +40,7 @@ export async function fetchProposalSummaries(daoAddress: string) {
   );
 
   for (let i = 0; i < logs?.length!; ++i) {
-    const { proposalId, proposer } = logs[i];
+    const { proposalId, proposer, voteEnd } = logs[i];
     const { title, summary } = metadatas[i];
     enrichedLogs = [
       {
@@ -49,6 +49,7 @@ export async function fetchProposalSummaries(daoAddress: string) {
         title,
         summary,
         state: states[i],
+        voteEnd: Number(voteEnd),
       },
       ...enrichedLogs,
     ];

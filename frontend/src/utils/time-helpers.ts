@@ -154,3 +154,19 @@ export function getLocalTimestamp(): string {
   const minutes = String(now.getMinutes()).padStart(2, "0");
   return `${year}${month}${day}${hours}${minutes}`;
 }
+
+export function getTimeLeftText(voteEndTimestamp: number): string {
+  const now = Math.floor(Date.now() / 1000);
+  const secondsLeft = voteEndTimestamp - now;
+
+  if (secondsLeft <= 0) return "Ended";
+
+  const minutes = Math.floor(secondsLeft / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days >= 1) return `about ${days} day${days > 1 ? "s" : ""} left`;
+  if (hours >= 1) return `about ${hours} hour${hours > 1 ? "s" : ""} left`;
+  if (minutes >= 1) return `${minutes} minute${minutes > 1 ? "s" : ""} left`;
+  return `less than a minute left`;
+}
