@@ -76,7 +76,7 @@ export const MinimumParticipation = () => {
                   marginRight: "5px",
                 }}
               >
-                ≥ {tokenAmount.toLocaleString()}
+                ≥ {Number(tokenAmount).toLocaleString()}
               </p>
               <p>of {totalSupply.toLocaleString()} tokens</p>
             </SliderDetails>
