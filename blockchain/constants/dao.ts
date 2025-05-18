@@ -19,7 +19,7 @@ export const TEST_DAOS = [
     members: [
       '0x03C25c5Dd860B021165A127A6553c67C371551b0',
       '0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF',
-      '0xBB7CCc4F133F9F2F593061EEB4a38F86c40c959C',
+      '0x3Ddc7dFC95f348b68C4C42bF523290012e3D3d2a',
     ],
     minimalDuration: ONE_HOUR_SECONDS,
     proposalCreationMinVotingPower: parseUnits('0.1'),
@@ -31,7 +31,7 @@ export const TEST_DAOS = [
       recipients: [
         '0x03C25c5Dd860B021165A127A6553c67C371551b0',
         '0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF',
-        '0xBB7CCc4F133F9F2F593061EEB4a38F86c40c959C',
+        '0x3Ddc7dFC95f348b68C4C42bF523290012e3D3d2a',
       ],
       amounts: [parseUnits('1000'), parseUnits('500'), parseUnits('200')],
     },
@@ -46,7 +46,7 @@ export const TEST_DAOS = [
     members: [
       '0x03C25c5Dd860B021165A127A6553c67C371551b0',
       '0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF',
-      '0xBB7CCc4F133F9F2F593061EEB4a38F86c40c959C',
+      '0x3Ddc7dFC95f348b68C4C42bF523290012e3D3d2a',
     ],
     minimalDuration: ONE_HOUR_SECONDS,
     proposalCreationMinVotingPower: 0,
@@ -67,10 +67,10 @@ export const TEST_DAOS = [
     daoURI:
       'https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreihinhjmpnzz6a2knzxns73azckpb4ijrhx54mdeumvdltt7akqecu',
     members: [
-      '0x03C25c5Dd860B021165A127A6553c67C371551b0',
+      '0x3Ddc7dFC95f348b68C4C42bF523290012e3D3d2a',
       '0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF',
     ],
-    minimalDuration: ONE_HOUR_SECONDS,
+    minimalDuration: ONE_MINUTE_SECONDS * 15n,
     proposalCreationMinVotingPower: parseUnits('0.1'),
     daoToken: {
       isDeployed: false,
@@ -78,7 +78,7 @@ export const TEST_DAOS = [
       name: 'MetaForge Token',
       symbol: 'MFT',
       recipients: [
-        '0x03C25c5Dd860B021165A127A6553c67C371551b0',
+        '0x3Ddc7dFC95f348b68C4C42bF523290012e3D3d2a',
         '0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF',
       ],
       amounts: [parseUnits('10000'), parseUnits('2345')],
@@ -92,12 +92,12 @@ export const TEST_DAOS = [
     daoURI:
       'https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreidmkbw4xhvmlrz5oraxfbj6za7dbapvkmizvrwufoopjenp5k2kpm',
     members: [
-      '0x03C25c5Dd860B021165A127A6553c67C371551b0',
+      '0xe35A34773cD39F1768EEB9eF7c25f3bf094801f1',
       '0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF',
       '0xBB7CCc4F133F9F2F593061EEB4a38F86c40c959C',
       '0x3Ddc7dFC95f348b68C4C42bF523290012e3D3d2a',
     ],
-    minimalDuration: ONE_HOUR_SECONDS,
+    minimalDuration: ONE_DAY_SECONDS,
     proposalCreationMinVotingPower: parseUnits('0.1'),
     daoToken: {
       isDeployed: false,
@@ -105,7 +105,7 @@ export const TEST_DAOS = [
       name: 'NovaSphere Token',
       symbol: 'NST',
       recipients: [
-        '0x03C25c5Dd860B021165A127A6553c67C371551b0',
+        '0xe35A34773cD39F1768EEB9eF7c25f3bf094801f1',
         '0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF',
         '0xBB7CCc4F133F9F2F593061EEB4a38F86c40c959C',
         '0x3Ddc7dFC95f348b68C4C42bF523290012e3D3d2a',
@@ -121,7 +121,7 @@ export const TEST_DAOS = [
     daoURI:
       'https://maroon-generous-cephalopod-902.mypinata.cloud/ipfs/bafkreigq5tbee2byou6ntsaewzate2vxew5mielejvobn3cgfctn3srqty',
     members: [
-      '0x03C25c5Dd860B021165A127A6553c67C371551b0',
+      '0xe35A34773cD39F1768EEB9eF7c25f3bf094801f1',
       '0x987c9600B353a1c54d6E995BEd8A4F24F85e57fF',
       '0xBB7CCc4F133F9F2F593061EEB4a38F86c40c959C',
       '0x3Ddc7dFC95f348b68C4C42bF523290012e3D3d2a',

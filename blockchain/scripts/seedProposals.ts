@@ -12,7 +12,7 @@ async function main() {
   } = DEPLOY_CONSTANTS[network.name];
 
   const dao = DaoMultisigVote__factory.connect(
-    '0xf305fda0a2f03e52f8370a2480b81f08ae61a230',
+    '0x1844eeb4D73b2Ca272073fB4a9Be27D8e5cbA593',
     signer,
   );
   const proposals = getTestProposals(dao, usdt.address, usdc.address, targetContract);

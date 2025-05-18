@@ -1,9 +1,9 @@
 export const DEPLOY_CONSTANTS = {
   testnet: {
-    daoSimpleVote: '0xf06d6a85Dd7efBB72e8AB77F6fDF5f0c5Df602Ea',
-    daoMultisigVote: '0x82a829AAE5C259d02C464BeE8a3295497D694e1b',
-    daoFractionalVote: '0x4464Bb9c84Cf3a92c29518a398a234f0ce385b6C',
-    factory: '0x74EF17208A595aB8c9375F416984cf0D8A2e260E',
+    daoSimpleVote: '0xdE71511eE2B04144f05cCEADE750a052Aa833462',
+    daoMultisigVote: '0x1fe7f5979c6a5F623cceED028c2Ba7C44611b800',
+    daoFractionalVote: '0x382c3Bf7Bfd03B9c32659540313a192d985a91fF',
+    factory: '0x762ACE01adcC984E116Ae5404d7ba4b4Bb3588fB',
     tokens: {
       usdt: {
         name: 'Test USDT',
@@ -18,11 +18,11 @@ export const DEPLOY_CONSTANTS = {
     },
     targetContract: '0xF209E6a7e3E31409C9b30D96050D9Bf75C26C1F3',
     daos: [
-      '0xf305fda0a2f03e52f8370a2480b81f08ae61a230', // simple
-      '0xb1e4498fd67fa4f445e068d104ed563eca8b5650', // multisig
-      '0x939172fe751fe7f439070ce9e36b3e6594d168d0', // simple
-      '0x98c065f07051d3e1a9d728522d00ee08fac480cd', // simple
-      '0xa74b04e54bcd514050d6e637bab8cd629714996b', // multisig
+      '0x63e33db3f27324bda7b043811e04788ca33c449f', // simple
+      '0x1844eeb4d73b2ca272073fb4a9be27d8e5cba593', // multisig
+      '0xbb03f8545068cb0ce443d0810c5770a26696fb27', // simple
+      '0xb8f30d9e118c2e3a0d940466510bb9a4827e973e', // simple
+      '0x516d4a902e221b7bd4a34a9bc712f61a892a5e8f', // multisig
     ],
   },
 } as Record<string, any>;

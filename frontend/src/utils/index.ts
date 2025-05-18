@@ -9,6 +9,7 @@ export * from "./predict-ipfs-uri";
 export * from "./get-create-dao-params";
 export * from "./get-create-proposal-params";
 export * from "./get-current-timestamp";
+export * from "./fetch-logs";
 
 export function toDashedName(name: string): string {
   return name.trim().toLowerCase().replace(/\s+/g, "-");

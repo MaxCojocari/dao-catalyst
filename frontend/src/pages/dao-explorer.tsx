@@ -18,16 +18,16 @@ export const DaoExplorerPage = () => {
   const { address } = useAccount();
   const [daos, setDaos] = useState<DaoSummary[]>([]);
 
-  // const fetchDaos = useCallback(async () => {
-  //   try {
-  //     setIsLoading({ fetchDaos: true });
-  //     setDaos(await fetchDaoSummaries(address!));
-  //   } catch (e) {
-  //     console.error(e);
-  //   } finally {
-  //     setIsLoading({ fetchDaos: false });
-  //   }
-  // }, [daos]);
+  const fetchDaos = useCallback(async () => {
+    try {
+      setIsLoading({ fetchDaos: true });
+      setDaos(await fetchDaoSummaries(address!));
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading({ fetchDaos: false });
+    }
+  }, [daos]);
 
   const filteredDaos = daos?.filter((dao) => {
     switch (value) {
@@ -43,8 +43,8 @@ export const DaoExplorerPage = () => {
   });
 
   useEffect(() => {
-    // fetchDaos();
-    setDaos(TEST_DAOS);
+    fetchDaos();
+    // setDaos(TEST_DAOS);
   }, []);
 
   return (
