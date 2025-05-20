@@ -18,30 +18,29 @@ export async function fetchProposalSummaries(daoAddress: string) {
     client: publicClient!,
   });
 
-  const allLogs = await publicClient?.getLogs({
-    address: daoAddress as `0x{string}`,
-    event: PROPOSAL_CREATION_EVENT,
-    fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
-    toBlock: "latest",
-  });
+  // const allLogs = await publicClient?.getLogs({
+  //   address: daoAddress as `0x{string}`,
+  //   event: PROPOSAL_CREATION_EVENT,
+  //   fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
+  //   toBlock: "latest",
+  // });
+  const resAllLogs = await fetch(
+    `http://localhost:5000/proposal-created?daoAddress=${daoAddress}`
+  );
+  const logs = await resAllLogs.json();
 
-  const logs: Record<string, any>[] = allLogs
-    ?.map((log) => log.args)
-    .slice(-3)!;
+  // const logs: Record<string, any>[] = allLogs
+  //   ?.map((log) => log.args)
+  //   .slice(-3)!;
 
   const states = await Promise.all(
-    logs.map((log) => contract.read.state([log.proposalId]))
+    logs.map((log: any) => contract.read.state([log.proposalId]))
   );
 
   let enrichedLogs: ProposalSummary[] = [];
 
-  const metadatas = await Promise.all(
-    logs.map((log) => fetchMetadata(log.descriptionURI))
-  );
-
   for (let i = 0; i < logs?.length!; ++i) {
-    const { proposalId, proposer, voteEnd } = logs[i];
-    const { title, summary } = metadatas[i];
+    const { proposalId, proposer, voteEnd, title, summary } = logs[i];
     enrichedLogs = [
       {
         proposalId: Number(proposalId),
@@ -55,5 +54,5 @@ export async function fetchProposalSummaries(daoAddress: string) {
     ];
   }
 
-  return { totalProposals: allLogs?.length, enrichedLogs };
+  return { totalProposals: logs.length, enrichedLogs };
 }

@@ -5,6 +5,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { blo } from "blo";
 import { shortenAddress } from "../../utils";
 import { Voter } from "../../types";
+import emptyIcon from "../../assets/images/empty-state.svg";
 
 interface VotersSectionProps {
   voters: Voter[];
@@ -21,7 +22,7 @@ export const VotersSection = ({ voters, tokenSymbol }: VotersSectionProps) => {
   const visibleVoters = showAll ? filteredVoters : filteredVoters?.slice(0, 3);
   const canToggle = filteredVoters?.length > 3;
 
-  return (
+  return voters.length > 0 ? (
     <Container>
       <SearchBar>
         <img src={searchIcon} alt="search" width={18} />
@@ -67,6 +68,11 @@ export const VotersSection = ({ voters, tokenSymbol }: VotersSectionProps) => {
         )}
       </VoterList>
     </Container>
+  ) : (
+    <Empty>
+      <img src={emptyIcon} alt="No resources" width="150px" />
+      <p>No voters yet</p>
+    </Empty>
   );
 };
 
@@ -171,4 +177,22 @@ const LoadMore = styled.div`
   line-height: 150%;
   letter-spacing: -0.02em;
   color: #6666ff;
+`;
+
+const Empty = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px 0;
+  width: 100%;
+
+  p {
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: -0.03em;
+    color: #4f4f5c;
+  }
 `;

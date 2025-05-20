@@ -16,7 +16,7 @@ import { $daoInfo, resetDaoInfo } from "../store";
 import { DaoSettings, DaoType, TxStatus } from "../types";
 import { useWriteContract } from "wagmi";
 import { DaoFactory__factory } from "../typechain-types";
-import { waitForTransactionReceipt } from "@wagmi/core";
+import { getPublicClient, waitForTransactionReceipt } from "@wagmi/core";
 import { wagmiConfig } from "../utils/provider";
 import { DAO_CREATED_EVENT, DAO_FACTORY } from "../constants";
 import { getCreateDaoParams } from "../utils";
@@ -69,11 +69,15 @@ export const CreateDaoPage = () => {
       setTxStatus(TxStatus.Waiting);
 
       const deployParams = await getCreateDaoParams(dao, logo)!;
+      const publicClient = getPublicClient(wagmiConfig)!;
+      const feeData = await publicClient.estimateFeesPerGas();
       const hash = await writeContractAsync({
         address: DAO_FACTORY as `0x${string}`,
         abi: DaoFactory__factory.abi,
         functionName: "createDao",
         args: [deployParams?.params as any],
+        maxFeePerGas: feeData.maxFeePerGas,
+        maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
       });
 
       setTxHash(hash);

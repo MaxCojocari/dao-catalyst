@@ -21,7 +21,7 @@ import {
 import { Dao__factory } from "../../typechain-types";
 import { useAccount, useWriteContract } from "wagmi";
 import { wagmiConfig } from "../../utils/provider";
-import { waitForTransactionReceipt } from "@wagmi/core";
+import { getPublicClient, waitForTransactionReceipt } from "@wagmi/core";
 import { fetchVotingStats } from "../../services";
 import { setIsLoading } from "../../store";
 import { useParams } from "react-router-dom";
@@ -64,7 +64,7 @@ export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
   const handleVoteSubmission = async (option: VotingOption) => {
     try {
       const isSimpleVote =
-        votingStats?.infoSectionData.daoType === DaoType.SimpleVote;
+        votingStats?.infoSectionData?.daoType === DaoType.SimpleVote;
 
       if (!isSimpleVote && !votingStats?.isMember) {
         setErrorModalOpen(true);
@@ -72,12 +72,17 @@ export const Voting = ({ proposalState }: { proposalState: ProposalState }) => {
       }
 
       setTxStatus(TxStatus.Waiting);
+      const publicClient = getPublicClient(wagmiConfig)!;
+      const feeData = await publicClient.estimateFeesPerGas();
       const hash = await writeContractAsync({
         address: daoAddress as `0x${string}`,
         abi: Dao__factory.abi,
         functionName: isSimpleVote ? "castVote" : "castVoteEqualWeight",
         args: isSimpleVote ? [BigInt(id!), option] : [BigInt(id!)],
+        maxFeePerGas: feeData.maxFeePerGas,
+        maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
       });
+
       setTxHash(hash);
 
       const receipt = await waitForTransactionReceipt(wagmiConfig, { hash });

@@ -12,7 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { AddressInput } from ".";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
-import { waitForTransactionReceipt } from "@wagmi/core";
+import { getPublicClient, waitForTransactionReceipt } from "@wagmi/core";
 import { wagmiConfig } from "../utils/provider";
 import { DaoSimpleVote__factory, DaoToken__factory } from "../typechain-types";
 import { useParams } from "react-router-dom";
@@ -49,6 +49,8 @@ export const DelegateModal = ({ open, setOpen }: DelegateModalProps) => {
 
     try {
       setDisabled(true);
+      const publicClient = getPublicClient(wagmiConfig)!;
+      const feeData = await publicClient.estimateFeesPerGas();
       const hash = await writeContractAsync({
         address: token?.toString() as `0x${string}`,
         abi: DaoToken__factory.abi,
@@ -58,6 +60,8 @@ export const DelegateModal = ({ open, setOpen }: DelegateModalProps) => {
             ? (delegatee as `0x{string}`)
             : (address as `0x{string}`),
         ],
+        maxFeePerGas: feeData.maxFeePerGas,
+        maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
       });
 
       const receipt = await waitForTransactionReceipt(wagmiConfig, { hash });

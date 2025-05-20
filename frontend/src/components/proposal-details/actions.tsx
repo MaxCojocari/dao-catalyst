@@ -18,7 +18,7 @@ import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import { useState } from "react";
 import { useWriteContract } from "wagmi";
 import { Dao__factory } from "../../typechain-types";
-import { waitForTransactionReceipt } from "@wagmi/core";
+import { getPublicClient, waitForTransactionReceipt } from "@wagmi/core";
 import { wagmiConfig } from "../../utils/provider";
 import { TransactionModal } from "..";
 import { useParams } from "react-router-dom";
@@ -156,11 +156,15 @@ export const ActionsSection = ({
   const handleExecute = async () => {
     try {
       setTxStatus(TxStatus.Waiting);
+      const publicClient = getPublicClient(wagmiConfig)!;
+      const feeData = await publicClient.estimateFeesPerGas();
       const hash = await writeContractAsync({
         address: daoAddress as `0x${string}`,
         abi: Dao__factory.abi,
         functionName: "execute",
         args: [BigInt(id!)],
+        maxFeePerGas: feeData.maxFeePerGas,
+        maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
       });
       setTxHash(hash);
 

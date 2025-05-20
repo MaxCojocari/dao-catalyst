@@ -36,21 +36,31 @@ export async function fetchProposal(
     client,
   });
 
-  const proposalLog: any = await client.getLogs({
-    address: daoAddress as `0x{string}`,
-    event: PROPOSAL_CREATION_EVENT,
-    args: { proposalId },
-    fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
-    toBlock: "latest",
-  });
+  // const proposalLog: any = await client.getLogs({
+  //   address: daoAddress as `0x{string}`,
+  //   event: PROPOSAL_CREATION_EVENT,
+  //   args: { proposalId },
+  //   fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
+  //   toBlock: "latest",
+  // });
 
-  const proposalExecutedLog: any = await client.getLogs({
-    address: daoAddress as `0x{string}`,
-    event: PROPOSAL_EXECUTED_EVENT,
-    args: { proposalId },
-    fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
-    toBlock: "latest",
-  });
+  // const proposalExecutedLog: any = await client.getLogs({
+  //   address: daoAddress as `0x{string}`,
+  //   event: PROPOSAL_EXECUTED_EVENT,
+  //   args: { proposalId },
+  //   fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
+  //   toBlock: "latest",
+  // });
+
+  const resProposalLog = await fetch(
+    `http://localhost:5000/proposal-created?proposalId=${proposalId}&daoAddress=${daoAddress}`
+  );
+  const proposalLog = await resProposalLog.json();
+
+  const resProposalExecutedLog = await fetch(
+    `http://localhost:5000/proposal-executed?proposalId=${proposalId}&daoAddress=${daoAddress}`
+  );
+  const proposalExecutedLog = await resProposalExecutedLog.json();
 
   const {
     blockNumber: blockNumberProposalCreation,
@@ -63,11 +73,11 @@ export async function fetchProposal(
     transactionHash: txHashExecuted,
   } = proposalExecutedLog[0] || {};
 
-  const { proposer, voteStart, voteEnd, descriptionURI, actions } =
-    proposalLog[0]?.args || {};
+  const { title, summary, resources, proposer, voteStart, voteEnd, actions } =
+    proposalLog[0] || {};
 
-  const { title, summary, resources } =
-    (await fetchMetadata(descriptionURI)) || {};
+  // const { title, summary, resources } =
+  //   (await fetchMetadata(descriptionURI)) || {};
 
   const state = await contract.read.state([proposalId]);
 
@@ -131,13 +141,18 @@ async function _fetchVotingStats(
     client,
   });
 
-  const votingLogs: any = await client.getLogs({
-    address: daoAddress as `0x{string}`,
-    event: VOTE_CAST_EVENT,
-    args: { proposalId },
-    fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
-    toBlock: "latest",
-  });
+  // const votingLogs: any = await client.getLogs({
+  //   address: daoAddress as `0x{string}`,
+  //   event: VOTE_CAST_EVENT,
+  //   args: { proposalId },
+  //   fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
+  //   toBlock: "latest",
+  // });
+
+  const resVotingLogs = await fetch(
+    `http://localhost:5000/vote-cast?proposalId=${proposalId}&daoAddress=${daoAddress}`
+  );
+  const votingLogs = await resVotingLogs.json();
 
   const [
     quorum,
@@ -186,9 +201,10 @@ async function _fetchVotingStats(
   );
 
   const totalParticipation = votingLogs.reduce(
-    (acc: any, log: any) => acc + log.args.weight,
+    (acc: any, log: any) => acc + BigInt(log.weight),
     0n
   );
+
   const participationPercentage =
     (Number(formatUnits(totalParticipation, 18)) /
       Number(formatUnits(totalSupply, 18))) *
@@ -213,7 +229,7 @@ async function _fetchVotingStats(
   const votes = await calculateVotingStats(accVotes);
 
   const voters = votingLogs.map((log: any) => {
-    const { voter, weight } = log.args;
+    const { voter, weight } = log;
     return {
       address: voter,
       power: formatCompactNumber(Number(formatUnits(weight, 18))),
@@ -244,14 +260,17 @@ async function _fetchVotingStatsMultisig(
     client,
   });
 
-  const votingLogs: any = await client.getLogs({
-    address: daoAddress as `0x{string}`,
-    event: VOTE_CAST_EVENT,
-    args: { proposalId },
-    fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
-    toBlock: "latest",
-  });
-
+  // const votingLogs: any = await client.getLogs({
+  //   address: daoAddress as `0x{string}`,
+  //   event: VOTE_CAST_EVENT,
+  //   args: { proposalId },
+  //   fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
+  //   toBlock: "latest",
+  // });.
+  const resVotingLogs = await fetch(
+    `http://localhost:5000/vote-cast?proposalId=${proposalId}&daoAddress=${daoAddress}`
+  );
+  const votingLogs = await resVotingLogs.json();
   const [
     quorum,
     minParticipation,
@@ -297,7 +316,7 @@ async function _fetchVotingStatsMultisig(
   };
 
   const voters = votingLogs.map((log: any) => {
-    const { voter, weight } = log.args;
+    const { voter, weight } = log;
     return {
       address: voter,
       power: Number(weight),

@@ -15,10 +15,6 @@ type Transfer = {
   timestamp: number;
 };
 
-const transferEvent = parseAbiItem(
-  "event Transfer(address indexed from, address indexed to, uint256 value)"
-);
-
 export async function fetchTreasuryInfo(daoAddress: string) {
   const publicClient = getPublicClient(wagmiConfig)!;
   const transfers: Transfer[] = [];
@@ -30,19 +26,19 @@ export async function fetchTreasuryInfo(daoAddress: string) {
   ];
 
   for (const token of tokenAddresses) {
-    const logs = await publicClient.getLogs({
-      address: token.address as `0x{string}`,
-      event: transferEvent,
-      fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
-      toBlock: "latest",
-    });
+    // const logs = await publicClient.getLogs({
+    //   address: token.address as `0x{string}`,
+    //   event: transferEvent,
+    //   fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
+    //   toBlock: "latest",
+    // });
+    const resAllLogs = await fetch(
+      `http://localhost:5000/transfer?token=${token.address}`
+    );
+    const logs = await resAllLogs.json();
 
     for (const log of logs) {
-      const { from, to, value } = log.args as unknown as {
-        from: `0x{string}`;
-        to: `0x{string}`;
-        value: bigint;
-      };
+      const { from, to, value } = log;
 
       const adjustedAmount = (Number(value) / 1e6).toFixed(4);
       const block = await publicClient.getBlock({

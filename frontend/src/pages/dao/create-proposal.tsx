@@ -20,7 +20,7 @@ import { ProposalSettings, TxStatus } from "../../types";
 import { $proposalInfo, resetProposalInfo } from "../../store";
 import { useWriteContract } from "wagmi";
 import { Dao__factory } from "../../typechain-types";
-import { waitForTransactionReceipt } from "@wagmi/core";
+import { getPublicClient, waitForTransactionReceipt } from "@wagmi/core";
 import { wagmiConfig } from "../../utils/provider";
 import { useNavigate, useParams } from "react-router-dom";
 import { PROPOSAL_CREATION_EVENT } from "../../constants";
@@ -72,11 +72,15 @@ export const CreateProposalPage = () => {
       const { actions, descriptionURI, voteStart, voteDuration } =
         proposalSettings?.params as any;
 
+      const publicClient = getPublicClient(wagmiConfig)!;
+      const feeData = await publicClient.estimateFeesPerGas();
       const hash = await writeContractAsync({
         address: daoAddress as `0x${string}`,
         abi: Dao__factory.abi,
         functionName: "propose",
         args: [actions as any, descriptionURI, voteStart, voteDuration],
+        maxFeePerGas: feeData.maxFeePerGas,
+        maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
       });
       setTxHash(hash);
 

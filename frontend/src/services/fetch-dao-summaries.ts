@@ -19,7 +19,6 @@ export async function fetchDaoSummaries(caller: string) {
     {
       daoCreateds(orderBy: blockTimestamp, orderDirection: desc) {
         daoType
-        daoURI
         daoAddress
         daoToken
       }
@@ -30,14 +29,16 @@ export async function fetchDaoSummaries(caller: string) {
     const res = (await request(url, query, {}, headers)) as any;
 
     for (const data of res.daoCreateds) {
-      const { daoURI, daoAddress, daoToken, daoType } = data;
-      const { name, logo, summary } = await fetchMetadata(daoURI);
-
+      const { daoAddress, daoToken, daoType } = data;
+      const res = await fetch(
+        `http://localhost:5000/daos?daoAddress=${daoAddress}`
+      );
+      const { name, logoUri, summary } = (await res.json())[0];
       summaries.push({
         daoType,
         daoToken,
         name,
-        logo,
+        logo: logoUri,
         summary,
         contractAddress: daoAddress,
         isCallerMember: await isCallerMember(
@@ -62,7 +63,6 @@ export async function fetchDaoSummary(
     {
       daoCreateds(where: {daoAddress: "${daoAddress}"}) {
         daoType
-        daoURI
         owner
         daoAddress
         blockTimestamp
@@ -73,17 +73,19 @@ export async function fetchDaoSummary(
 
   try {
     const res_gql = (await request(url, query, {}, headers)) as any;
-    const { daoType, daoURI, owner, daoAddress, blockTimestamp, daoToken } =
+    const { daoType, owner, daoAddress, blockTimestamp, daoToken } =
       res_gql.daoCreateds[0];
-    const res = await fetch(daoURI);
-    const { name, logo, summary, links } = await res.json();
+    const res = await fetch(
+      `http://localhost:5000/daos?daoAddress=${daoAddress}`
+    );
+    const { name, logoUri, summary, links } = (await res.json())[0];
 
     return {
       links,
       daoType,
       owner,
       name,
-      logo,
+      logo: logoUri,
       summary,
       contractAddress: daoAddress,
       creationDate: getMonthYear(Number(blockTimestamp)),

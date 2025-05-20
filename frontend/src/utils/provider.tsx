@@ -17,26 +17,17 @@ export const wagmiConfig = getDefaultConfig({
     [arbitrum.id]: http(
       `https://arb-mainnet.g.alchemy.com/v2/${
         import.meta.env.VITE_ALCHEMY_API_KEY
-      }`,
-      {
-        batch: true,
-      }
+      }`
     ),
     [arbitrumSepolia.id]: http(
       `https://arb-sepolia.g.alchemy.com/v2/${
         import.meta.env.VITE_ALCHEMY_API_KEY
-      }`,
-      {
-        batch: true,
-      }
+      }`
     ),
     [sepolia.id]: http(
       `https://eth-sepolia.g.alchemy.com/v2/${
         import.meta.env.VITE_ALCHEMY_API_KEY
-      }`,
-      {
-        batch: true,
-      }
+      }`
     ),
   },
 }) as Config;

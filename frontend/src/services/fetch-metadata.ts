@@ -32,7 +32,6 @@ export async function fetchDaoMetadata(
   const query = gql`
     {
       daoCreateds(where: {daoAddress: "${daoAddress}"}) {
-        daoURI
         daoType
       }
     }
@@ -40,9 +39,12 @@ export async function fetchDaoMetadata(
 
   try {
     const res_gql = (await request(url, query, {}, headers)) as any;
-    const { daoURI, daoType } = res_gql.daoCreateds[0];
-    const res = await fetchMetadata(daoURI);
-    return { daoType, ...res } as DaoMetadata;
+    const { daoType } = res_gql.daoCreateds[0];
+    const res = await fetch(
+      `http://localhost:5000/daos?daoAddress=${daoAddress}`
+    );
+    const { name, logoUri, summary, links } = (await res.json())[0];
+    return { daoType, name, logo: logoUri, summary, links } as DaoMetadata;
   } catch (error) {
     console.error(error);
   }
@@ -52,19 +54,25 @@ export async function fetchProposalMetadata(
   daoAddress: string,
   proposalId: number
 ): Promise<ProposalMetadata | undefined> {
-  const publicClient = getPublicClient(wagmiConfig);
+  // const publicClient = getPublicClient(wagmiConfig);
 
-  const log: any = await publicClient?.getLogs({
-    address: daoAddress as `0x{string}`,
-    event: PROPOSAL_CREATION_EVENT,
-    args: {
-      proposalId,
-    },
-    fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
-    toBlock: "latest",
-  });
+  // const log: any = await publicClient?.getLogs({
+  //   address: daoAddress as `0x{string}`,
+  //   event: PROPOSAL_CREATION_EVENT,
+  //   args: {
+  //     proposalId,
+  //   },
+  //   fromBlock: DAO_FACTORY_DEPLOY_TIMESTAMP,
+  //   toBlock: "latest",
+  // });
 
-  const uri = log[0].args.descriptionURI;
-
-  return (await fetchMetadata(uri)) as ProposalMetadata;
+  try {
+    const res = await fetch(
+      `http://localhost:5000/proposal-created/proposalId=${proposalId}&daoAddress=${daoAddress}`
+    );
+    const { title, summary, resources } = (await res.json())[0];
+    return { title, summary, resources };
+  } catch (error) {
+    console.error(error);
+  }
 }
